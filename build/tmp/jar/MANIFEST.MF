@@ -1,0 +1,4 @@
+Manifest-Version: 1.0
+SistemaCeb: com.gradle.tutorial.FizzBuzzProcessor
+Main-Class: sistemaceb.SistemaCeb
+

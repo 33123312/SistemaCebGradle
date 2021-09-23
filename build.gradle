@@ -1,0 +1,33 @@
+apply plugin: 'java'
+apply plugin: 'jacoco'
+apply plugin: 'application'
+
+
+mainClassName = 'sistemaceb.SistemaCeb'
+
+repositories {
+    jcenter()
+}
+
+jar {
+    manifest {
+        attributes(
+                "SistemaCeb": "com.gradle.tutorial.FizzBuzzProcessor",
+                'Main-Class': 'sistemaceb.SistemaCeb'
+        )
+    }
+    zip64 = true
+    from {
+        configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
+    }
+}
+
+dependencies {
+    testImplementation     'junit:junit:4.13'
+    compile fileTree(include: ['*.jar'], dir: 'libs')
+    compile 'com.itextpdf:io:7.0.2'
+    compile 'com.itextpdf:kernel:7.0.2'
+    compile 'com.itextpdf:layout:7.0.2'
+
+
+}
