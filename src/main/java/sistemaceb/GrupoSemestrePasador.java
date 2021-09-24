@@ -3,6 +3,7 @@ package sistemaceb;
 import JDBCController.DataBaseConsulter;
 import JDBCController.DataBaseUpdater;
 import JDBCController.TableRegister;
+import JDBCController.ViewSpecs;
 import SpecificViews.GrupoOperator;
 
 import java.sql.SQLException;
@@ -179,7 +180,7 @@ public class GrupoSemestrePasador {
             condVal.add(alumno);
 
         try {
-            new DataBaseUpdater("alumnos").update(colsToSet,values,cond,condVal);
+            new ViewSpecs("alumnos").getUpdater().update(colsToSet,values,cond,condVal);
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }

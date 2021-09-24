@@ -1,12 +1,8 @@
 package SpecificViews;
 
-import JDBCController.DBU;
 import JDBCController.DataBaseConsulter;
 import JDBCController.Table;
 import JDBCController.ViewSpecs;
-import RegisterDetailViewProps.RegisterDetail;
-
-import java.awt.*;
 import java.util.ArrayList;
 
 public class HorarioConsulter extends TableViewerOperation {
@@ -108,9 +104,7 @@ public class HorarioConsulter extends TableViewerOperation {
         String[] conditions = new String[]{"turno"};
         String[] values = new String[]{getTurno()};
 
-        ArrayList<String> horas = cons.bringTable(conditions,values).getColumn(0);
-
-        return horas;
+        return cons.bringTable(conditions,values).getColumn(0);
     }
 
     private ArrayList<String> getDias(){
@@ -160,7 +154,7 @@ public class HorarioConsulter extends TableViewerOperation {
         DataBaseConsulter con = new DataBaseConsulter("asignaturas_visible_view");
         ViewSpecs specs = new ViewSpecs("asignaturas_visible_view");
 
-        java.util.List<String> columnsToConsult = specs.getInfo().getTablecols();
+        java.util.List<String> columnsToConsult = specs.getInfo().getTableCols();
             columnsToConsult.remove("grupo");
             columnsToConsult.remove("materia");
             columnsToConsult.remove("profesor");

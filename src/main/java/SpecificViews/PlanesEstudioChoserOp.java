@@ -4,6 +4,7 @@ import JDBCController.DataBaseConsulter;
 import JDBCController.DataBaseUpdater;
 import JDBCController.Table;
 
+import JDBCController.ViewSpecs;
 import RegisterDetailViewProps.RegisterDetail;
 import sistemaceb.*;
 import sistemaceb.form.FormDialogMessage;
@@ -84,15 +85,16 @@ public class PlanesEstudioChoserOp extends Operation{
 
         String nuevoPlan = data.get("clave_plan");
         if(nuevoPlan != null){
+
             ArrayList<String> keys = new ArrayList<>();
-            keys.add("plan");
-            keys.add("grupo");
+                keys.add("plan");
+                keys.add("grupo");
             ArrayList<String> values = new ArrayList<>();
-            values.add(nuevoPlan);
-            values.add(keyValue);
+                values.add(nuevoPlan);
+                values.add(keyValue);
 
             try {
-                new DataBaseUpdater("plan_grupo").insert(keys,values);
+                new ViewSpecs("plan_grupo").getUpdater().insert(keys,values);
             } catch (SQLException throwables) {
                 throwables.printStackTrace();
             }

@@ -30,7 +30,7 @@ public class ConditionedOptionsGetter extends CommonRegistersGetter{
     public ArrayList<ConditionedTable> getColumnsOptionsGetters(){
         ArrayList<ConditionedTable> conditionedTables = new ArrayList<>();
 
-        ArrayList<String> tables = specs.getForeignColsTables();
+        ArrayList<String> tables = specs.getInfo().getForeignTables();
         ArrayList<String> cols  = specs.getForeignCols();
 
         int size = tables.size();

@@ -57,7 +57,7 @@ public class CommonRegistersGetter implements optionsGetter {
     private ArrayList<ConditionedTable> detNativeForTags(){
         ArrayList<ConditionedTable> forTags = new ArrayList();
 
-        ArrayList<String> tables = specs.getForeignColsTables();
+        ArrayList<String> tables = specs.getInfo().getForeignTables();
         ArrayList<String> tags = specs.getForeignCols();
 
         for(int i = 0;i < tables.size();i++){

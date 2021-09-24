@@ -67,7 +67,7 @@ public abstract class ConsultTableBuild {
             }
 
         });
-        ArrayList<String> searchTags = viewSpecs.getInfo().getTags().get(1);
+        ArrayList<String> searchTags = viewSpecs.getInfo().getTags();
         searchBar.addItems(searchTags);
         
         return searchBar;

@@ -5,16 +5,12 @@
  */
 package JDBCController;
 
-import Tables.AdapTableFE;
 import sistemaceb.form.Global;
 
-import javax.swing.*;
-import java.awt.*;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -112,16 +108,6 @@ public class DataBaseConsulter {
             res.append("'");
         return res.toString();
     }
-
-    public Table executeFunction(String function){
-        
-        return buildRegisters("Select " + function);
-    } 
-    
-    public Table call(String procedure){
-        
-        return buildRegisters("call " +  procedure);
-    }
    
     private Table  buildRegisters( String query){
         System.out.println(query);
@@ -149,10 +135,7 @@ public class DataBaseConsulter {
             ex.printStackTrace();
         }
 
-        Table returnTable = new Table(columns,newTable);
-
-        return  returnTable;
-
+        return new Table(columns,newTable);
     }
     
     private ArrayList<String> getColumns(ResultSet response){

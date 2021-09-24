@@ -15,7 +15,6 @@ import java.util.Map;
  */
 public class ViewUpdater {
     
-    private  final DataBaseUpdater updater;
     private final DBTableMetadata metadata;
     private final String table;
     private  final ArrayList<String> tableTags;
@@ -25,7 +24,6 @@ public class ViewUpdater {
     public ViewUpdater(String view){
         table = view;
         specs = new ViewSpecs(view);
-        updater = new DataBaseUpdater(view);
         metadata = new DBTableMetadata(table);
         tableTags = determinateTableTags();
     }
@@ -36,7 +34,7 @@ public class ViewUpdater {
         ArrayList<String> responseValues = new ArrayList(data.values());
 
         try {
-            updater.insert(responseTitles, responseValues);
+            specs.getUpdater().insert(responseTitles, responseValues);
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }

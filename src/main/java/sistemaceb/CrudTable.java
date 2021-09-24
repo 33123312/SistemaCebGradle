@@ -69,7 +69,7 @@ public class CrudTable extends KeyedTableBehavior {
             @Override
             public void mousePressed(MouseEvent e) {
                 super.mousePressed(e);
-                ArrayList<String> updateConditions  = build.viewSpecs.getInfo().getTablecols();
+                ArrayList<String> updateConditions  = build.viewSpecs.getInfo().getTableCols();
                 ArrayList<String> updateValues = table.getTrueData(selectedRow);
 
                 rowUpdateConfirmationFrame confirmationForm = new rowUpdateConfirmationFrame(
@@ -134,7 +134,7 @@ public class CrudTable extends KeyedTableBehavior {
                                   @Override
                                   public void genericEvent() {
                                       try {
-                                          new DataBaseUpdater(viewSpecs.getInfo().getView()).update(responseTitles, responseValues, updateConditions2, selectedRegister);
+                                          viewSpecs.getUpdater().update(responseTitles, responseValues, updateConditions2, selectedRegister);
                                       } catch (SQLException throwables) {
                                           throwables.printStackTrace();
                                           new FormDialogMessage("Error","El registro que se ha intentdo añadir ya existe");

@@ -6,16 +6,18 @@ public class DBSTate {
     public  String loadedPeriodo;
     public  String currentDatabase;
     public  boolean periodIsPair;
+    private Table mainTables;
 
     public DBSTate(){
         currentDatabase = "cebdatabase";
         resetPeriodo();
     }
 
-    public  Table getMainTables(){
-        DataBaseConsulter consulter = new DataBaseConsulter("viewsspecs.mainviewsview");
+    public Table getMainTables(){
+        if( mainTables == null)
+            mainTables = new DataBaseConsulter("viewsspecs.mainviewsview").bringTable();
 
-        return  consulter.bringTable();
+        return mainTables;
     }
 
 

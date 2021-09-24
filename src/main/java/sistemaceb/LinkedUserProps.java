@@ -39,7 +39,7 @@ public class LinkedUserProps extends JPanel {
         ArrayList<String> foreignTables;
 
         foreignColumns = specs.getForeignCols();
-        foreignTables = specs.getForeignColsTables();
+        foreignTables = specs.getInfo().getForeignTables();
 
         linkTags = new ArrayList<>();
         linkTable = new ArrayList<>();

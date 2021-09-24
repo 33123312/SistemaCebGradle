@@ -59,7 +59,7 @@ public class AsignturasPillChoser extends RegisterDetailTable {
                                 values.add(critValue);
 
                             try {
-                                new DataBaseUpdater("asignaturas").insert(cond,values);
+                                new ViewSpecs("asignaturas").getUpdater().insert(cond,values);
                             } catch (SQLException throwables) {
                                 throwables.printStackTrace();
                                 new FormDialogMessage("Error","El registro que se ha intentado insertar ya éxiste en la base de datos, no se puede insertar nuevamente");
@@ -136,7 +136,7 @@ public class AsignturasPillChoser extends RegisterDetailTable {
 
                 ArrayList<String> updateConditionsCols = viewSpecs.getCol(updateConditions);
                 try {
-                    new DataBaseUpdater("asignaturas").update(cond,values,updateConditionsCols,updateValues);
+                    new ViewSpecs("asignaturas").getUpdater().update(cond,values,updateConditionsCols,updateValues);
                 } catch (SQLException throwables) {
                     throwables.printStackTrace();
                 }

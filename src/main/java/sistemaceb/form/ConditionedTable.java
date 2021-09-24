@@ -5,9 +5,8 @@
  */
 package sistemaceb.form;
 
-import JDBCController.DBTableMetadata;
 import JDBCController.DataBaseConsulter;
-import JDBCController.DBU;
+
 import JDBCController.Table;
 import JDBCController.ViewSpecs;
 import java.util.ArrayList;
@@ -217,17 +216,10 @@ ConditionedTable {
         return objectiveTable;
     }
 
-    public boolean hasRelations(){
-
-        return !conditionsTranslations.isEmpty();
-    }
-    
-
-
     public void determinateViewRelations(ArrayList<ConditionedTable> getters){
         String table = specs.getTable();
 
-        ArrayList<String> thisForeignViewsNameCol = specs.getForeignRawCols();
+        ArrayList<String> thisForeignViewsNameCol = specs.getInfo().getForeignRawCols();
         ArrayList<String> thisForeignViewsName = specs.getTag(thisForeignViewsNameCol);
 
         for(ConditionedTable viewToEvaluate:getters){

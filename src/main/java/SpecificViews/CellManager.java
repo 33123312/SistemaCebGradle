@@ -89,7 +89,7 @@ public class CellManager {
             insertiveCols.addAll(backend.getConditions());
             deleteIfExists();
             try {
-                new DataBaseUpdater(insertTable).insert(insertiveCols, insertVal);
+                new ViewSpecs(insertTable).getUpdater().insert(insertiveCols, insertVal);
             } catch (SQLException throwables) {
                 throwables.printStackTrace();
             }

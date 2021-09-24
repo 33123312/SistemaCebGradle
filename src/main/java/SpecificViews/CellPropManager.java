@@ -3,6 +3,7 @@ package SpecificViews;
 import JDBCController.DataBaseConsulter;
 import JDBCController.DataBaseUpdater;
 import JDBCController.Table;
+import JDBCController.ViewSpecs;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -74,7 +75,7 @@ public class CellPropManager {
         if(response.isEmpty()){
             ArrayList<String> insertVal = getInserccVal(getKey());
             try {
-                new DataBaseUpdater(back.insertTable).insert(insertiveCols,insertVal);
+                new ViewSpecs(back.insertTable).getUpdater().insert(insertiveCols,insertVal);
             } catch (SQLException throwables) {
                 throwables.printStackTrace();
             }
@@ -102,7 +103,7 @@ public class CellPropManager {
 
 
         try {
-            new DataBaseUpdater("calificaciones").insert(cols,val);
+            new ViewSpecs("calificaciones").getUpdater().insert(cols,val);
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
@@ -130,7 +131,7 @@ public class CellPropManager {
             insertValA.add(newValue);
 
         try {
-            new DataBaseUpdater(back.insertTable).update(insertColA,insertValA,insertiveCols,currentValues);
+            new ViewSpecs(back.insertTable).getUpdater().update(insertColA,insertValA,insertiveCols,currentValues);
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }

@@ -3,6 +3,7 @@ package sistemaceb;
 import Generals.BtnFE;
 import JDBCController.DBSTate;
 import JDBCController.DataBaseUpdater;
+import JDBCController.ViewSpecs;
 import JDBCController.dataType;
 import SpecificViews.GrupoPasserInfoStorage;
 import SpecificViews.LinearHorizontalLayout;
@@ -297,7 +298,7 @@ public class SemestrePasador extends Window{
             periodoNewValue.add(getNewParidad());
 
         try {
-            new DataBaseUpdater("periodos").insert(periodoString,periodoNewValue);
+            new ViewSpecs("periodos").getUpdater().insert(periodoString,periodoNewValue);
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
@@ -328,7 +329,7 @@ public class SemestrePasador extends Window{
             periodoOldValue.add(oldPeriodo);
 
         try {
-            new DataBaseUpdater("currentperiodo").
+            new ViewSpecs("currentperiodo").getUpdater().
                 update(
                     periodoStringToMod,
                     newPeriodoArray,

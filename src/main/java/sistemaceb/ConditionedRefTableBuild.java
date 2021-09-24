@@ -89,8 +89,7 @@ public class ConditionedRefTableBuild extends NewRegisterGenTableBuild {
                 updateConditions =  viewSpecs.getCol(updateConditions);
 
                 try {
-                    new DataBaseUpdater(viewSpecs.getTable())
-                            .update(responseTitles,responseValues,updateConditions,updateValues);
+                    viewSpecs.getUpdater().update(responseTitles,responseValues,updateConditions,updateValues);
                 } catch (SQLException throwables) {
                     throwables.printStackTrace();
                 }

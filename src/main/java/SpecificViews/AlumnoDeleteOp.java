@@ -1,6 +1,7 @@
 package SpecificViews;
 
 import JDBCController.DataBaseUpdater;
+import JDBCController.ViewSpecs;
 import RegisterDetailViewProps.RegisterDetail;
 import sistemaceb.form.FormDialogMessage;
 import sistemaceb.genericEvents;
@@ -47,7 +48,7 @@ public class AlumnoDeleteOp extends Operation{
             values.add(keyValue);
 
         try {
-            new DataBaseUpdater("alumnos").update(colstoChange,valuesToChange,cond,values);
+            new ViewSpecs("alumnos").getUpdater().update(colstoChange,valuesToChange,cond,values);
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }

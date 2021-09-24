@@ -82,12 +82,10 @@ public class MultipleAdderConsultBuild extends keyHiddedCoonsTableBuild {
                 valuesToInsert.add(critValue);
                 valuesToInsert.add("");
 
-                DataBaseUpdater updater =  new DataBaseUpdater(viewSpecs.getTable());
-
                 for (String key:data){
                     valuesToInsert.set(1,key);
                     try {
-                        updater.insert(columnsToInsert,valuesToInsert);
+                        viewSpecs.getUpdater().insert(columnsToInsert,valuesToInsert);
                     } catch (SQLException throwables) {
                         throwables.printStackTrace();
                     }

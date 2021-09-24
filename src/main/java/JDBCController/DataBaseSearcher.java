@@ -155,8 +155,11 @@ public class DataBaseSearcher{
             Table unsortedVisible = visibleTagsConsulter.bringTable();
 
             unsortedVisible.setColumnTitles(specs.getTag(unsortedVisible.getColumnTitles()));
+
             merge(unsortedVisible, unsortedView);
+
             complexSearcher visibleSearcher = getSearcher(unsortedVisible,specs.getVisibleTags());
+
             mergeRates(visibleSearcher, viewSearcher);
 
            return visibleSearcher.getRatedNSortedRegisters();
@@ -184,6 +187,7 @@ public class DataBaseSearcher{
 
     private void mergeRates(complexSearcher visible,complexSearcher view){
         int[] visibleRates = visible.getRegistersRates();
+
         int[] viewRates = view.getRegistersRates();
 
         int[] mergedRates = new int[viewRates.length];

@@ -14,7 +14,6 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import javax.swing.*;
-import javax.swing.border.Border;
 
 import RegisterDetailViewProps.RegisterDetail;
 import SpecificViews.DefaultRegisterDetailTable;
@@ -74,26 +73,25 @@ public class RegisterDetailView extends Window {
         ScrollView.setViewportView(body);
 
         setTitle(buildWindowTitle());
-
     }
 
     private JPanel deployRegisterInfoContainer() {
         JPanel parentContainer = new JPanel(new BorderLayout());
-        parentContainer.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
-        parentContainer.setBackground(Color.white);
+            parentContainer.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+            parentContainer.setBackground(Color.white);
 
         JPanel controlsNTitlePanel = headerHeader();
+            parentContainer.add(controlsNTitlePanel, BorderLayout.NORTH);
 
-        parentContainer.add(controlsNTitlePanel, BorderLayout.NORTH);
         JPanel reg = new LinkedUserProps(viewSpecs, registerInfo.getViewRegisters());
-        parentContainer.add(reg, BorderLayout.CENTER);
+            parentContainer.add(reg, BorderLayout.CENTER);
 
         return parentContainer;
     }
 
     private JPanel headerHeader() {
         JPanel generalContainer = new JPanel(new BorderLayout());
-        generalContainer.setOpaque(false);
+            generalContainer.setOpaque(false);
 
         JLabel humnKeyLabel = new JLabel();
 
@@ -104,7 +102,6 @@ public class RegisterDetailView extends Window {
         generalContainer.add(deployControlsPanel(), BorderLayout.EAST);
 
         return generalContainer;
-
     }
 
     private infoPackage searchForRegisterInfo() {
@@ -116,7 +113,6 @@ public class RegisterDetailView extends Window {
         return registerInfo;
     }
 
-
     private JPanel deployTablesPanel() {
         JPanel parentContainer = new JPanel(new GridLayout(1, 1));
         parentContainer.setBorder(BorderFactory.createEmptyBorder(30, 0, 0, 0));
@@ -126,14 +122,11 @@ public class RegisterDetailView extends Window {
         return parentContainer;
     }
 
-
     SwitcheableWindowPills pillsArea;
     private SwitcheableWindowPills getPills( ) {
         pillsArea = new SwitcheableWindowPills();
         return pillsArea;
     }
-
-
 
     public void addCustomPill(RegisterDetailTableTrigerer trigerer){
         tablesTrigerers.add(trigerer);
@@ -214,7 +207,6 @@ public class RegisterDetailView extends Window {
                         viewSpecs,
                         primaryKey,
                         registerInfo.getViewRegisters().getRegister(0));
-
         RegisterDetail detail = operationsManager.getProps(viewSpecs.getTable());
         searchForOperations(detail);
         searchForPills(detail);
@@ -253,10 +245,5 @@ public class RegisterDetailView extends Window {
 
         return button;
     }
-
-
-    
-
-    
 
 }

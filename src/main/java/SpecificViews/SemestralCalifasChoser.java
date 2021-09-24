@@ -1,9 +1,6 @@
 package SpecificViews;
 
-import JDBCController.DataBaseConsulter;
-import JDBCController.DataBaseUpdater;
-import JDBCController.Table;
-import JDBCController.dataType;
+import JDBCController.*;
 import sistemaceb.FormResponseManager;
 import sistemaceb.form.Formulario;
 import sistemaceb.form.HorizontalFormPanel;
@@ -91,7 +88,7 @@ public class SemestralCalifasChoser extends  HorizontalFormPanel{
             insertValA.add(califa);
 
         try {
-            new DataBaseUpdater("calificaciones_semestrales").insert(insertColA,insertValA);
+            new ViewSpecs("calificaciones_semestrales").getUpdater().insert(insertColA,insertValA);
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
@@ -113,7 +110,7 @@ public class SemestralCalifasChoser extends  HorizontalFormPanel{
             insertiveValues.add(currentKey);
 
         try {
-            new DataBaseUpdater("calificaciones_semestrales").update(insertColA,insertValA,insertiveCols,insertiveValues);
+            new ViewSpecs("calificaciones_semestrales").getUpdater().update(insertColA,insertValA,insertiveCols,insertiveValues);
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }

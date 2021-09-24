@@ -42,7 +42,6 @@ public class DefaultModifyRegisterOp extends Operation{
                     updateForm.getFrame();
 
                     Map<String, String> trueData = form.getData();
-                    DataBaseUpdater dataUpdater = new DataBaseUpdater(viewSpecs.getInfo().getView());
 
                     ArrayList<String> responseTagTitles = new ArrayList<>(trueData.keySet());
                     ArrayList<String> responseValues = new ArrayList<>(trueData.values());
@@ -66,7 +65,7 @@ public class DefaultModifyRegisterOp extends Operation{
                         @Override
                         public void genericEvent(){
                             try {
-                                dataUpdater.update(responseTitles,responseValues,updateConditions,updateValues);
+                                viewSpecs.getUpdater().update(responseTitles,responseValues,updateConditions,updateValues);
                             } catch (SQLException throwables) {
                                 throwables.printStackTrace();
                             }

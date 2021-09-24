@@ -23,6 +23,8 @@ sistemaceb/GrupoSemestrePasador.java
  sistemaceb.GrupoSemestrePasador
 SpecificViews/HorarioConsulter.java
  SpecificViews.HorarioConsulter
+JDBCController/SpecsInfo.java
+ JDBCController.SpecsInfo
 sistemaceb/form/ErrorChecker.java
  sistemaceb.form.ErrorChecker
 SpecificViews/BitacoraMateriaGrupo.java
@@ -54,7 +56,7 @@ SpecificViews/newMateriPlanos.java
  SpecificViews.newMateriPlanos$1
 JDBCController/ViewSpecs.java
  JDBCController.ViewSpecs
- JDBCController.ViewSpecs$SpecsInfo
+ JDBCController.ViewSpecs$Updater
 SpecificViews/SimplePdfTableGenerator.java
  SpecificViews.SimplePdfTableGenerator
 sistemaceb/form/Section.java

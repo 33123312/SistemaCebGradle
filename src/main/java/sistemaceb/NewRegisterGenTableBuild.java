@@ -51,8 +51,8 @@ public class NewRegisterGenTableBuild extends keyHiddedCoonsTableBuild {
 
     private Map<String,String> getVirtuals() {
         Map<String,String> virtuals = new HashMap<>();
-        ArrayList<String> parentTables = parentSpecs.getForeignColsTables();
-        ArrayList<String> thisTables = viewSpecs.getForeignColsTables();
+        ArrayList<String> parentTables = parentSpecs.getInfo().getForeignTables();
+        ArrayList<String> thisTables = viewSpecs.getInfo().getForeignTables();
 
         ArrayList<String> mergedParentCols = new ArrayList<>();
         ArrayList<String> mergedThisCols = new ArrayList<>();

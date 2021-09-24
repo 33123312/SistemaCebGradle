@@ -33,13 +33,28 @@ public class GrupoOperator {
         if(materias.equals("Numérica"))
             return getMaterias("Numérica");
         else
-            return getMaterias("Boleana");
+            return
+                    getMaterias("Boleana");
     }
+
 
     public Table getMaterias(){
-        return getMaterias("");
-    }
+        if(plan != null) {
+            DataBaseConsulter consulter = new DataBaseConsulter("planes_estudio_materias_view");
 
+            String[] columnsToBring = new String[]{"materia","nombre_materia"};
+
+            String[] cond = new String[]{"clave_plan"};
+
+            String[] value = new String[]{plan};
+
+            Table materias = consulter.bringTable(columnsToBring, cond, value);
+
+            return materias;
+
+        } else
+            return new Table(new ArrayList<>(),new ArrayList<>());
+    }
 
     public Table getMaterias(String tipo){
         if(plan != null) {
