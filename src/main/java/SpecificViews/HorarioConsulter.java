@@ -98,13 +98,10 @@ public class HorarioConsulter extends TableViewerOperation {
         return consulter.bringTable(colsBring, cond, values).getUniqueValue();
     }
 
-    private ArrayList getHoras(){
-        DataBaseConsulter cons = new DataBaseConsulter("horas_clase");
+    private ArrayList<String> getHoras(){
 
-        String[] conditions = new String[]{"turno"};
-        String[] values = new String[]{getTurno()};
 
-        return cons.bringTable(conditions,values).getColumn(0);
+        return CalifasOperator.getHorasClase(getTurno());
     }
 
     private ArrayList<String> getDias(){

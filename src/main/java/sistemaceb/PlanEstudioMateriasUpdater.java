@@ -1,6 +1,7 @@
 package sistemaceb;
 
 import JDBCController.DataBaseUpdater;
+import JDBCController.ViewSpecs;
 import SpecificViews.GrupoOperator;
 
 import java.sql.SQLException;
@@ -52,7 +53,7 @@ public class PlanEstudioMateriasUpdater {
                 values.add(value);
 
             try {
-                new DataBaseUpdater(table).delete(cond,values);
+                new ViewSpecs(table).getUpdater().delete(cond,values);
             } catch (SQLException throwables) {
                 throwables.printStackTrace();
             }

@@ -78,7 +78,7 @@ public class CrudTable extends KeyedTableBehavior {
                           @Override
                           public void genericEvent(){
                               try {
-                                  new DataBaseUpdater(viewSpecs.getTable()).delete(updateConditions,updateValues);
+                                  viewSpecs.getUpdater().delete(updateConditions,updateValues);
                               } catch (SQLException throwables) {
                                   throwables.printStackTrace();
                               }

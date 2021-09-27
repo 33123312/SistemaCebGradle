@@ -14,6 +14,7 @@ public class DInamicWindow extends DinamicPanel {
 
     public void setView(ViewAdapter view) {
         super.setView(view);
+        view.getWIndow().update();
         currentWindow = view;
     }
 }

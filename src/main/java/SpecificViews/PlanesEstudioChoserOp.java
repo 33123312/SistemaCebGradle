@@ -30,9 +30,6 @@ public class PlanesEstudioChoserOp extends Operation{
         updater = new PlanEstudioMateriasUpdater(keyValue);
         deployForm();
     }
-
-
-
     private void deployForm (){
         FormWindow formulario = new FormWindow("Cambiar Plan de Estudio");
             formulario.addDesplegableMenu("Nuevo Plan").setOptions(getPlanes());
@@ -78,7 +75,7 @@ public class PlanesEstudioChoserOp extends Operation{
             originalValues.add(keyValue);
 
         try {
-            new DataBaseUpdater("plan_grupo").delete(origCond, originalValues);
+            new ViewSpecs("plan_grupo").getUpdater().delete(origCond, originalValues);
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
@@ -100,10 +97,7 @@ public class PlanesEstudioChoserOp extends Operation{
             }
         }
 
-
         updater.makeUpdate();
     }
-
-
 
 }

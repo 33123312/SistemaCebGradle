@@ -4,6 +4,7 @@ import Generals.BtnFE;
 import Generals.DesplegableMenuFE;
 import JDBCController.DBU;
 import JDBCController.DataBaseUpdater;
+import JDBCController.ViewSpecs;
 import sistemaceb.LinkedTable;
 import sistemaceb.form.MultipleAdderConsultBuild;
 import sistemaceb.primaryKeyedTable;
@@ -59,7 +60,7 @@ public class LinkedInterTable extends LinkedTable {
 
         cols = build.getViewSpecs().getCol(cols);
         try {
-            new DataBaseUpdater(interTable).delete(cols,values);
+            new ViewSpecs(interTable).getUpdater().delete(cols,values);
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }

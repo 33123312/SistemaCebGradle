@@ -3,6 +3,7 @@ package SpecificViews;
 import JDBCController.DataBaseConsulter;
 import JDBCController.DataBaseUpdater;
 import JDBCController.Table;
+import JDBCController.ViewSpecs;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -30,7 +31,7 @@ public class GrupoHorarioChecker {
         }
 
         try {
-            new DataBaseUpdater("horarios").delete(cond,val);
+            new ViewSpecs("horarios").getUpdater().delete(cond,val);
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }

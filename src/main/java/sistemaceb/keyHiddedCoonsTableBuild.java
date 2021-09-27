@@ -26,6 +26,9 @@ public class keyHiddedCoonsTableBuild extends ConsultTableBuild{
     protected ArrayList<String> getRemovedVisibleTags() {
         ArrayList<String> tagsToInsert = viewSpecs.getVisibleTags();
             tagsToInsert.remove(critCol);
+
+        if (viewSpecs.hasHumanKey())
+            tagsToInsert.remove(viewSpecs.getInfo().getHumanKey());
         return tagsToInsert;
     }
 

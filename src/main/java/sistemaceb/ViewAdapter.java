@@ -23,14 +23,12 @@ public class ViewAdapter extends  JPanel{
         further = null;
         thisWindow = view;
         view.addButtons(getButtons());
-        view.update();
     }
     protected void changeView(ViewAdapter nextView){
         addToContainer(nextView);
         Global.view.currentWindow = nextView;
 
     }
-
 
     public Window getWIndow(){
         return thisWindow;
@@ -105,15 +103,8 @@ public class ViewAdapter extends  JPanel{
     }
 
     private void addToContainer(ViewAdapter view){
-        Container parent = Global.view;
-        parent.setVisible(false);
-        parent.removeAll();
-        parent.add(view);
-        parent.setVisible(true);
-
+         Global.view.setView(view);
     }
-
-
 
     public JPanel getButtons(){
         buttons.setBorder(BorderFactory.createEmptyBorder(0,5,0,5));

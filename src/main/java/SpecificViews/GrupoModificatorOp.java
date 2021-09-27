@@ -3,6 +3,7 @@ package SpecificViews;
 import JDBCController.DataBaseConsulter;
 import JDBCController.DataBaseUpdater;
 import JDBCController.TableRegister;
+import JDBCController.ViewSpecs;
 import RegisterDetailViewProps.RegisterDetail;
 import sistemaceb.FormResponseManager;
 import sistemaceb.form.Formulario;
@@ -77,7 +78,7 @@ public class GrupoModificatorOp extends DefaultModifyRegisterOp{
                 values.add(grupo);
 
             try {
-                new DataBaseUpdater("horarios").delete(cond,values);
+                new ViewSpecs("horarios").getUpdater().delete(cond,values);
             } catch (SQLException throwables) {
                 throwables.printStackTrace();
             }

@@ -191,6 +191,10 @@ public class AsignturasPillChoser extends RegisterDetailTable {
 
         Table response = operator.getMaterias();
 
+        if (response.isEmpty()){
+            new FormDialogMessage("Error", "no se hn encontrado materias para este grupo,esto pueeser debia a que no hay un plan asignado, o bien, a que el plan asignado no tiene materias");
+        }
+
         ArrayList<String> humanValues = response.getColumn(1);
         ArrayList<String> keyValues = response.getColumn(0);
 

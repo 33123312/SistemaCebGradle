@@ -28,13 +28,8 @@ public class BoletaConsulter extends TableViewerPDFOp{
     }
 
     private ArrayList<String> getEvaluaciones(){
-        ArrayList<String> evaluaciones = new ArrayList<>();
-            evaluaciones.add("1ra");
-            evaluaciones.add("2ra");
-            evaluaciones.add("3ra");
-            evaluaciones.add("4Ta");
 
-        return evaluaciones;
+        return CalifasOperator.getEvaluaciones();
     }
 
     private void deploy(){

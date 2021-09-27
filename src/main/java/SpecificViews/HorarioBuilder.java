@@ -80,14 +80,8 @@ public class HorarioBuilder extends MultipleFormsOperation{
     }
 
     private ArrayList getHorasClase(){
-        DataBaseConsulter cons = new DataBaseConsulter("horas_clase");
 
-        String[] conditions = new String[]{"turno"};
-
-        String[] values = new String[]{getTurno()};
-
-        ArrayList<String> horas = cons.bringTable(conditions,values).getColumn(0);
-        return horas;
+        return CalifasOperator.getHorasClase(getTurno());
     }
 
 

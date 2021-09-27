@@ -47,13 +47,7 @@ public class ConcentradoTodasMateriasOp extends TableViewerPDFOp{
     }
 
     public ArrayList<String> getEvaluaciones() {
-        ArrayList<String> dias = new ArrayList<>();
-        dias.add("1ra");
-        dias.add("2ra");
-        dias.add("3ra");
-        dias.add("4Ta");
-
-        return dias;
+        return CalifasOperator.getEvaluaciones();
     }
 
     private ConcentradoTodasMateriasPDF getDoc(){

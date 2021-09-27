@@ -112,7 +112,7 @@ public class CellManager {
 
     private void delete(ArrayList<String> cols,ArrayList<String> values){
         try {
-            new DataBaseUpdater(insertTable).delete(cols,values);
+            new ViewSpecs(insertTable).getUpdater().delete(cols,values);
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }

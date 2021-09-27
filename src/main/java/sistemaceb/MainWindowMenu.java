@@ -47,7 +47,7 @@ public class MainWindowMenu extends MenuListsContainer {
     private void addToolsSubMenu()  {
         ListButton list = addNewSubmenu("Herramientas","images/tablasIcon.png");
 
-        //list.addButton("Pasar de periodo", new SemestrePasador());
+        list.addButton("Pasar de periodo", new SemestrePasador());
 
     }
     

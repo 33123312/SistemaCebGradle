@@ -283,9 +283,9 @@ public class ViewSpecs {
     }
     public class Updater{
 
-        private void delete(ArrayList<String> columnCondition,ArrayList<String> values) throws SQLException {
+        public void delete(ArrayList<String> columnCondition, ArrayList<String> values) throws SQLException {
             String query = "delete from " + table + " where "  + stringifyConditions(columnCondition,values);
-            //System.out.println(query);
+            System.out.println(query);
             info.flushCount();
             Global.SQLConector.getMyStatment().executeUpdate(query);
 

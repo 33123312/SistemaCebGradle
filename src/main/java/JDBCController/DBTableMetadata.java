@@ -18,24 +18,20 @@ import java.util.logging.Logger;
 public class DBTableMetadata{
     
         private DatabaseMetaData metadata;
-        String table;
+        private String table;
 
         public DBTableMetadata(String table){
             super();
             this.table = table;
 
         }
-        
-        public DatabaseMetaData getMetadata(){
-            return metadata;
-        }
-        
+
         public ArrayList<String>  getColumnsMetadata(String popiertyToGet){
         makeMetadataConection();
                 ArrayList<String> ColumnsList = new ArrayList();
 
         try {
-            ResultSet columns = metadata.getColumns(null,null,table,null);
+            ResultSet columns = getMetadata().getColumns(null,null,table,null);
 
             while(columns.next())
                 ColumnsList.add(columns.getString(popiertyToGet));
@@ -72,7 +68,7 @@ public class DBTableMetadata{
         ArrayList<String> columnNames = new ArrayList();
         try {
             ResultSet primaryKeyColumn = null;
-             primaryKeyColumn = metadata.getPrimaryKeys(Global.SQLConector.getMyCon().getCatalog(), null, table);
+             primaryKeyColumn = getMetadata().getPrimaryKeys(Global.SQLConector.getMyCon().getCatalog(), null, table);
              while(primaryKeyColumn.next()){
                  String columnName = primaryKeyColumn.getString("COLUMN_NAME");
                  columnNames.add(columnName);
@@ -95,7 +91,7 @@ public class DBTableMetadata{
             try {
                 makeMetadataConection();
                 for(String column: columns){
-                    rs = metadata.getColumnPrivileges(Global.SQLConector.getMyCon().getCatalog(),null,table,column);
+                    rs = getMetadata().getColumnPrivileges(Global.SQLConector.getMyCon().getCatalog(),null,table,column);
 
                 while(rs.next()){
                     if (rs.getString("PRIVILEGE").equals(privilege))
@@ -117,7 +113,7 @@ public class DBTableMetadata{
         ArrayList<String> importedKeys = new ArrayList();
         
             try {
-                ResultSet meta = metadata.getImportedKeys(Global.SQLConector.getMyCon().getCatalog(), null, table);
+                ResultSet meta = getMetadata().getImportedKeys(Global.SQLConector.getMyCon().getCatalog(), null, table);
                 while (meta.next())
                     importedKeys.add(meta.getString(order));
                 
@@ -127,6 +123,13 @@ public class DBTableMetadata{
             
             return importedKeys;
         
+    }
+
+    private DatabaseMetaData getMetadata(){
+        if (!Global.SQLConector.checkConection())
+            makeMetadataConection();
+        return metadata;
+
     }
     
     private void makeMetadataConection(){

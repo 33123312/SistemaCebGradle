@@ -26,10 +26,8 @@ public class HorariosPlanosBuilder extends Operation{
     }
 
     private ArrayList<String> getHoras(){
-        DataBaseConsulter consulter = new DataBaseConsulter("horas_clase");
 
-        return consulter.bringTable(new String[]{"hora"}).getColumn(0);
-
+        return CalifasOperator.getHorasClase();
     }
 
     private ArrayList<String> getDias(){

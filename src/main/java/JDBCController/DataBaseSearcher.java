@@ -108,9 +108,8 @@ public class DataBaseSearcher{
             String[] viewTagValuesArray = exactValue.toArray(new String[exactValue.size()]);
 
             List<String> temV = specs.getCol(viewTagTypesArray);
-            String[] rr = new String[temV.size()];
 
-            unsortedViewsTable= consulterView.bringTable(temV.toArray(rr), viewTagValuesArray);
+            unsortedViewsTable= consulterView.bringTable(temV.toArray(new String[temV.size()]), viewTagValuesArray);
         }
 
         unsortedViewsTable.setColumnTitles(specs.getTag(unsortedViewsTable.getColumnTitles()));
@@ -120,6 +119,7 @@ public class DataBaseSearcher{
 
     public infoPackage getSearch(ArrayList<String> columnsToBring) {
         Table unsortedView = getViewExactFiltered();
+
        complexSearcher viewSearcher = getSearcher(unsortedView,specs.getViewTags());
 
         infoPackage pack;
@@ -130,6 +130,7 @@ public class DataBaseSearcher{
             ratedVisibleRegisters = getRatedVisibleView(unsortedView,viewSearcher);
         else
             ratedVisibleRegisters = viewSearcher.getRatedNSortedRegisters();
+
         removeCols(ratedVisibleRegisters,columnsToBring);
         ratedViewRegisters = viewSearcher.getRatedNSortedRegisters();
 
@@ -152,7 +153,9 @@ public class DataBaseSearcher{
     }
 
     private Table getRatedVisibleView(Table unsortedView,complexSearcher viewSearcher){
-            Table unsortedVisible = visibleTagsConsulter.bringTable();
+        Table unsortedVisible = visibleTagsConsulter.bringTable();
+
+
 
             unsortedVisible.setColumnTitles(specs.getTag(unsortedVisible.getColumnTitles()));
 
@@ -163,8 +166,6 @@ public class DataBaseSearcher{
             mergeRates(visibleSearcher, viewSearcher);
 
            return visibleSearcher.getRatedNSortedRegisters();
-
-
     }
 
     private complexSearcher getSearcher(Table unsortedView,ArrayList<String> tags) {
@@ -213,34 +214,57 @@ public class DataBaseSearcher{
 
     }
 
-    private String getPrimaryKey(Table visibleTable, Table viewTable){
-        String prim = specs.getPrimarykey();
-        if(prim == null){
+    private ArrayList<String> getPrimaryKey(Table visibleTable, Table viewTable){
+        ArrayList<String> prim = specs.getPrimaryskey();
+        if(prim.isEmpty()){
             addTempKeys(visibleTable,viewTable);
-            prim = "primary_key";
+            prim.add("primary_key");
         }
 
         return prim;
     }
 
+    private int[] getPrimIndex(ArrayList<String> keys,Table res){
+        int[] index = new int[keys.size()];
+
+        for (int i = 0; i < keys.size();i++)
+            index[i] = res.columnTitles.indexOf(keys.get(i));
+
+        return index;
+
+    }
+
     private void merge(Table visibleTable, Table viewTable) {
-        String prim = getPrimaryKey(visibleTable,viewTable);
+        ArrayList<String> prim = getPrimaryKey(visibleTable,viewTable);
 
         ArrayList<ArrayList<String>> newRegisters = new ArrayList();
         ArrayList<ArrayList<String>> visibleTableReg = visibleTable.getRegisters();
 
-        ArrayList<String> viewTablePrim = viewTable.getColumn(prim);
-        ArrayList<String> visibleTablePrim = visibleTable.getColumn(prim);
+        int[] visiblePrimIndex = getPrimIndex(prim,visibleTable);
+        int[] viewPrimIndex = getPrimIndex(prim,viewTable);
 
-        for (String view:viewTablePrim){
-            int index = visibleTablePrim.indexOf(view);
-            if(index > -1){
-                ArrayList<String> registerToAdd = visibleTableReg.get(index);
-                newRegisters.add( registerToAdd);
-                visibleTableReg.remove(index);
-                visibleTablePrim.remove(index);
-            }
-        }
+        ArrayList<ArrayList<String>> viewRegisters = viewTable.getRegisters();
+        ArrayList<ArrayList<String>> visibleRegisters = visibleTable.getRegisters();
+
+            for (ArrayList<String> viewRow: viewRegisters)
+                for (ArrayList<String> visibleRow: visibleRegisters){
+                    boolean hasCoincidence = true;
+                    for (int i = 0; i < prim.size();i++){
+                        int visibleKey = visiblePrimIndex[i];
+                        int viewKey = viewPrimIndex[i];
+
+                        if(!viewRow.get(viewKey).equals(visibleRow.get(visibleKey))){
+                            hasCoincidence = false;
+                            break;
+                        }
+
+                    }
+                    if(hasCoincidence)
+                        newRegisters.add(visibleRow);
+
+                }
+
+
         visibleTable.setRegisters(newRegisters);
 
         if(viewTable.columnTitles.contains("primary_key")){

@@ -30,7 +30,7 @@ public class DefaultDeleteRegisterOp extends Operation{
         updateConditions = viewSpecs.getCol(updateConditions);
 
         try {
-            new DataBaseUpdater(viewSpecs.getInfo().getView()).delete(updateConditions, updateValues);
+           viewSpecs.getUpdater().delete(updateConditions,updateValues);
         } catch (Exception e){
             FormDialogMessage message = new FormDialogMessage("Error al eliminar el registro",getFormMessage());
             message.addOnAcceptEvent(new genericEvents() {

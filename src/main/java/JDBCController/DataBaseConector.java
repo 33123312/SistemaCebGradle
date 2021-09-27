@@ -8,6 +8,8 @@ package JDBCController;
 import sistemaceb.form.Global;
 
 import java.sql.*;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -20,11 +22,46 @@ public class DataBaseConector {
     
     private Statement myStatment;
     private Connection myCon;
+    private boolean isChecked;
 
     public DataBaseConector(){
         makeConection();
     }
 
+    public boolean checkConection(){
+        if(!isChecked){
+            isChecked = true;
+            activateTimer();
+            if (!makeTestConsult()){
+                makeConection();
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private void activateTimer(){
+        new Timer().schedule(new TimerTask() {
+            @Override
+            public void run() {
+                isChecked = false;
+            }
+        },600000);
+
+    }
+
+
+    private boolean makeTestConsult(){
+
+        System.out.println("makeConsult");
+        try {
+            DataBaseConsulter consulter = new DataBaseConsulter("viewsspecs.tags");
+            consulter.bringTable();
+            return true;
+        } catch(Exception e){
+            return false;
+        }
+    }
 
     public void endConection(){
         try {
@@ -36,6 +73,7 @@ public class DataBaseConector {
     }
 
     public Statement getMyStatment() {
+        checkConection();
         return myStatment;
     }
 

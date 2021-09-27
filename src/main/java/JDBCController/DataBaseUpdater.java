@@ -35,17 +35,6 @@ public class DataBaseUpdater {
 
 
 
-    
-    public void delete (ArrayList<String> columnCondition,ArrayList<String> values) throws SQLException {
-        /*if(specs.getPrimaryskey().size() == 1){
-            String primaryKey = DBU.getColumn(specs.getPrimarykey(),specs.getTable()) ;
-            int keyIndex = columnCondition.indexOf(primaryKey);
-            deleteRelatedTables(values.get(keyIndex));
-        }
-        */
-        //deleteRegister(columnCondition,values);
-    }
-
     private void deleteRelatedTables(String value){
         ArrayList<String> relatedTables = specs.getRelatedTables();
         for(String table: relatedTables){

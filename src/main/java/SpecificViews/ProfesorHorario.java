@@ -119,7 +119,7 @@ public class ProfesorHorario extends Operation {
     }
 
     private ArrayList<String> getHorasClase(){
-        return new DataBaseConsulter("horas_clase").bringTable().getColumn(0);
+        return CalifasOperator.getHorasClase();
     }
 
 

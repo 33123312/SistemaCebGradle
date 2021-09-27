@@ -61,7 +61,7 @@ public class GrupoSemestrePasador {
         val.add(alumno);
 
         try {
-            new DataBaseUpdater(table).delete(cond,val);
+            new ViewSpecs(table).getUpdater().delete(cond,val);
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
@@ -85,8 +85,6 @@ public class GrupoSemestrePasador {
         ArrayList<String> califasKeys = getCalificacionesKeys(alumno);
         removeCalificacionesEtapas(califasKeys);
 
-        DataBaseUpdater califasUpdater = new DataBaseUpdater("calificaciones");
-
             ArrayList<String> colToDelete = new ArrayList<>();
                 colToDelete.add("clave_alumno");
 
@@ -94,7 +92,7 @@ public class GrupoSemestrePasador {
                 values.add(alumno);
 
             try {
-                califasUpdater.delete(colToDelete,values);
+                new ViewSpecs("calificaciones").getUpdater().delete(colToDelete,values);
             } catch (SQLException throwables) {
                 throwables.printStackTrace();
             }
@@ -102,7 +100,7 @@ public class GrupoSemestrePasador {
     }
 
     private void removeEtapasFromTable(String table,ArrayList<String> califasKeys){
-        DataBaseUpdater updater = new DataBaseUpdater(table);
+        ViewSpecs updater = new ViewSpecs(table);
 
         ArrayList<String> cols = new ArrayList<>();
             cols.add("calificacion_clave");
@@ -112,7 +110,7 @@ public class GrupoSemestrePasador {
             valueBol.add(key);
 
             try {
-                updater.delete(cols,valueBol);
+                updater.getUpdater().delete(cols,valueBol);
             } catch (SQLException throwables) {
                 throwables.printStackTrace();
             }
@@ -145,7 +143,7 @@ public class GrupoSemestrePasador {
             values.add(alumno);
 
         try {
-            new DataBaseUpdater("alumnos").delete(colsToSet,values);
+            new ViewSpecs("alumnos").getUpdater().delete(colsToSet,values);
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
