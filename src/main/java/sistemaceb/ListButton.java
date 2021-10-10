@@ -73,35 +73,8 @@ public  class ListButton extends JPanel {
         
     }
     
-    public void addButton(String title, CrudCerator creator){
-        
-        MouseAdapter event = new MouseAdapter(){
-            @Override
-            public void mousePressed(MouseEvent arg0){
-                Global.view.setView(new ViewAdapter(creator.create()));
 
-            }
-        };
-
-        addBtn(title,event);
-            }
-
-    public void addButton(String title, Window window){
-
-        MouseAdapter event = new MouseAdapter(){
-            @Override
-            public void mousePressed(MouseEvent arg0){
-                Global.view.setView(new ViewAdapter(window));
-            }
-        };
-
-        addBtn(title,event);
-    }
-
-    private void addBtn(String title,MouseAdapter event){
-        BtnFE newButton = buildButton(title);
-        newButton.addMouseListener(event);
-
+    public void addButton(BtnFE newButton){
         GridBagConstraints cons = new GridBagConstraints();
         cons.gridy = buttonsCounter;
         cons.weightx =  1;
@@ -113,13 +86,63 @@ public  class ListButton extends JPanel {
         buttonsCounter++;
 
     }
-    private BtnFE buildButton(String title){
-        BtnFE newButton = new BtnFE(title);
-        newButton.setPadding(10,40,10,10);
-        newButton.setBackground(new Color(51, 67, 156));
-        newButton.setAlignmentWest();
-        return newButton;
-    }   
+
+
+    public interface WindowBuiler{
+
+        public Window buildWindow();
+    }
+
+    public static class Button extends BtnFE{
+        Window window;
+        WindowBuiler builder;
+
+        public Button(String title){
+            super(title);
+            setPadding(10,40,10,10);
+            setBackground(new Color(51, 67, 156));
+            setAlignmentWest();
+
+        }
+
+        public Button(String title,MouseAdapter e){
+            this(title);
+            addMouseListener(e);
+        }
+
+        public Button(String title,WindowBuiler builder){
+            this(title);
+            this.builder = builder;
+
+        }
+
+        public Button reBuildWindow(){
+            addMouseListener(new MouseAdapter() {
+                @Override
+                public void mousePressed(MouseEvent e) {
+                    super.mousePressed(e);
+                    Global.view.setView(new ViewAdapter(builder.buildWindow()));
+                }
+            });
+            return this;
+        }
+
+        public Button storeWindow(){
+            addMouseListener(new MouseAdapter() {
+                @Override
+                public void mousePressed(MouseEvent e) {
+                    super.mousePressed(e);
+                    if(window == null)
+                        window = builder.buildWindow();
+
+                    Global.view.setView(new ViewAdapter(window));
+                }
+            });
+            return this;
+        }
+
+
+    }
  
         
     }

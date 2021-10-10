@@ -6,6 +6,7 @@ import JDBCController.DataBaseConector;
 import JDBCController.DataBaseResManager;
 import sistemaceb.DInamicWindow;
 import sistemaceb.MainWindow;
+import sistemaceb.RespaldosManager;
 
 import java.io.IOException;
 
@@ -16,24 +17,50 @@ public class Global {
     public static DBSTate conectionData;
 
     public static void initGlobal() {
-        bootSystem();
+        SQLConector = new DataBaseConector();
+        conectionData = new DBSTate();
+        createView();
     }
 
-     private static void bootSystem(){
+     public static void resetPriodo(){
+        conectionData.setCurrentPeriodo();
+        reStartView();
+     }
+
+     private static void createView(){
          try {
-             pauseSystem();
-
              view = new DInamicWindow();
-             SQLConector = new DataBaseConector();
-             conectionData = new DBSTate();
              currentmainWindow = new MainWindow();
-
          } catch (IOException e) {
              e.printStackTrace();
          }
      }
 
-     public static void pauseSystem(){
+    public static void chargeBackup(String file){
+        new RespaldosManager().chargeBackup(file);
+        conectionData.useResDatabase();
+        reStartView();
+    }
+
+    public static void chargePeriodoRes(String periodo){
+        new RespaldosManager().chargePeriodoBackup(periodo);
+        conectionData.useResDatabase();
+        reStartView();
+    }
+
+    public static void chargeMainDatabase(){
+        conectionData.useMainDatabase();
+        reStartView();
+    }
+
+     public static void reStartView(){
+         currentmainWindow.closeForm();
+         createView();
+         SQLConector.reConect();
+
+     }
+
+     public static void closeView(){
          if(SQLConector != null)
             SQLConector.endConection();
          if(currentmainWindow != null)
@@ -41,7 +68,7 @@ public class Global {
      }
 
      public static void closeSystem(){
-        pauseSystem();
+            closeView();
          System.exit(0);
      }
 }

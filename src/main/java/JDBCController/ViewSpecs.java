@@ -10,7 +10,6 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 
 public class ViewSpecs {
-
     private String table;
     private final SpecsInfo info;
 
@@ -34,7 +33,7 @@ public class ViewSpecs {
 
     }
 
-    public ArrayList<String> getForeignCols() {
+    public ArrayList<String> getForeignTags() {
         ArrayList<String> foreignCols = info.getForeignRawCols();
         return getTag(foreignCols);
     }
@@ -77,28 +76,19 @@ public class ViewSpecs {
     }
 
 
-    public ArrayList<String> getPrimaryskey() {
-
-        ArrayList<String> primaryKeys = new DBTableMetadata(table).getPrimaryKeyColumn();
-        return getTag(primaryKeys);
-
-    }
-
-    public ArrayList<String> getAutoIncrCols() {
-        ArrayList<String> cols = new DBTableMetadata(table).getAutoIncCols();
-        cols = getTag(cols);
-
-        return cols;
-    }
-
     public String getPrimarykey() {
         ArrayList<String> primaryKeys = getPrimaryskey();
+
         if (!primaryKeys.isEmpty())
             return primaryKeys.get(0);
         else
             return null;
+
     }
 
+    public ArrayList<String> getPrimaryskey(){
+        return getTag(info.getPrimaryKeys());
+    }
 
     public ArrayList<String> getForeignTables(ArrayList<String> foreignTags) {
         ArrayList<String> response = new ArrayList<>();
@@ -110,15 +100,14 @@ public class ViewSpecs {
 
     public String getTagFromTable(String table) {
         ArrayList<String> foreigntables = info.getForeignTables();
-        ArrayList<String> columnNames = getForeignCols();
-
+        ArrayList<String> columnNames = getForeignTags();
 
         return columnNames.get(foreigntables.indexOf(table));
     }
 
     public String getTableFromTag(String tag) {
         ArrayList<String> foreignTables = info.getForeignTables();
-        ArrayList<String> columnNames = getForeignCols();
+        ArrayList<String> columnNames = getForeignTags();
 
         return foreignTables.get(columnNames.indexOf(tag));
     }
@@ -260,7 +249,9 @@ public class ViewSpecs {
         return size < 20;
     }
 
-
+    public ArrayList<String> getAutoIncrTag(){
+        return getTag(info.getAutoIncrCols());
+    }
 
     private DBTableMetadata getMetadata(){
         return new DBTableMetadata(table);
@@ -278,6 +269,7 @@ public class ViewSpecs {
 
     }
 
+
     public Updater getUpdater(){
         return new Updater();
     }
@@ -285,7 +277,7 @@ public class ViewSpecs {
 
         public void delete(ArrayList<String> columnCondition, ArrayList<String> values) throws SQLException {
             String query = "delete from " + table + " where "  + stringifyConditions(columnCondition,values);
-            System.out.println(query);
+            //System.out.println(query);
             info.flushCount();
             Global.SQLConector.getMyStatment().executeUpdate(query);
 
@@ -300,10 +292,12 @@ public class ViewSpecs {
 
         }
         public void update (
+
                 ArrayList<String>colToMod,
                 ArrayList<String> newValues,
                 ArrayList<String>colCondition,
                 ArrayList<String> conditionValue
+
         ) throws SQLException {
             String primaryCol = getCol(getPrimarykey());
 
@@ -323,7 +317,6 @@ public class ViewSpecs {
                 newValues.remove(newPrimaryValue);
 
             }
-
             if(!colToMod.isEmpty())
                 updateRegister(colToMod,newValues,colCondition,conditionValue);
         }
@@ -373,16 +366,19 @@ public class ViewSpecs {
                 ViewSpecs tableSpecs = new ViewSpecs(table);
 
                 ArrayList<String>  foreignKey = new ArrayList<>();
-                foreignKey.add(tableSpecs.getTagFromTable(getTable()));
+                    foreignKey.add(tableSpecs.getTagFromTable(getTable()));
 
                 ArrayList<String> newPrimaryValueArray = new ArrayList<>();
-                newPrimaryValueArray.add(newPrimaryValue);
+                    newPrimaryValueArray.add(newPrimaryValue);
 
                 ArrayList<String> currentPrimaryValueArray = new ArrayList<>();
-                currentPrimaryValueArray.add(oldValue);
+                    currentPrimaryValueArray.add(oldValue);
 
                 foreignKey = new ViewSpecs(table).getCol(foreignKey);
-                update(foreignKey,newPrimaryValueArray,foreignKey,currentPrimaryValueArray);
+
+                tableSpecs.getUpdater().update(
+                        foreignKey,newPrimaryValueArray,foreignKey,currentPrimaryValueArray
+                );
             }
         }
 

@@ -16,24 +16,25 @@ public class keyHiddedCoonsTableBuild extends ConsultTableBuild{
 
     }
 
-    private void commonCons( String critKey,ViewSpecs dadSpecs){
+    private void commonCons(String critKey,ViewSpecs dadSpecs){
         parentSpecs = dadSpecs;
         critCol = viewSpecs.getTagFromTable(parentSpecs.getTable());
         critValue = critKey;
-        dataBaseConsulter.addExactSearch(critCol,critKey);
+        dataBaseConsulter.addPermanentSearch(critCol,critKey);
     }
 
     protected ArrayList<String> getRemovedVisibleTags() {
         ArrayList<String> tagsToInsert = viewSpecs.getVisibleTags();
             tagsToInsert.remove(critCol);
 
-        if (viewSpecs.hasHumanKey())
-            tagsToInsert.remove(viewSpecs.getInfo().getHumanKey());
+       // if (viewSpecs.hasHumanKey())
+       //     tagsToInsert.remove(viewSpecs.getInfo().getHumanKey());
         return tagsToInsert;
     }
 
     protected ArrayList<String> getRemovedTableTags(){
         ArrayList<String> tagsToInsert = viewSpecs.getTableTags();
+        System.out.println(tagsToInsert);
             tagsToInsert.remove(critCol);
 
         return tagsToInsert;

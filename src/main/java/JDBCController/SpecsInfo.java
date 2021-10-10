@@ -26,12 +26,31 @@ public class SpecsInfo {
     private ArrayList<String> rawPForeignF;
     private ArrayList<String> foreignTables;
 
+    private ArrayList<String> autoIncCols;
+
+    private ArrayList<String> primaryKeys;
+
     private int colCount;
 
 
-    SpecsInfo(String table){
+    public SpecsInfo(String table){
         thisTable = table;
         colCount =-1;
+    }
+
+    public ArrayList<String> getPrimaryKeys() {
+        if(primaryKeys == null)
+            primaryKeys = new DBTableMetadata(thisTable).getPrimaryKeyColumn();
+
+        return primaryKeys;
+    }
+
+    public ArrayList<String> getAutoIncrCols() {
+        if (autoIncCols == null)
+            autoIncCols = new DBTableMetadata(thisTable).getAutoIncCols();
+
+
+        return autoIncCols;
     }
 
     public ArrayList<String> getCols() {
@@ -119,11 +138,11 @@ public class SpecsInfo {
     }
 
     public ArrayList<String> getVisibleCols() {
-
         return getTagList(getVisibleView());
     }
 
     private ArrayList<String> consultValue(String table){
+
         return new DBTableMetadata(table).getColumnsMetadata("COLUMN_NAME");
     }
 
@@ -143,6 +162,7 @@ public class SpecsInfo {
     public ArrayList<String> conVisibleCols() {
         if (visibleCols == null)
             visibleCols = consultValue(getVisibleView());
+
         return new ArrayList<>(visibleCols);
     }
 
@@ -154,7 +174,7 @@ public class SpecsInfo {
         if (value.equals(getView()))
             return conViewCols();
 
-        if (value.equals(getVisibleView()))
+        if (value.equals(getTable()))
             return conTablecols();
 
         return null;

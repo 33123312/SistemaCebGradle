@@ -40,10 +40,12 @@ public class TagFormBuilder {
     }
 
     private ArrayList<String> proccesTagsToShow(ArrayList<String> tags){
-        ArrayList<String> autoIncrTgs = specs.getAutoIncrCols();
-        for (String tag:autoIncrTgs)
-            if(tags.contains(tag))
-                tags.remove(tag);
+        ArrayList<String> autoIncrTgs = specs.getAutoIncrTag();
+        for (String tag:autoIncrTgs){
+            int tagIndex = tag.indexOf(tag);
+            if(tagIndex > - 1)
+                tags.remove(tagIndex);
+        }
 
         return tags;
     }
@@ -114,6 +116,7 @@ public class TagFormBuilder {
     
 private void setRelations(){
     Map<String,ArrayList<String>> relations = optionsGetter.getConditionedOptionsGetter().getParentalRelations();
+
     for(Map.Entry<String,ArrayList<String>> relation:relations.entrySet())
         setRelations(relation.getKey(),relation.getValue());
     

@@ -15,16 +15,12 @@ import java.util.Map;
  */
 public class ViewUpdater {
     
-    private final DBTableMetadata metadata;
-    private final String table;
     private  final ArrayList<String> tableTags;
-    ViewSpecs specs;
+    private final ViewSpecs specs;
     
     
     public ViewUpdater(String view){
-        table = view;
         specs = new ViewSpecs(view);
-        metadata = new DBTableMetadata(table);
         tableTags = determinateTableTags();
     }
     
@@ -48,9 +44,9 @@ public class ViewUpdater {
     
     
     private  ArrayList<String > determinateTableTags(){
-        ArrayList<String> columns = metadata.getColumnsMetadata("COLUMN_NAME");
-        ArrayList<String> foreignColumnsNames = metadata.getForeignKeysMetadata("FKCOLUMN_NAME");
-        ArrayList<String> foreignColumnsTables = metadata.getForeignKeysMetadata("PKTABLE_NAME");
+        ArrayList<String> columns = specs.getInfo().getCols();
+        ArrayList<String> foreignColumnsNames = specs.getInfo().getForeignRawCols();
+        ArrayList<String> foreignColumnsTables = specs.getInfo().getTableCols();
         for(String col:foreignColumnsNames)
             columns.remove(col);
             

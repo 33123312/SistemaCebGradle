@@ -40,7 +40,7 @@ public class DataBaseUpdater {
         for(String table: relatedTables){
             ViewSpecs tableSpecs = new ViewSpecs(table);
 
-            ArrayList<String> columns = tableSpecs.getForeignCols();
+            ArrayList<String> columns = tableSpecs.getForeignTags();
             ArrayList<String> tables = tableSpecs.getInfo().getForeignTables();
 
             ArrayList<String>  foreignKey = new ArrayList<>();

@@ -11,8 +11,7 @@ import java.util.ArrayList;
 public class GrupoRegisterProps extends RegisterDetail{
     public GrupoRegisterProps(OperationInfoPanel infoPanel) {
         super(infoPanel);
-        GrupoModificatorOp op = new GrupoModificatorOp(infoPanel);
-        overRideDefOp("modificar", op);
+        overRideDefOp("modificar", new GrupoModificatorOp(infoPanel));
         addPills();
         addOps();
 
@@ -45,6 +44,7 @@ public class GrupoRegisterProps extends RegisterDetail{
         addOperation(new ConcentradoTodasMateriasOp(infoPanel));
         addOperation(new BitacoraMateriaGrupo(infoPanel));
         addOperation(new PlanesEstudioChoserOp(infoPanel));
+
 
     }
 

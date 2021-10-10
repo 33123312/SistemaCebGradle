@@ -19,12 +19,17 @@ import sistemaceb.formRelationEvent;
  * @author escal
  */
 public abstract class Formulario extends JPanel {
+
     protected final ArrayList<String> elementTitles;
     protected final ArrayList<FormElement> elements;
+
     protected final ArrayList<String> elementWithOptionsTitles;
     protected final ArrayList<formElementWithOptions> elementsWithOptions;
+
     protected Map <String,String> virtualParents;
+
     protected final List<FormResponseManager> dataManagers;
+
     protected final Map<String,ArrayList<String>> relations;
 
     public Formulario(){
@@ -36,6 +41,15 @@ public abstract class Formulario extends JPanel {
         elementWithOptionsTitles = new ArrayList();
         elementsWithOptions = new ArrayList();
         virtualParents = new HashMap<>();
+
+    }
+
+    public void removeElement(String element){
+
+        int elementIndex = elementTitles.indexOf(element);
+            elementTitles.remove(elementIndex);
+            elements.remove(elementIndex);
+
 
     }
     
@@ -148,6 +162,7 @@ public abstract class Formulario extends JPanel {
 
     public void addElementRelation(String parentElementName,String childElementName,formRelationEvent event){
             formElementWithOptions childElement= getElementWithOptionsFromTitle(childElementName);
+
             EventListener triggerEvent = new EventListener(){
                 @Override
                 public void onTriger(String elementInput){

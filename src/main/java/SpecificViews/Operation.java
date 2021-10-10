@@ -30,6 +30,8 @@ public abstract class Operation{
     public abstract void buildOperation();
 
     public ViewSpecs getViewSpecs() {
+
+
         return viewSpecs;
     }
 

@@ -19,9 +19,6 @@ import java.util.Map;
  * @author escal
  */
 public class ConditionedOptionsGetter extends CommonRegistersGetter{
-     
-
-    
     public ConditionedOptionsGetter(ViewSpecs specs){
         super(specs);
             setOptionsGetter(getColumnsOptionsGetters());
@@ -31,7 +28,7 @@ public class ConditionedOptionsGetter extends CommonRegistersGetter{
         ArrayList<ConditionedTable> conditionedTables = new ArrayList<>();
 
         ArrayList<String> tables = specs.getInfo().getForeignTables();
-        ArrayList<String> cols  = specs.getForeignCols();
+        ArrayList<String> cols  = specs.getForeignTags();
 
         int size = tables.size();
         for(int i = 0;i < size;i++)

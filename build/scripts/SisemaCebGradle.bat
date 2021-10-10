@@ -67,7 +67,7 @@ goto fail
 :execute
 @rem Setup the command line
 
-set CLASSPATH=%APP_HOME%\lib\SisemaCebGradle.jar;%APP_HOME%\lib\FelixFE.jar;%APP_HOME%\lib\mysql-connector-java-8.0.19.jar;%APP_HOME%\lib\layout-7.0.2.jar;%APP_HOME%\lib\kernel-7.0.2.jar;%APP_HOME%\lib\io-7.0.2.jar;%APP_HOME%\lib\slf4j-api-1.7.13.jar
+set CLASSPATH=%APP_HOME%\lib\SisemaCebGradle.jar;%APP_HOME%\lib\FelixFE.jar;%APP_HOME%\lib\mysql-connector-java-8.0.19.jar;%APP_HOME%\lib\gson-2.8.5.jar;%APP_HOME%\lib\layout-7.0.2.jar;%APP_HOME%\lib\kernel-7.0.2.jar;%APP_HOME%\lib\io-7.0.2.jar;%APP_HOME%\lib\jersey-client-2.6.jar;%APP_HOME%\lib\slf4j-api-1.7.13.jar;%APP_HOME%\lib\jersey-common-2.6.jar;%APP_HOME%\lib\javax.ws.rs-api-2.0.jar;%APP_HOME%\lib\hk2-locator-2.2.0.jar;%APP_HOME%\lib\hk2-api-2.2.0.jar;%APP_HOME%\lib\javax.inject-2.2.0.jar;%APP_HOME%\lib\javax.annotation-api-1.2.jar;%APP_HOME%\lib\jersey-guava-2.6.jar;%APP_HOME%\lib\osgi-resource-locator-1.0.1.jar;%APP_HOME%\lib\hk2-utils-2.2.0.jar;%APP_HOME%\lib\aopalliance-repackaged-2.2.0.jar;%APP_HOME%\lib\javassist-3.18.1-GA.jar;%APP_HOME%\lib\javax.inject-1.jar
 
 
 @rem Execute SisemaCebGradle

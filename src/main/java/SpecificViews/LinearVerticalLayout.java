@@ -22,7 +22,6 @@ public class LinearVerticalLayout extends JPanel {
         cons.gridy = 0;
         cons.fill = GridBagConstraints.BOTH;
         cons.weightx = 1;
-
     }
 
     public boolean containsElement(Component element){
@@ -52,15 +51,18 @@ public class LinearVerticalLayout extends JPanel {
         addFiller();
     }
 
+    public void removeAll(){
+        super.removeAll();
+        addFiller();
+    }
+
     protected void removeElement(JComponent element) {
         List<Component> components =  Arrays.asList(getComponents());
         components.remove(element);
-        components.remove(filler);
         removeAll();
         for(Component com: components)
             addElement(com);
         addFiller();
-
     }
 
 }

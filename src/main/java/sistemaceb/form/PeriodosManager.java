@@ -20,7 +20,6 @@ public class PeriodosManager {
     public static void chargeDatabaseToBack(String periodo){
         loadBackDatabase(periodo);
         changeToBackup();
-        Global.conectionData.resetPeriodo();
     }
 
     public static void createPriodoFinalBackup(){

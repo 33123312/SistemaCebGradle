@@ -17,7 +17,6 @@ import java.util.Map;
 public class HorarioBuilder extends MultipleFormsOperation{
     private ArrayList<String> dias;
 
-
     public HorarioBuilder(OperationInfoPanel infoPanlel){
         super(infoPanlel);
         operation = "Modificar Horario";
@@ -32,7 +31,6 @@ public class HorarioBuilder extends MultipleFormsOperation{
         if(hasPlan())
             if(hasAllAsignaturas() )
                 addFormArea();
-
     }
 
     private boolean hasAllAsignaturas(){
@@ -46,14 +44,11 @@ public class HorarioBuilder extends MultipleFormsOperation{
         ArrayList<String> misingMaterias = new ArrayList<>();
 
         for (String materia: materias){
-
-
             Table response  = consulter.bringTable(new String[]{"grupo","materia"},new String[]{keyValue,materia});
-
             if (response.isEmpty())
                misingMaterias.add(materiasNombres.get(materias.indexOf(materia)));
-
         }
+
         if(misingMaterias.isEmpty())
             return true;
         else {
@@ -113,7 +108,6 @@ public class HorarioBuilder extends MultipleFormsOperation{
         materia.addColumn(1,titles.get(0),keys);
 
         return materia;
-
     }
 
     private void deployMissingPlanMSG(){
@@ -138,10 +132,6 @@ public class HorarioBuilder extends MultipleFormsOperation{
             deployMissingPlanMSG();
         return hasPlan;
     }
-
-
-
-
 
     private Map<String,String> getCurrentMaterias(String hora){
         DataBaseConsulter con = new DataBaseConsulter("horarios_view");
@@ -236,7 +226,6 @@ public class HorarioBuilder extends MultipleFormsOperation{
 
         String[] value = new String[]{grupo,materia};
 
-
         Table res = consulter.bringTable(bring, cond, value);
 
         String prof = res.getUniqueValue();
@@ -263,7 +252,7 @@ public class HorarioBuilder extends MultipleFormsOperation{
                 }
             });
 
-            element.setResponse("");
+            element.selectEmptyResponse();
 
         }
     }
@@ -285,8 +274,6 @@ public class HorarioBuilder extends MultipleFormsOperation{
 
         new ProfesorHorario(pack).buildOperation();
 
-
-
     }
 
     private Table getRowTitlesTable(){
@@ -303,7 +290,6 @@ public class HorarioBuilder extends MultipleFormsOperation{
         return new Table(new ArrayList<>(),registers);
     }
 
-
     private Table getNewMaterias(String dia){
         Table materias = getMaterias();
         Table newMaterias = new Table(materias);
@@ -312,15 +298,4 @@ public class HorarioBuilder extends MultipleFormsOperation{
         newMaterias.setColumnTitles(titles);
         return newMaterias;
     }
-
-
-
-
-
-
-
-
-
-
-
 }

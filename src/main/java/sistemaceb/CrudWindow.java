@@ -123,11 +123,9 @@ public class CrudWindow extends Window {
             btnAddTag.setTextColor(new Color(108, 92, 231));
             btnAddTag.setPadding(10, 15, 10, 15);
             btnAddTag.addMouseListener(
-            
                 new MouseAdapter(){
 
                     @Override
-
                     public void mousePressed(MouseEvent arg0){
                         Formulario tagForm = new FormWindow("Nuevo Tag");
                         new TagFormBuilder(consulterTable.getViewSpecs(),consulterTable.getViewSpecs().getTableTags(),tagForm,false);
@@ -142,7 +140,6 @@ public class CrudWindow extends Window {
                                     consulterTable.getDataBaseConsulter().addSearch(trueData);
                                     tagsManager.addTags(rawData);
                                     ((FormWindow)tagForm).getFrame().closeForm();
-
                                            }
                             }
                         );

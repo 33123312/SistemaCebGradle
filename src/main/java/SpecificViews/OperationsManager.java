@@ -9,7 +9,8 @@ import sistemaceb.RegisterDetailView;
 
 import java.util.ArrayList;
 
-public class OperationsManager {
+public class
+OperationsManager {
 
     OperationInfoPanel infoPanel;
     ViewSpecs specs;
@@ -42,6 +43,9 @@ public class OperationsManager {
 
         if (view.equals("planes_estudio"))
             return new PlanosEstudioRegisterProps(infoPanel);
+
+        if (view.equals("materias"))
+            return new MateriasRegisterProps(infoPanel);
 
         return new RegisterDetail(infoPanel);
     }

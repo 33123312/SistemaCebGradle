@@ -24,7 +24,9 @@ import java.util.Map;
 
 public class PDFPlantillaGetter extends Document{
 
-    String title;
+    private String title;
+    private static String pdfPath = "C:/Users/" + System.getProperty("user.name") + "/tempPdfSysCeb.pdf";
+
     public PDFPlantillaGetter(String title) {
         super(getNewDocumnt());
         this.title = title;
@@ -36,12 +38,11 @@ public class PDFPlantillaGetter extends Document{
     }
 
     private static PdfDocument getNewDocumnt(){
-        String path = "D:\\AAPdfDePrueba.pdf";
         try {
-            PdfWriter writer = new PdfWriter(path);
+            PdfWriter writer = new PdfWriter(pdfPath);
             PdfDocument documentPdf = new PdfDocument(writer);
-            return documentPdf;
 
+            return documentPdf;
         } catch (FileNotFoundException e) {
             e.printStackTrace();
             return null;
@@ -134,7 +135,7 @@ public class PDFPlantillaGetter extends Document{
 
     public void openPdf(){
         try {
-            File myFile = new File("D:\\AAPdfDePrueba.pdf");
+            File myFile = new File(pdfPath);
             Desktop.getDesktop().open(myFile);
         } catch (IOException ex) {
         }

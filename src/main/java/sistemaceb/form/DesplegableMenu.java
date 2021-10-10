@@ -26,6 +26,14 @@ public class DesplegableMenu extends formElementWithOptions{
         setTrigerEvent();
     }
 
+    @Override
+    public void selectEmptyResponse() {
+        menu.setSelectedIndex(menu.getItemCount()-1);
+    }
+
+    public JComboBox getMenu() {
+        return menu;
+    }
 
     @Override
     protected void buildGUIOptions() {

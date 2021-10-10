@@ -6,7 +6,8 @@ import JDBCController.TableRegister;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 
-public abstract class AluMateriaOperator{
+public abstract class
+AluMateriaOperator{
     String materia;
     ArrayList<String> parcialesCal;
     String materiaType;

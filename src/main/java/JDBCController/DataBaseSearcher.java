@@ -7,94 +7,163 @@ package JDBCController;
 
 import java.util.*;
 
-import SpecificViews.LinearVerticalLayout;
 import sistemaceb.form.OptionsGetter;
 
 /**
  *
  * @author escal
  */
-public class DataBaseSearcher{
+public class DataBaseSearcher {
 
     protected final DataBaseConsulter consulterView;
     protected final DataBaseConsulter visibleTagsConsulter;
 
-    protected Map<String,String> currentTagsToExactSearch;
-    protected Map<String,String> currentTagsToAproximatedSearch;
-    protected String view;
-    protected ViewSpecs  specs ;
-    
-    OptionsGetter exctTypeChecker;
+    protected ArrayList<TagToSearch> currentTagsToExactSearch;
+    protected ArrayList<TagToSearch> currentTagsToAproximatedSearch;
 
+    protected String view;
+    protected ViewSpecs specs;
+
+    private OptionsGetter exctTypeChecker;
+
+    public class TagToSearch {
+        private String tag;
+        private String value;
+        private boolean isPermanent;
+
+        public TagToSearch(String tag, String value) {
+            isPermanent = false;
+            this.tag = tag;
+            this.value = value;
+        }
+
+        public String getTag() {
+            return tag;
+        }
+
+        public String getValue() {
+            return value;
+        }
+
+        public void setAsPermnent() {
+            isPermanent = true;
+        }
+
+        public boolean isPermanent() {
+            return isPermanent;
+        }
+
+    }
 
     public DataBaseSearcher(String view) {
         this.view = view;
+        specs = new ViewSpecs(view);
 
-        consulterView = new DataBaseConsulter(view);
+        currentTagsToAproximatedSearch = new ArrayList<>();
+        currentTagsToExactSearch = new ArrayList<>();
 
-        specs =  new ViewSpecs(view);
+        consulterView = new DataBaseConsulter(specs.getInfo().getView());
         visibleTagsConsulter = new DataBaseConsulter(specs.getInfo().getVisibleView());
-
 
         exctTypeChecker = new OptionsGetter(specs);
         newSearch();
-        
+
     }
 
-    public ViewSpecs getViewSpecs(){
-        
+    public ViewSpecs getViewSpecs() {
+
         return specs;
     }
-    
-    public void newSearch(){
-        currentTagsToExactSearch = new HashMap();
-        currentTagsToAproximatedSearch = new HashMap();
-        
-    }
-    
-    public void removeSearch(String column){
-        
-        if(currentTagsToExactSearch.containsKey(column))
-            currentTagsToExactSearch.remove(column);
-        else if (currentTagsToAproximatedSearch.containsKey(column))
-            currentTagsToAproximatedSearch.remove(column);
-        else 
-            System.err.println("La columna buscada no se puede remover:" 
-                    + column + " no pertenece a la tabla " + view );
+
+    public void newSearch() {
+        currentTagsToExactSearch = getNewTags(currentTagsToExactSearch);
+        currentTagsToAproximatedSearch = getNewTags(currentTagsToAproximatedSearch);
 
     }
-    
-    public void addSearch(Map<String,String>data ){
-        for (Map.Entry<String,String> thisData: data.entrySet()){
-            addSearch(thisData.getKey(),thisData.getValue());
-        }                       
+
+    private ArrayList<TagToSearch> getNewTags(ArrayList<TagToSearch> tags) {
+        ArrayList<TagToSearch> newTags = new ArrayList<>();
+
+        for (TagToSearch tag : tags)
+            if (tag.isPermanent())
+                newTags.add(tag);
+
+        return newTags;
+
     }
 
-    
-    public void addExactSearch(String tagToSearch,String value){
-        currentTagsToExactSearch.put(tagToSearch, value);
-        
+    private boolean listContainsKey(ArrayList<TagToSearch> tags, String tagToCompare) {
+        if (getIndex(tags, tagToCompare) > -1)
+            return true;
+
+        return false;
+
     }
-    
-    public void addSearch( String tagToSearch,String value) {
-        Map listToAddNewSearch;
-        
-        if(exctTypeChecker.hasOptions(tagToSearch) ||
-            specs.getPrimaryskey().contains(tagToSearch))
-            listToAddNewSearch = currentTagsToExactSearch;
+
+    private int getIndex(ArrayList<TagToSearch> tags, String tagToCompare) {
+
+        for (int i = 0; i < tags.size(); i++) {
+            if (tags.get(i).getTag().equals(tagToCompare))
+                return i;
+        }
+
+        return -1;
+    }
+
+    public void removeSearch(String column) {
+
+        if (listContainsKey(currentTagsToExactSearch, column))
+            currentTagsToExactSearch.remove(getIndex(currentTagsToExactSearch, column));
+        else if (listContainsKey(currentTagsToAproximatedSearch, column))
+            currentTagsToAproximatedSearch.remove(getIndex(currentTagsToAproximatedSearch, column));
         else
-            listToAddNewSearch = currentTagsToAproximatedSearch;
-            
-        listToAddNewSearch.put(tagToSearch, value);
- 
-    }
-    
+            System.err.println("La columna buscada no se puede remover:"
+                    + column + " no pertenece a la tabla " + view);
 
-    public infoPackage getSearch(){
-        
+    }
+
+    public void addSearch(Map<String, String> data) {
+        for (Map.Entry<String, String> thisData : data.entrySet()) {
+            addSearch(thisData.getKey(), thisData.getValue());
+        }
+    }
+
+    private void addSearch(TagToSearch tag) {
+        if (exctTypeChecker.hasOptions(tag.getTag()) || specs.getPrimaryskey().contains(tag.getTag()))
+            currentTagsToExactSearch.add(tag);
+        else
+            currentTagsToAproximatedSearch.add(tag);
+    }
+
+    public void addSearch(String tagToSearch, String value){
+        addSearch(new TagToSearch(tagToSearch, value));
+    }
+
+    public void addPermanentSearch(String tagToSearch, String value){
+        TagToSearch tag = new TagToSearch(tagToSearch, value);
+            tag.setAsPermnent();
+        addSearch(tag);
+    }
+
+    public infoPackage getSearch() {
+
         return getSearch(new ArrayList());
     }
 
+    private ArrayList<String> getTags(ArrayList<TagToSearch> tags){
+        ArrayList<String> titles = new ArrayList<>();
+        for (TagToSearch tag:tags)
+            titles.add(tag.getTag());
+
+        return titles;
+    }
+    private ArrayList<String> getValues(ArrayList<TagToSearch> tags){
+        ArrayList<String> titles = new ArrayList<>();
+        for (TagToSearch tag:tags)
+            titles.add(tag.getValue());
+
+        return titles;
+    }
 
     private Table getViewExactFiltered(){
         Table unsortedViewsTable;
@@ -102,9 +171,9 @@ public class DataBaseSearcher{
         if(currentTagsToExactSearch.isEmpty())
             unsortedViewsTable = consulterView.bringTable();
         else{
-            Collection<String> exactValue = currentTagsToExactSearch.values();
+            Collection<String> exactValue = getValues(currentTagsToExactSearch);
 
-            ArrayList<String> viewTagTypesArray = new ArrayList(currentTagsToExactSearch.keySet());
+            ArrayList<String> viewTagTypesArray = new ArrayList(getTags(currentTagsToExactSearch));
             String[] viewTagValuesArray = exactValue.toArray(new String[exactValue.size()]);
 
             List<String> temV = specs.getCol(viewTagTypesArray);
@@ -117,25 +186,45 @@ public class DataBaseSearcher{
 
     }
 
+    private Table getUnsortedVisible(){
+        Table unsortedVisible = visibleTagsConsulter.bringTable();
+        unsortedVisible.setColumnTitles(specs.getTag(unsortedVisible.getColumnTitles()));
+        return unsortedVisible;
+    }
+
     public infoPackage getSearch(ArrayList<String> columnsToBring) {
         Table unsortedView = getViewExactFiltered();
 
-       complexSearcher viewSearcher = getSearcher(unsortedView,specs.getViewTags());
+        Table unsortedVisible = getUnsortedVisible();
 
-        infoPackage pack;
+        merge(unsortedVisible, unsortedView);
+
+        if(!currentTagsToAproximatedSearch.isEmpty())
+            return getRatedValues(unsortedView,unsortedVisible,columnsToBring);
+
+        return new infoPackage(unsortedVisible,unsortedView);
+    }
+
+    private infoPackage getRatedValues(Table unsortedView,Table unsortedVisible,ArrayList<String> columnsToBring){
         Table ratedViewRegisters;
         Table ratedVisibleRegisters;
 
-        if (!visibleTagsConsulter.getTable().equals(specs.getTable()))
-            ratedVisibleRegisters = getRatedVisibleView(unsortedView,viewSearcher);
+        complexSearcher viewSearcher = getSearcher(unsortedView,specs.getViewTags());
+
+        if (hasVisibleView())
+            ratedVisibleRegisters = getRatedVisibleView(unsortedVisible,viewSearcher);
         else
             ratedVisibleRegisters = viewSearcher.getRatedNSortedRegisters();
 
         removeCols(ratedVisibleRegisters,columnsToBring);
         ratedViewRegisters = viewSearcher.getRatedNSortedRegisters();
 
-        pack = new infoPackage(ratedVisibleRegisters,ratedViewRegisters);
-        return pack;
+        return new infoPackage(ratedVisibleRegisters,ratedViewRegisters);
+
+    }
+
+    private boolean hasVisibleView(){
+       return !visibleTagsConsulter.getTable().equals(specs.getTable());
     }
 
     private void removeCols(Table ratedVisibleRegisters,ArrayList<String> columnsToBring){
@@ -152,14 +241,7 @@ public class DataBaseSearcher{
         }
     }
 
-    private Table getRatedVisibleView(Table unsortedView,complexSearcher viewSearcher){
-        Table unsortedVisible = visibleTagsConsulter.bringTable();
-
-
-
-            unsortedVisible.setColumnTitles(specs.getTag(unsortedVisible.getColumnTitles()));
-
-            merge(unsortedVisible, unsortedView);
+    private Table getRatedVisibleView(Table unsortedVisible,complexSearcher viewSearcher){
 
             complexSearcher visibleSearcher = getSearcher(unsortedVisible,specs.getVisibleTags());
 
@@ -170,18 +252,16 @@ public class DataBaseSearcher{
 
     private complexSearcher getSearcher(Table unsortedView,ArrayList<String> tags) {
         complexSearcher viewSearcher = new complexSearcher(unsortedView);
-
         rateIfContains(tags, viewSearcher);
         return viewSearcher;
-
     }
 
 
     private void rateIfContains(ArrayList<String> columnTitles, complexSearcher viewSearcher){
         if (!currentTagsToAproximatedSearch.isEmpty()){
-            for (Map.Entry<String,String> tag : currentTagsToAproximatedSearch.entrySet()){
-                if(columnTitles.contains(tag.getKey()))
-                    viewSearcher.rate(tag.getKey(), tag.getValue());
+            for (TagToSearch tag : currentTagsToAproximatedSearch){
+                if(columnTitles.contains(tag.getTag()))
+                    viewSearcher.rate(tag.getTag(), tag.getValue());
             }
         }
     }
@@ -195,8 +275,6 @@ public class DataBaseSearcher{
 
         for (int i = 0; i < viewRates.length;i++)
             mergedRates[i] = viewRates[i] + visibleRates[i];
-
-
 
         visible.setRates(mergedRates);
         view.setRates(mergedRates.clone());

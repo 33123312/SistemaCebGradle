@@ -32,7 +32,7 @@ public class LinkedTable extends KeyedTableBehavior {
     }
 
     private static String getObjectiveTable(ViewSpecs viewSpecs,String primaryKey){
-        ArrayList<String> foreignCols =  viewSpecs.getForeignCols();
+        ArrayList<String> foreignCols =  viewSpecs.getForeignTags();
         ArrayList<String> tables = viewSpecs.getInfo().getForeignTables();
 
         int index = foreignCols.indexOf(primaryKey);

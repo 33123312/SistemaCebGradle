@@ -8,6 +8,7 @@ import JDBCController.dataType;
 import SpecificViews.GrupoPasserInfoStorage;
 import SpecificViews.LinearHorizontalLayout;
 import SpecificViews.LinearVerticalLayout;
+import sistemaceb.form.ErrorChecker;
 import sistemaceb.form.Global;
 import sistemaceb.form.HorizontalFormPanel;
 
@@ -67,7 +68,16 @@ public class SemestrePasador extends Window{
     private JPanel getPeriodoNameChoser(){
         JPanel cont = new JPanel(new GridBagLayout());
         newPeriodoGetter = new HorizontalFormPanel();
-            newPeriodoGetter.addInput("Ingresar el Nombre del Siguiente Periodo", dataType.VARCHAR).setRequired(true);
+            newPeriodoGetter.addInput("Ingresar el Nombre del Siguiente Periodo", dataType.VARCHAR).setRequired(true).addErrorChecker(new ErrorChecker() {
+                @Override
+                public String checkForError(String response) {
+                    String trueResponse = response.trim();
+                    if (trueResponse.contains(" "))
+                        return "Error: los nombres de periodo no pueden contener espacios";
+                    else
+                        return "";
+                }
+            });
             newPeriodoGetter.showAll();
 
         cont.setBorder(new EmptyBorder(10,0,10,0));
@@ -102,7 +112,6 @@ public class SemestrePasador extends Window{
                 super.mousePressed(e);
                 if(!newPeriodoGetter.hasErrors()){
                     submitPasers();
-                    Global.initGlobal();
                 }
             }
         };
@@ -271,11 +280,12 @@ public class SemestrePasador extends Window{
             }
 
         if(!hasErrors){
+            new RespaldosManager().orderPeriodoRes();
             for(GrupoPasserWindow pasador:grupoPassers)
                 pasador.submit();
 
-            String nextPeriodo = getNextPeriodo();
-            setPeriodo(nextPeriodo);
+            setNewPeriodo();
+            Global.resetPriodo();
 
         }
     }
@@ -286,7 +296,11 @@ public class SemestrePasador extends Window{
 
     }
 
-    private void setPeriodo(String nextPeriodo){
+    private void setNewPeriodo(){
+        String nextPeriodo = getNextPeriodo();
+
+        new RespaldosManager().createResDir(nextPeriodo);
+
         String currentPeriodo = Global.conectionData.loadedPeriodo;
 
         ArrayList<String> periodoString = new ArrayList<>();
@@ -341,7 +355,7 @@ public class SemestrePasador extends Window{
             throwables.printStackTrace();
         }
 
-        Global.conectionData.resetPeriodo();
+
     }
 
 }

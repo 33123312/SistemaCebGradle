@@ -119,7 +119,16 @@ public class Table {
         
         return new TableRegister(columnTitles,registers.get(index));
     }
-    
+
+    @Override
+    public String toString() {
+        System.out.println("------------------------------------");
+        for (ArrayList<String> register: registers)
+            System.out.println(register);
+
+        return "";
+    }
+
     public int rowCount(){
         return registers.size();
     }

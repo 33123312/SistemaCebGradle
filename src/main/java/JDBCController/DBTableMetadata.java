@@ -29,12 +29,12 @@ public class DBTableMetadata{
         public ArrayList<String>  getColumnsMetadata(String popiertyToGet){
         makeMetadataConection();
                 ArrayList<String> ColumnsList = new ArrayList();
-
         try {
-            ResultSet columns = getMetadata().getColumns(null,null,table,null);
+            ResultSet columns = getMetadata().getColumns(Global.conectionData.currentDatabase,null,table,null);
 
             while(columns.next())
                 ColumnsList.add(columns.getString(popiertyToGet));
+
 
         } catch (SQLException ex) {
             Logger.getLogger(DataBaseConsulter.class.getName()).log(Level.SEVERE, null, ex);
@@ -68,7 +68,7 @@ public class DBTableMetadata{
         ArrayList<String> columnNames = new ArrayList();
         try {
             ResultSet primaryKeyColumn = null;
-             primaryKeyColumn = getMetadata().getPrimaryKeys(Global.SQLConector.getMyCon().getCatalog(), null, table);
+             primaryKeyColumn = getMetadata().getPrimaryKeys(DBSTate.currentDatabase, DBSTate.currentDatabase, table);
              while(primaryKeyColumn.next()){
                  String columnName = primaryKeyColumn.getString("COLUMN_NAME");
                  columnNames.add(columnName);
@@ -77,12 +77,12 @@ public class DBTableMetadata{
         } catch (SQLException ex) {
             Logger.getLogger(infoPackage.class.getName()).log(Level.SEVERE, null, ex);
         }
+
         return columnNames;
     }
     
     public ArrayList<String> getAccesibleCols(String privilege){
         makeMetadataConection();
-
 
         ResultSet rs;
         ArrayList<String> columns = getColumnsMetadata("COLUMN_NAME");
@@ -103,7 +103,6 @@ public class DBTableMetadata{
             } catch (SQLException ex) {
                 Logger.getLogger(DBTableMetadata.class.getName()).log(Level.SEVERE, null, ex);
             }
-
         return accessibleCols;
         
     }
@@ -113,16 +112,32 @@ public class DBTableMetadata{
         ArrayList<String> importedKeys = new ArrayList();
         
             try {
-                ResultSet meta = getMetadata().getImportedKeys(Global.SQLConector.getMyCon().getCatalog(), null, table);
+                ResultSet meta = getMetadata().getImportedKeys(
+                    DBSTate.currentDatabase,
+                    DBSTate.currentDatabase,
+                    table);
+
                 while (meta.next())
                     importedKeys.add(meta.getString(order));
                 
             } catch (SQLException ex) {
                 Logger.getLogger(DBTableMetadata.class.getName()).log(Level.SEVERE, null, ex);
             }
-            
+
+
+            importedKeys = getUnique(importedKeys);
             return importedKeys;
         
+    }
+
+    private ArrayList<String> getUnique(ArrayList<String> array){
+        ArrayList<String> newArray = new ArrayList<>();
+
+        for (String val:array)
+            if (!newArray.contains(val))
+                newArray.add(val);
+
+        return newArray;
     }
 
     private DatabaseMetaData getMetadata(){

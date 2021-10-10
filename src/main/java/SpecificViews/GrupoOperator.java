@@ -18,7 +18,6 @@ public class GrupoOperator {
         plan = getPlan();
         numAlumnos = getNumAlumnos();
         grupoInfo = getRegisterInfo();
-
     }
 
     public TableRegister getGrupoInfo() {
@@ -41,13 +40,9 @@ public class GrupoOperator {
     public Table getMaterias(){
         if(plan != null) {
             DataBaseConsulter consulter = new DataBaseConsulter("planes_estudio_materias_view");
-
             String[] columnsToBring = new String[]{"materia","nombre_materia"};
-
             String[] cond = new String[]{"clave_plan"};
-
             String[] value = new String[]{plan};
-
             Table materias = consulter.bringTable(columnsToBring, cond, value);
 
             return materias;
@@ -129,8 +124,6 @@ public class GrupoOperator {
     public AsignaturaOperatorr getAsignOperator(String materia){
         return new AsignaturaOperatorr(grupo,materia);
     }
-
-
 
     public class GrupoMateriaOperator{
 
@@ -257,7 +250,7 @@ public class GrupoOperator {
                 ArrayList<String> parCalif = op.getParCalif();
                 for (int i = 0; i < 4;i++){
                     String cal = parCalif.get(i);
-                    if (!cal.equals("")){
+                    if (!cal.isEmpty()){
                         double caliInt = Double.parseDouble(parCalif.get(i));
                         if(caliInt < 6)
                             reprobados[i] ++;

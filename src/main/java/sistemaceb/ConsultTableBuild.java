@@ -82,6 +82,7 @@ public abstract class ConsultTableBuild {
 
     private void initTable(){
         outputTable.setTitles(tagsToShow);
+
         outputTable.showAll();
     }
 

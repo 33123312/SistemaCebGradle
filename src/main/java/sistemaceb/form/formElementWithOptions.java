@@ -36,6 +36,8 @@ public abstract class formElementWithOptions extends FormElement {
 
     }
 
+    public abstract void selectEmptyResponse();
+
     @Override
     public String getResponse(){
 

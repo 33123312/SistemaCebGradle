@@ -13,35 +13,32 @@ import java.util.TimerTask;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-
 /**
  *
  * @author escal
  */
 public class DataBaseConector {
-    
     private Statement myStatment;
     private Connection myCon;
     private boolean isChecked;
-
-    public DataBaseConector(){
-        makeConection();
-    }
+    private Timer timer;
 
     public boolean checkConection(){
         if(!isChecked){
-            isChecked = true;
+            reConect();
             activateTimer();
-            if (!makeTestConsult()){
-                makeConection();
-                return false;
-            }
         }
-        return true;
+
+        return isChecked;
     }
 
     private void activateTimer(){
-        new Timer().schedule(new TimerTask() {
+        isChecked = true;
+        if (timer != null)
+            timer.cancel();
+
+        timer = new Timer();
+        timer.schedule(new TimerTask() {
             @Override
             public void run() {
                 isChecked = false;
@@ -50,10 +47,7 @@ public class DataBaseConector {
 
     }
 
-
     private boolean makeTestConsult(){
-
-        System.out.println("makeConsult");
         try {
             DataBaseConsulter consulter = new DataBaseConsulter("viewsspecs.tags");
             consulter.bringTable();
@@ -81,27 +75,31 @@ public class DataBaseConector {
         return myCon;
     }
 
+    public void reConect(){
+        if (myCon != null)
+            endConection();
+
+        makeConection();
+    }
+
     private void makeConection(){
-        String user = "remote";
-        String pass = "Kinareth41ñ$";
+
         String connSpecs = "?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC";
         String URL = "jdbc:mysql://147.182.129.199:3306/";
 
         try {
              myCon =
                      DriverManager.getConnection(
-                        URL + "cebdatabase" + connSpecs,
-                             user,
-                             pass);
+                        URL + DBSTate.currentDatabase + connSpecs,
+                             Global.conectionData.user,
+                             Global.conectionData.password);
             myStatment = myCon.createStatement();
 
         } catch (SQLException ex) {
             Logger.getLogger(DataBaseConector.class.getName()).log(Level.SEVERE, null, ex);
         }
+
+        activateTimer();
         
     }
-    
-
-    
-
 }

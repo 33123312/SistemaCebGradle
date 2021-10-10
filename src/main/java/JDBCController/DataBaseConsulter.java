@@ -76,7 +76,6 @@ public class DataBaseConsulter {
 
             return query.toString();
         }
-
         return "*";
     }
 
@@ -148,7 +147,7 @@ public class DataBaseConsulter {
         } catch (SQLException ex) {
             Logger.getLogger(DataBaseConsulter.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
+
         return  columns;
     }
 
@@ -171,12 +170,11 @@ public class DataBaseConsulter {
                 "FROM\n" +
                 "    INFORMATION_SCHEMA.KEY_COLUMN_USAGE\n" +
                 "WHERE\n" +
-                "     REFERENCED_TABLE_NAME = '" + table + "'";
-               
-        
+                "     REFERENCED_TABLE_NAME = '" + table + "' and " +
+                "CONSTRAINT_SCHEMA = '" + DBSTate.currentDatabase + "'";
+
         Table relatedTableInfo = bringTable(query);
 
-        
         return relatedTableInfo.getColumn(0);
     }
 

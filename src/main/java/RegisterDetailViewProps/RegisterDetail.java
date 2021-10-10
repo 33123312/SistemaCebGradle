@@ -69,17 +69,16 @@ public class RegisterDetail {
 
     private void detDefaultOperations(){
         defaultOperations = new HashMap<>();
-        defaultOperations.put("modificar", new OperationBuilder() {
-            @Override
-            public Operation getOperation() {
-                return new DefaultModifyRegisterOp(infoPanel);
-            }
-        });
-
         defaultOperations.put("eliminar", new OperationBuilder() {
             @Override
             public Operation getOperation() {
                 return new DefaultDeleteRegisterOp(infoPanel);
+            }
+        });
+        defaultOperations.put("modificar", new OperationBuilder() {
+            @Override
+            public Operation getOperation() {
+                return new DefaultModifyRegisterOp(infoPanel);
             }
         });
     }

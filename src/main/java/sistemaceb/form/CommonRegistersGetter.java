@@ -7,8 +7,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class CommonRegistersGetter implements optionsGetter {
-
-
     public ViewSpecs specs;
     public ArrayList<ConditionedTable> conditionTags;
     public ArrayList<ConditionedTable> optionsGetters;
@@ -58,7 +56,7 @@ public class CommonRegistersGetter implements optionsGetter {
         ArrayList<ConditionedTable> forTags = new ArrayList();
 
         ArrayList<String> tables = specs.getInfo().getForeignTables();
-        ArrayList<String> tags = specs.getForeignCols();
+        ArrayList<String> tags = specs.getForeignTags();
 
         for(int i = 0;i < tables.size();i++){
             ConditionedTable tableComprober = getTableFfromTable(tables.get(i));
@@ -81,10 +79,10 @@ public class CommonRegistersGetter implements optionsGetter {
     }
 
     public ConditionedTable getTable(String tag){
-        for(ConditionedTable table:optionsGetters){
+        for(ConditionedTable table:optionsGetters)
             if(table.isTag(tag))
                 return table;
-        }
+
         return null;
     }
 
@@ -137,9 +135,7 @@ public class CommonRegistersGetter implements optionsGetter {
 
     @Override
     public boolean hasOptions(String tag){
-
         ConditionedTable table = getTable(tag);
-
         return table != null;
 
     }
@@ -160,7 +156,6 @@ public class CommonRegistersGetter implements optionsGetter {
                 parentalRelations.get(conditionTag).add(currentConditionalTag);
             }
         }
-
         return parentalRelations;
     }
 

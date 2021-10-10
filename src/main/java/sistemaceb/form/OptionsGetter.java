@@ -16,24 +16,17 @@ import JDBCController.optionsGetter;
  * @author escal
  */
 public class OptionsGetter implements optionsGetter{
-    
     private final ConditionedOptionsGetter relatedOptionsGetter;
-    private final StaticOptionsGetter staticOptionsGetter;
 
-        
     public OptionsGetter(ViewSpecs specs){
         relatedOptionsGetter = new ConditionedOptionsGetter(specs);
-        staticOptionsGetter = new StaticOptionsGetter(specs);
     }
     
     public ConditionedOptionsGetter getConditionedOptionsGetter(){
         
         return  relatedOptionsGetter;
     }
-    
-   
 
-        
     @Override
     public Table getOptions(String tag){
 
@@ -48,12 +41,8 @@ public class OptionsGetter implements optionsGetter{
     }
     
     public optionsGetter determinateOptionsGetter(String tag){
-
-
         if(relatedOptionsGetter.hasOptions(tag))
             return relatedOptionsGetter;
-        else if(staticOptionsGetter.hasOptions(tag))
-            return staticOptionsGetter;
         else
             return null;
 

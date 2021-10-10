@@ -1,16 +1,30 @@
 package JDBCController;
 
+import sistemaceb.RespaldosManager;
+import sistemaceb.form.Global;
+
 import java.util.ArrayList;
 
 public class DBSTate {
     public  String loadedPeriodo;
-    public  String currentDatabase;
     public  boolean periodIsPair;
     private Table mainTables;
 
-    public DBSTate(){
-        currentDatabase = "cebdatabase";
-        resetPeriodo();
+    public static String currentDatabase;
+    public static String user;
+    public static String password;
+
+
+    public DBSTate() {
+        user = "remote";
+        password = "Kinareth41ñ$";
+
+        useMainDatabase();
+
+    }
+
+    public static boolean usingMainDatabase(){
+        return currentDatabase.equals("cebdatabase");
     }
 
     public Table getMainTables(){
@@ -21,7 +35,14 @@ public class DBSTate {
     }
 
 
-    public void resetPeriodo(){
+    public void useMainDatabase(){
+        setDataBase( "cebdatabase");
+    }
+
+    public void useResDatabase(){ setDataBase( "backDatabase");
+    }
+
+    public void setCurrentPeriodo(){
         DataBaseConsulter consulter = new DataBaseConsulter("currentperiodo");
 
         String[] period = new String[]{"periodo"};
@@ -64,10 +85,12 @@ public class DBSTate {
         return semestres;
     }
 
-    public  void setDataBase(String base){
+    public void setDataBase(String base){
         currentDatabase = base;
-        resetPeriodo();
+        Global.SQLConector.reConect();
+        setCurrentPeriodo();
     }
+
 
 
 }
