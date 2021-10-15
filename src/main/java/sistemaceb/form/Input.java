@@ -4,15 +4,11 @@
  * and open the template in the editor.
  */
 package sistemaceb.form;
-
-
 import JDBCController.dataType;
 
 import java.awt.*;
 import javax.swing.BorderFactory;
 import javax.swing.JTextField;
-
-
 /**
  *
  * @author escal
@@ -25,10 +21,18 @@ public class Input extends FormElement{
     public Input(String title,dataType type){
         super(title);
         addWrongTypeError();
-        textField= deployTextField();   
+        textField= deployTextField( new JTextField());
         addElement(textField);
         this.type = type;
       
+    }
+
+    public Input(String title,dataType type,int size){
+        super(title);
+        addWrongTypeError();
+        textField= deployTextField(new limitedImput(size));
+        addElement(textField);
+        this.type = type;
     }
     
     private void addWrongTypeError(){
@@ -45,23 +49,17 @@ public class Input extends FormElement{
         );
     }
     
-    private  JTextField deployTextField(){
-        
-        JTextField localTextField = new JTextField();
-            localTextField.setForeground(new Color(120,120,120));
-            localTextField.setBorder(BorderFactory.createLineBorder(new Color(220,220,220),2));
-            localTextField.setPreferredSize(new Dimension(70,30));
-            
-            
-            return localTextField;
-        
+    private  JTextField deployTextField(JTextField localTextField){
+        localTextField.setForeground(new Color(120,120,120));
+        localTextField.setBorder(BorderFactory.createLineBorder(new Color(220,220,220),2));
+        localTextField.setPreferredSize(new Dimension(70,30));
+        return localTextField;
     }
     
     @Override
     protected String getResponseConfig(){
         
         return textField.getText().trim();
-        
     }
 
     @Override
@@ -73,7 +71,6 @@ public class Input extends FormElement{
         textField.setText(text);
         return this;
     }
-
 
     private boolean isRightType(String response){
         switch(type){
@@ -92,9 +89,6 @@ public class Input extends FormElement{
                    return false;
                 }
                 break;
-
-
-
         }
 
         return true;

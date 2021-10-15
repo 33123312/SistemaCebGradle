@@ -24,9 +24,12 @@ public class ConditionedRefTableBuild extends NewRegisterGenTableBuild {
 
     public ConditionedRefTableBuild(String view, String critKey, ViewSpecs dadSpecs) {
         super(view, critKey, dadSpecs);
-        new LinkedTable(view, getOutputTable());
-        setInsertButtonEvent(getButtonEvent());
+        setBehavior(new LinkedTable(view, getOutputTable()));
+    }
 
+    @Override
+    public BtnFE getInsertButton() {
+        return super.getInsertButton(getButtonEvent());
     }
 
     protected String getExistentTagsToInsert() {

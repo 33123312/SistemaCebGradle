@@ -20,7 +20,7 @@ public class FormDialogMessage extends SubmitFrame {
         JLabel label = new JLabel(getMessageWWithFormat(mesage));
             label.setForeground(new Color(100,100,100));
             label.setBorder(new EmptyBorder(20,30,20,30));
-            label.setFont(new Font("arial", Font.PLAIN, 15));
+            label.setFont(new Font("arial", Font.PLAIN, 17));
 
         addBody(label);
     }

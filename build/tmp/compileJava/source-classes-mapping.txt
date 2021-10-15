@@ -1,11 +1,17 @@
-SpecificViews/AnalisisProfesorPDF.java
- SpecificViews.AnalisisProfesorPDF
-sistemaceb/styleModel.java
- sistemaceb.styleModel
+JDBCController/DataBaseUpdater.java
+ JDBCController.DataBaseUpdater
+SpecificViews/PlanosMateriasPills.java
+ SpecificViews.PlanosMateriasPills
+ SpecificViews.PlanosMateriasPills$1
+ SpecificViews.PlanosMateriasPills$1$1
+ SpecificViews.PlanosMateriasPills$2
+ SpecificViews.PlanosMateriasPills$2$1
+sistemaceb/form/ConditionedTable.java
+ sistemaceb.form.ConditionedTable
 sistemaceb/form/EventListener.java
  sistemaceb.form.EventListener
-JDBCController/DBTableMetadata.java
- JDBCController.DBTableMetadata
+SpecificViews/AnalisisProfesorOperation.java
+ SpecificViews.AnalisisProfesorOperation
 SpecificViews/BitacoraMateriaGrupoPDF.java
  SpecificViews.BitacoraMateriaGrupoPDF
 JDBCController/DataBaseConsulter.java
@@ -28,23 +34,28 @@ sistemaceb/RespaldoChargerWindow.java
  sistemaceb.RespaldoChargerWindow$8
  sistemaceb.RespaldoChargerWindow$PanelPeriodoSelector
  sistemaceb.RespaldoChargerWindow$PanelPeriodoSelector$1
-sistemaceb/form/RefTableBuildFac.java
- sistemaceb.form.RefTableBuildFac
-SpecificViews/AluMateriaBolOperator.java
- SpecificViews.AluMateriaBolOperator
-sistemaceb/formRelationEvent.java
- sistemaceb.formRelationEvent
-SpecificViews/ALumnoOperator.java
- SpecificViews.ALumnoOperator
- SpecificViews.ALumnoOperator$TodasMateriasOps
+sistemaceb/ConditionedRefTableBuild.java
+ sistemaceb.ConditionedRefTableBuild
+ sistemaceb.ConditionedRefTableBuild$1
+ sistemaceb.ConditionedRefTableBuild$2
+ sistemaceb.ConditionedRefTableBuild$2$1
+ sistemaceb.ConditionedRefTableBuild$3
+sistemaceb/LinkedTable.java
+ sistemaceb.LinkedTable
+ sistemaceb.LinkedTable$1
+sistemaceb/GrupoSemestrePasador.java
+ sistemaceb.GrupoSemestrePasador
+SpecificViews/HorarioConsulter.java
+ SpecificViews.HorarioConsulter
+ SpecificViews.HorarioConsulter$1
 JDBCController/SpecsInfo.java
  JDBCController.SpecsInfo
 sistemaceb/form/ErrorChecker.java
  sistemaceb.form.ErrorChecker
-JDBCController/infoPackage.java
- JDBCController.infoPackage
-SpecificViews/ProfesorHorarioPDFBuilder.java
- SpecificViews.ProfesorHorarioPDFBuilder
+SpecificViews/BitacoraMateriaGrupo.java
+ SpecificViews.BitacoraMateriaGrupo
+SpecificViews/OperationInfoPanel.java
+ SpecificViews.OperationInfoPanel
 SpecificViews/LinearVerticalLayout.java
  SpecificViews.LinearVerticalLayout
 sistemaceb/editedScrollPanel.java
@@ -53,22 +64,23 @@ sistemaceb/editedScrollPanel.java
  sistemaceb.editedScrollPanel$2
 sistemaceb/SemestreOperator.java
  sistemaceb.SemestreOperator
-SpecificViews/AluMateriaOperator.java
- SpecificViews.AluMateriaOperator
+SpecificViews/GrupoCalifConsulter.java
+ SpecificViews.GrupoCalifConsulter
+ SpecificViews.GrupoCalifConsulter$1
 SpecificViews/LinearHorizontalLayout.java
  SpecificViews.LinearHorizontalLayout
 sistemaceb/form/HorizontalFormPanel.java
  sistemaceb.form.HorizontalFormPanel
 SpecificViews/CalifasOperator.java
  SpecificViews.CalifasOperator
-SpecificViews/PromsOperations.java
- SpecificViews.PromsOperations
-sistemaceb/rowUpdateConfirmationFrame.java
- sistemaceb.rowUpdateConfirmationFrame
- sistemaceb.rowUpdateConfirmationFrame$1
-SpecificViews/CuadroResumenPdfBuilder.java
- SpecificViews.CuadroResumenPdfBuilder
- SpecificViews.CuadroResumenPdfBuilder$MateriaGrupoInfo
+sistemaceb/ConsultTableBuild.java
+ sistemaceb.ConsultTableBuild
+ sistemaceb.ConsultTableBuild$1
+ sistemaceb.ConsultTableBuild$InsertiveForm
+ sistemaceb.ConsultTableBuild$InsertiveForm$1
+JDBCController/ViewSpecs.java
+ JDBCController.ViewSpecs
+ JDBCController.ViewSpecs$Updater
 SpecificViews/SimplePdfTableGenerator.java
  SpecificViews.SimplePdfTableGenerator
 sistemaceb/form/Section.java
@@ -78,24 +90,27 @@ sistemaceb/ViewAdapter.java
  sistemaceb.ViewAdapter$1
 JDBCController/DBU.java
  JDBCController.DBU
-JDBCController/complexSearcher.java
- JDBCController.complexSearcher
+sistemaceb/ConditionedConsultTable.java
+ sistemaceb.ConditionedConsultTable
 JDBCController/TableRegister.java
  JDBCController.TableRegister
+sistemaceb/keyedBuildBehavior.java
+ sistemaceb.keyedBuildBehavior
 sistemaceb/reactiveSearchBar.java
  sistemaceb.reactiveSearchBar
  sistemaceb.reactiveSearchBar$1
  sistemaceb.reactiveSearchBar$ItemChangeListener
 sistemaceb/form/formElementWithOptions.java
  sistemaceb.form.formElementWithOptions
-SpecificViews/PdfCuadroHonorBuilder.java
- SpecificViews.PdfCuadroHonorBuilder
+sistemaceb/IntermediaryCrudBuild.java
+ sistemaceb.IntermediaryCrudBuild
+SpecificViews/MultipleFormsOperation.java
+ SpecificViews.MultipleFormsOperation
 SpecificViews/GrupoOperator.java
  SpecificViews.GrupoOperator
  SpecificViews.GrupoOperator$GrupoMateriaOperator
-sistemaceb/SwitcheableWindowPills.java
- sistemaceb.SwitcheableWindowPills
- sistemaceb.SwitcheableWindowPills$1
+sistemaceb/form/ConditionedOptionsGetter.java
+ sistemaceb.form.ConditionedOptionsGetter
 sistemaceb/form/ViewsRelationState.java
  sistemaceb.form.ViewsRelationState
 sistemaceb/form/FormDialogMessage.java
@@ -108,46 +123,59 @@ SpecificViews/AnalisisProfesoresPdf.java
  SpecificViews.AnalisisProfesoresPdf
 sistemaceb/form/TrigerElemetGetter.java
  sistemaceb.form.TrigerElemetGetter
-JDBCController/CrudCerator.java
- JDBCController.CrudCerator
+sistemaceb/MainWindowMenu.java
+ sistemaceb.MainWindowMenu
+ sistemaceb.MainWindowMenu$1
+ sistemaceb.MainWindowMenu$2
+ sistemaceb.MainWindowMenu$3
+ sistemaceb.MainWindowMenu$4
+ sistemaceb.MainWindowMenu$5
 sistemaceb/form/elementInfoPack.java
  sistemaceb.form.elementInfoPack
 SpecificViews/opBackend.java
  SpecificViews.opBackend
-SpecificViews/HorariosPlanosPdf.java
- SpecificViews.HorariosPlanosPdf
-sistemaceb/FormResponseManager.java
- sistemaceb.FormResponseManager
+sistemaceb/KeyedTableBehavior.java
+ sistemaceb.KeyedTableBehavior
+sistemaceb/form/RelationComprober.java
+ sistemaceb.form.RelationComprober
 SpecificViews/GrupoListaGenerator.java
  SpecificViews.GrupoListaGenerator
 SpecificViews/PDFPlantillaTable.java
  SpecificViews.PDFPlantillaTable
 SpecificViews/PlanesOperator.java
  SpecificViews.PlanesOperator
-sistemaceb/SistemaCeb.java
- sistemaceb.SistemaCeb
-sistemaceb/stringInputManager.java
- sistemaceb.stringInputManager
+SpecificViews/MateriaModificator.java
+ SpecificViews.MateriaModificator
+SpecificViews/LinkedInterTable.java
+ SpecificViews.LinkedInterTable
+ SpecificViews.LinkedInterTable$1
+ SpecificViews.LinkedInterTable$1$1
+ SpecificViews.LinkedInterTable$1$2
+ SpecificViews.LinkedInterTable$1$3
+ SpecificViews.LinkedInterTable$2
 JDBCController/DataBaseConector.java
  JDBCController.DataBaseConector
  JDBCController.DataBaseConector$1
-JDBCController/DBSTate.java
- JDBCController.DBSTate
+sistemaceb/ConsulterReactiveSB.java
+ sistemaceb.ConsulterReactiveSB
 JDBCController/optionsGetter.java
  JDBCController.optionsGetter
 sistemaceb/genericEvents.java
  sistemaceb.genericEvents
-sistemaceb/form/Formulario.java
- sistemaceb.form.Formulario
- sistemaceb.form.Formulario$1
-sistemaceb/DinamicForm.java
- sistemaceb.DinamicForm
-JDBCController/dataType.java
- JDBCController.dataType
+SpecificViews/Operation.java
+ SpecificViews.Operation
+sistemaceb/SemestrePasador.java
+ sistemaceb.SemestrePasador
+ sistemaceb.SemestrePasador$1
+ sistemaceb.SemestrePasador$2
+ sistemaceb.SemestrePasador$3
+SpecificViews/BuilderBackend2.java
+ SpecificViews.BuilderBackend2
+ SpecificViews.BuilderBackend2$1
 sistemaceb/Window.java
  sistemaceb.Window
-sistemaceb/form/proccesStateStorage.java
- sistemaceb.form.proccesStateStorage
+SpecificViews/HorariosPlanosBuilder.java
+ SpecificViews.HorariosPlanosBuilder
 sistemaceb/form/MenuListsContainer.java
  sistemaceb.form.MenuListsContainer
 sistemaceb/DInamicWindow.java
@@ -156,88 +184,31 @@ sistemaceb/form/DateInput.java
  sistemaceb.form.DateInput
  sistemaceb.form.DateInput$1
  sistemaceb.form.DateInput$2
- sistemaceb.form.DateInput$JTextFieldLimit
- sistemaceb.form.DateInput$JTextFieldLimit$LimitDocument
-sistemaceb/GrupoPasserWindow.java
- sistemaceb.GrupoPasserWindow
- sistemaceb.GrupoPasserWindow$1
 SpecificViews/AluMateriaNumOperator.java
  SpecificViews.AluMateriaNumOperator
+SpecificViews/AsignaturaOperator.java
+ SpecificViews.AsignaturaOperator
+sistemaceb/form/limitedImput.java
+ sistemaceb.form.limitedImput
+ sistemaceb.form.limitedImput$LimitDocument
 JDBCController/textProccesor.java
  JDBCController.textProccesor
-sistemaceb/MainWindow.java
- sistemaceb.MainWindow
- sistemaceb.MainWindow$1
-JDBCController/Table.java
- JDBCController.Table
+sistemaceb/PlanEstudioMateriasUpdater.java
+ sistemaceb.PlanEstudioMateriasUpdater
+JDBCController/StaticOptionsGetter.java
+ JDBCController.StaticOptionsGetter
 sistemaceb/form/DesplegableMenu.java
  sistemaceb.form.DesplegableMenu
  sistemaceb.form.DesplegableMenu$1
-sistemaceb/PeriodoChanger.java
- sistemaceb.PeriodoChanger
+SpecificViews/ProfesorHorario.java
+ SpecificViews.ProfesorHorario
 sistemaceb/referencedConsulterTableBuild.java
  sistemaceb.referencedConsulterTableBuild
-sistemaceb/SubmitFrame.java
- sistemaceb.SubmitFrame
- sistemaceb.SubmitFrame$1
- sistemaceb.SubmitFrame$2
- sistemaceb.SubmitFrame$3
- sistemaceb.SubmitFrame$4
- sistemaceb.SubmitFrame$5
-JDBCInterfaces/ConsulterInterface.java
- JDBCInterfaces.ConsulterInterface
-JDBCController/ratesSorter.java
- JDBCController.ratesSorter
-sistemaceb/form/FormElementErrors.java
- sistemaceb.form.FormElementErrors
-SpecificViews/BoletaPDFBuilder.java
- SpecificViews.BoletaPDFBuilder
-SpecificViews/ConcentradoTodasMateriasPDF.java
- SpecificViews.ConcentradoTodasMateriasPDF
-sistemaceb/MainWindowMenu.java
- sistemaceb.MainWindowMenu
- sistemaceb.MainWindowMenu$1
- sistemaceb.MainWindowMenu$2
- sistemaceb.MainWindowMenu$3
- sistemaceb.MainWindowMenu$4
- sistemaceb.MainWindowMenu$5
-SpecificViews/GrupoPasserInfoStorage.java
- SpecificViews.GrupoPasserInfoStorage
-sistemaceb/form/Input.java
- sistemaceb.form.Input
- sistemaceb.form.Input$1
- sistemaceb.form.Input$2
-sistemaceb/form/PeriodosManager.java
- sistemaceb.form.PeriodosManager
-sistemaceb/form/GroupRelationarForm.java
- sistemaceb.form.GroupRelationarForm
- sistemaceb.form.GroupRelationarForm$1
-sistemaceb/primaryKeyedTable.java
- sistemaceb.primaryKeyedTable
- sistemaceb.primaryKeyedTable$1
- sistemaceb.primaryKeyedTable$1$1
- sistemaceb.primaryKeyedTable$2
- sistemaceb.primaryKeyedTable$2$1
- sistemaceb.primaryKeyedTable$clickedRowEvent
-sistemaceb/form/Global.java
- sistemaceb.form.Global
-sistemaceb/ListButton.java
- sistemaceb.ListButton
- sistemaceb.ListButton$Button
- sistemaceb.ListButton$Button$1
- sistemaceb.ListButton$Button$2
- sistemaceb.ListButton$WindowBuiler
-sistemaceb/form/FormWindow.java
- sistemaceb.form.FormWindow
- sistemaceb.form.FormWindow$1
- sistemaceb.form.FormWindow$2
-SpecificViews/AsignaturaOperatorr.java
- SpecificViews.AsignaturaOperatorr
-SpecificViews/ProfesoresOperator.java
- SpecificViews.ProfesoresOperator
-sistemaceb/form/FormElement.java
- sistemaceb.form.FormElement
- sistemaceb.form.FormElement$1
+sistemaceb/LinkedUserProps.java
+ sistemaceb.LinkedUserProps
+ sistemaceb.LinkedUserProps$1
+SpecificViews/ListadoAlumnosOp.java
+ SpecificViews.ListadoAlumnosOp
 sistemaceb/CrudTable.java
  sistemaceb.CrudTable
  sistemaceb.CrudTable$1
@@ -248,63 +219,97 @@ sistemaceb/CrudTable.java
  sistemaceb.CrudTable$3
  sistemaceb.CrudTable$3$1
  sistemaceb.CrudTable$3$1$1
-JDBCController/DataBaseUpdater.java
- JDBCController.DataBaseUpdater
+sistemaceb/RegisterDetailView.java
+ sistemaceb.RegisterDetailView
+ sistemaceb.RegisterDetailView$1
+ sistemaceb.RegisterDetailView$2
+ sistemaceb.RegisterDetailView$3
 SpecificViews/TableViewerOperation.java
  SpecificViews.TableViewerOperation
  SpecificViews.TableViewerOperation$1
  SpecificViews.TableViewerOperation$2
  SpecificViews.TableViewerOperation$3
  SpecificViews.TableViewerOperation$tableToPrint
-SpecificViews/BuilderBackend.java
- SpecificViews.BuilderBackend
- SpecificViews.BuilderBackend$1
+SpecificViews/ConcentradoTodasMateriasPDF.java
+ SpecificViews.ConcentradoTodasMateriasPDF
+JDBCController/CrudCerator.java
+ JDBCController.CrudCerator
+RegisterDetailViewProps/SemestreRegisterProps.java
+ RegisterDetailViewProps.SemestreRegisterProps
+sistemaceb/form/Input.java
+ sistemaceb.form.Input
+ sistemaceb.form.Input$1
+ sistemaceb.form.Input$2
+sistemaceb/form/PeriodosManager.java
+ sistemaceb.form.PeriodosManager
 SpecificViews/SemestralCalifasChoser.java
  SpecificViews.SemestralCalifasChoser
  SpecificViews.SemestralCalifasChoser$1
-sistemaceb/form/ConditionedTable.java
- sistemaceb.form.ConditionedTable
-SpecificViews/AnalisisProfesorOperation.java
- SpecificViews.AnalisisProfesorOperation
+SpecificViews/TableOperator.java
+ SpecificViews.TableOperator
+sistemaceb/primaryKeyedTable.java
+ sistemaceb.primaryKeyedTable
+ sistemaceb.primaryKeyedTable$1
+ sistemaceb.primaryKeyedTable$1$1
+ sistemaceb.primaryKeyedTable$2
+ sistemaceb.primaryKeyedTable$2$1
+ sistemaceb.primaryKeyedTable$clickedRowEvent
+sistemaceb/form/Global.java
+ sistemaceb.form.Global
 SpecificViews/BoletaBuilder.java
  SpecificViews.BoletaBuilder
  SpecificViews.BoletaBuilder$1
  SpecificViews.BoletaBuilder$2
+ SpecificViews.BoletaBuilder$2$1
  SpecificViews.BoletaBuilder$3
+sistemaceb/form/FormWindow.java
+ sistemaceb.form.FormWindow
+ sistemaceb.form.FormWindow$1
+ sistemaceb.form.FormWindow$2
 sistemaceb/NewRegisterGenTableBuild.java
  sistemaceb.NewRegisterGenTableBuild
  sistemaceb.NewRegisterGenTableBuild$1
+ sistemaceb.NewRegisterGenTableBuild$1$1
+sistemaceb/form/FormElement.java
+ sistemaceb.form.FormElement
+ sistemaceb.form.FormElement$1
 JDBCController/DataBaseSearcher.java
  JDBCController.DataBaseSearcher
  JDBCController.DataBaseSearcher$TagToSearch
+JDBCInterfaces/ConsulterInterface.java
+ JDBCInterfaces.ConsulterInterface
 SpecificViews/AsignturasPillChoser.java
  SpecificViews.AsignturasPillChoser
  SpecificViews.AsignturasPillChoser$1
- SpecificViews.AsignturasPillChoser$1$1
  SpecificViews.AsignturasPillChoser$2
- SpecificViews.AsignturasPillChoser$2$1
  SpecificViews.AsignturasPillChoser$3
+ SpecificViews.AsignturasPillChoser$3$1
  SpecificViews.AsignturasPillChoser$4
-sistemaceb/ConditionedRefTableBuild.java
- sistemaceb.ConditionedRefTableBuild
- sistemaceb.ConditionedRefTableBuild$1
- sistemaceb.ConditionedRefTableBuild$2
- sistemaceb.ConditionedRefTableBuild$2$1
- sistemaceb.ConditionedRefTableBuild$3
+ SpecificViews.AsignturasPillChoser$5
+ SpecificViews.AsignturasPillChoser$6
+sistemaceb/SubmitFrame.java
+ sistemaceb.SubmitFrame
+ sistemaceb.SubmitFrame$1
+ sistemaceb.SubmitFrame$2
+ sistemaceb.SubmitFrame$3
+ sistemaceb.SubmitFrame$4
+ sistemaceb.SubmitFrame$5
 SpecificViews/PlanosModificationOp.java
  SpecificViews.PlanosModificationOp
  SpecificViews.PlanosModificationOp$1
-sistemaceb/LinkedTable.java
- sistemaceb.LinkedTable
- sistemaceb.LinkedTable$1
-sistemaceb/GrupoSemestrePasador.java
- sistemaceb.GrupoSemestrePasador
-SpecificViews/HorarioConsulter.java
- SpecificViews.HorarioConsulter
-SpecificViews/BitacoraMateriaGrupo.java
- SpecificViews.BitacoraMateriaGrupo
-SpecificViews/OperationInfoPanel.java
- SpecificViews.OperationInfoPanel
+JDBCController/Table.java
+ JDBCController.Table
+JDBCController/DBSTate.java
+ JDBCController.DBSTate
+sistemaceb/MainWindow.java
+ sistemaceb.MainWindow
+ sistemaceb.MainWindow$1
+sistemaceb/AlumnoRemover.java
+ sistemaceb.AlumnoRemover
+SpecificViews/PdfHorarioGrupoBuilder.java
+ SpecificViews.PdfHorarioGrupoBuilder
+sistemaceb/form/RefTableBuildFac.java
+ sistemaceb.form.RefTableBuildFac
 SpecificViews/SubmitOperation.java
  SpecificViews.SubmitOperation
  SpecificViews.SubmitOperation$1
@@ -314,28 +319,27 @@ SpecificViews/PlanesEstudioChoserOp.java
  SpecificViews.PlanesEstudioChoserOp$1$1
 SpecificViews/PlanoGrupoViewerPill.java
  SpecificViews.PlanoGrupoViewerPill
+JDBCController/ratesSorter.java
+ JDBCController.ratesSorter
 SpecificViews/TableViewerPDFOp.java
  SpecificViews.TableViewerPDFOp
  SpecificViews.TableViewerPDFOp$1
 SpecificViews/CuadroResumenOP.java
  SpecificViews.CuadroResumenOP
  SpecificViews.CuadroResumenOP$1
-SpecificViews/GrupoCalifConsulter.java
- SpecificViews.GrupoCalifConsulter
- SpecificViews.GrupoCalifConsulter$1
-sistemaceb/ConsultTableBuild.java
- sistemaceb.ConsultTableBuild
- sistemaceb.ConsultTableBuild$1
- sistemaceb.ConsultTableBuild$InsertiveForm
- sistemaceb.ConsultTableBuild$InsertiveForm$1
-SpecificViews/newMateriPlanos.java
- SpecificViews.newMateriPlanos
- SpecificViews.newMateriPlanos$1
-JDBCController/ViewSpecs.java
- JDBCController.ViewSpecs
- JDBCController.ViewSpecs$Updater
+SpecificViews/PromsOperations.java
+ SpecificViews.PromsOperations
+SpecificViews/DeleteAluOperation.java
+ SpecificViews.DeleteAluOperation
+ SpecificViews.DeleteAluOperation$1
+JDBCController/dataType.java
+ JDBCController.dataType
 sistemaceb/form/OptionsGetter.java
  sistemaceb.form.OptionsGetter
+JDBCController/infoPackage.java
+ JDBCController.infoPackage
+sistemaceb/PeriodoChanger.java
+ sistemaceb.PeriodoChanger
 SpecificViews/IntermediaryTableConsultBuild.java
  SpecificViews.IntermediaryTableConsultBuild
 sistemaceb/CrudWindow.java
@@ -343,24 +347,26 @@ sistemaceb/CrudWindow.java
  sistemaceb.CrudWindow$1
  sistemaceb.CrudWindow$2
  sistemaceb.CrudWindow$3
- sistemaceb.CrudWindow$3$1
  sistemaceb.CrudWindow$4
+ sistemaceb.CrudWindow$4$1
  sistemaceb.CrudWindow$5
+ sistemaceb.CrudWindow$6
 SpecificViews/GrupoHorarioChecker.java
  SpecificViews.GrupoHorarioChecker
 SpecificViews/MultipleFormsPanel.java
  SpecificViews.MultipleFormsPanel
  SpecificViews.MultipleFormsPanel$FormElementBuilder
  SpecificViews.MultipleFormsPanel$keyedHForm
-sistemaceb/PlanEstudioMateriasUpdater.java
- sistemaceb.PlanEstudioMateriasUpdater
-sistemaceb/ConditionedConsultTable.java
- sistemaceb.ConditionedConsultTable
+SpecificViews/OperationsManager.java
+ SpecificViews.OperationsManager
+sistemaceb/SistemaCeb.java
+ sistemaceb.SistemaCeb
 sistemaceb/SimpleInsertTableBuild.java
  sistemaceb.SimpleInsertTableBuild
  sistemaceb.SimpleInsertTableBuild$1
  sistemaceb.SimpleInsertTableBuild$1$1
  sistemaceb.SimpleInsertTableBuild$2
+ sistemaceb.SimpleInsertTableBuild$3
 SpecificViews/CellPropManager.java
  SpecificViews.CellPropManager
 sistemaceb/form/MultipleFormWindow.java
@@ -372,25 +378,31 @@ SpecificViews/DefaultModifyRegisterOp.java
  SpecificViews.DefaultModifyRegisterOp
  SpecificViews.DefaultModifyRegisterOp$1
  SpecificViews.DefaultModifyRegisterOp$1$1
-SpecificViews/ListadoAlumnosOp.java
- SpecificViews.ListadoAlumnosOp
-SpecificViews/MultipleFormsOperation.java
- SpecificViews.MultipleFormsOperation
-sistemaceb/LinkedUserProps.java
- sistemaceb.LinkedUserProps
- sistemaceb.LinkedUserProps$1
+RegisterDetailViewProps/AlumnosRegisterProps.java
+ RegisterDetailViewProps.AlumnosRegisterProps
+sistemaceb/form/GroupRelationarForm.java
+ sistemaceb.form.GroupRelationarForm
+ sistemaceb.form.GroupRelationarForm$1
+RegisterDetailViewProps/GrupoRegisterProps.java
+ RegisterDetailViewProps.GrupoRegisterProps
+sistemaceb/form/proccesStateStorage.java
+ sistemaceb.form.proccesStateStorage
 sistemaceb/form/CommonRegistersGetter.java
  sistemaceb.form.CommonRegistersGetter
-sistemaceb/form/ConditionedOptionsGetter.java
- sistemaceb.form.ConditionedOptionsGetter
+SpecificViews/PdfCuadroHonorBuilder.java
+ SpecificViews.PdfCuadroHonorBuilder
+sistemaceb/GrupoPasserWindow.java
+ sistemaceb.GrupoPasserWindow
+ sistemaceb.GrupoPasserWindow$1
+sistemaceb/SwitcheableWindowPills.java
+ sistemaceb.SwitcheableWindowPills
+ sistemaceb.SwitcheableWindowPills$1
 SpecificViews/BoletaConsulter.java
  SpecificViews.BoletaConsulter
-sistemaceb/TagFormBuilder.java
- sistemaceb.TagFormBuilder
- sistemaceb.TagFormBuilder$1
- sistemaceb.TagFormBuilder$2
- sistemaceb.TagFormBuilder$FormElementDetail
- sistemaceb.TagFormBuilder$elementTypes
+RegisterDetailViewProps/PlanosEstudioRegisterProps.java
+ RegisterDetailViewProps.PlanosEstudioRegisterProps
+SpecificViews/BoletaPDFBuilder.java
+ SpecificViews.BoletaPDFBuilder
 SpecificViews/DefaultDeleteRegisterOp.java
  SpecificViews.DefaultDeleteRegisterOp
  SpecificViews.DefaultDeleteRegisterOp$1
@@ -398,34 +410,33 @@ sistemaceb/RegisterDetailTable.java
  sistemaceb.RegisterDetailTable
  sistemaceb.RegisterDetailTable$1
  sistemaceb.RegisterDetailTable$2
+sistemaceb/formRelationEvent.java
+ sistemaceb.formRelationEvent
 SpecificViews/DefaultRegisterDetailTable.java
  SpecificViews.DefaultRegisterDetailTable
-SpecificViews/RegisterDetailTableTrigerer.java
- SpecificViews.RegisterDetailTableTrigerer
 SpecificViews/ConcentradoTodasMateriasOp.java
  SpecificViews.ConcentradoTodasMateriasOp
-sistemaceb/KeyedTableBehavior.java
- sistemaceb.KeyedTableBehavior
-JDBCController/StaticOptionsGetter.java
- JDBCController.StaticOptionsGetter
-SpecificViews/GrupoModificatorOp.java
- SpecificViews.GrupoModificatorOp
- SpecificViews.GrupoModificatorOp$1
- SpecificViews.GrupoModificatorOp$GrupoModificatorListener
-sistemaceb/form/RelationComprober.java
- sistemaceb.form.RelationComprober
+JDBCController/complexSearcher.java
+ JDBCController.complexSearcher
+SpecificViews/MateriasRegisterProps.java
+ SpecificViews.MateriasRegisterProps
+RegisterDetailViewProps/RegisterDetail.java
+ RegisterDetailViewProps.RegisterDetail
+ RegisterDetailViewProps.RegisterDetail$1
+ RegisterDetailViewProps.RegisterDetail$2
+ RegisterDetailViewProps.RegisterDetail$3
+ RegisterDetailViewProps.RegisterDetail$OperationBuilder
+sistemaceb/DinamicForm.java
+ sistemaceb.DinamicForm
 sistemaceb/SelectionFIlterTable.java
  sistemaceb.SelectionFIlterTable
  sistemaceb.SelectionFIlterTable$1
-SpecificViews/MateriaModificator.java
- SpecificViews.MateriaModificator
-SpecificViews/LinkedInterTable.java
- SpecificViews.LinkedInterTable
- SpecificViews.LinkedInterTable$1
- SpecificViews.LinkedInterTable$1$1
- SpecificViews.LinkedInterTable$1$2
-sistemaceb/ConsulterReactiveSB.java
- sistemaceb.ConsulterReactiveSB
+sistemaceb/ListButton.java
+ sistemaceb.ListButton
+ sistemaceb.ListButton$Button
+ sistemaceb.ListButton$Button$1
+ sistemaceb.ListButton$Button$2
+ sistemaceb.ListButton$WindowBuiler
 SpecificViews/AlumnoDeleteOp.java
  SpecificViews.AlumnoDeleteOp
  SpecificViews.AlumnoDeleteOp$1
@@ -435,10 +446,11 @@ sistemaceb/form/MultipleAdderConsultBuild.java
  sistemaceb.form.MultipleAdderConsultBuild$1$1
  sistemaceb.form.MultipleAdderConsultBuild$2
  sistemaceb.form.MultipleAdderConsultBuild$2$1
-SpecificViews/Operation.java
- SpecificViews.Operation
-SpecificViews/ProfesorHorario.java
- SpecificViews.ProfesorHorario
+ sistemaceb.form.MultipleAdderConsultBuild$2$2
+SpecificViews/AluMateriaOperator.java
+ SpecificViews.AluMateriaOperator
+RegisterDetailViewProps/ProfesoresRegisterDetail.java
+ RegisterDetailViewProps.ProfesoresRegisterDetail
 SpecificViews/CuadroDeHonorOperation.java
  SpecificViews.CuadroDeHonorOperation
  SpecificViews.CuadroDeHonorOperation$1
@@ -446,22 +458,27 @@ SpecificViews/CuadroDeHonorOperation.java
  SpecificViews.CuadroDeHonorOperation$3
  SpecificViews.CuadroDeHonorOperation$4
  SpecificViews.CuadroDeHonorOperation$CalifaGeter
-sistemaceb/SemestrePasador.java
- sistemaceb.SemestrePasador
- sistemaceb.SemestrePasador$1
- sistemaceb.SemestrePasador$2
- sistemaceb.SemestrePasador$3
-SpecificViews/BuilderBackend2.java
- SpecificViews.BuilderBackend2
- SpecificViews.BuilderBackend2$1
+SpecificViews/HorariosPlanosPdf.java
+ SpecificViews.HorariosPlanosPdf
+JDBCController/DBTableMetadata.java
+ JDBCController.DBTableMetadata
+SpecificViews/ALumnoOperator.java
+ SpecificViews.ALumnoOperator
+ SpecificViews.ALumnoOperator$TodasMateriasOps
+SpecificViews/AluMateriaBolOperator.java
+ SpecificViews.AluMateriaBolOperator
+sistemaceb/form/Formulario.java
+ sistemaceb.form.Formulario
+ sistemaceb.form.Formulario$1
+sistemaceb/rowUpdateConfirmationFrame.java
+ sistemaceb.rowUpdateConfirmationFrame
+ sistemaceb.rowUpdateConfirmationFrame$1
 SpecificViews/HorarioBuilder.java
  SpecificViews.HorarioBuilder
  SpecificViews.HorarioBuilder$1
  SpecificViews.HorarioBuilder$2
  SpecificViews.HorarioBuilder$3
  SpecificViews.HorarioBuilder$4
-SpecificViews/HorariosPlanosBuilder.java
- SpecificViews.HorariosPlanosBuilder
 sistemaceb/keyHiddedCoonsTableBuild.java
  sistemaceb.keyHiddedCoonsTableBuild
 SpecificViews/OperationWindow.java
@@ -470,35 +487,38 @@ SpecificViews/CellManager.java
  SpecificViews.CellManager
 SpecificViews/ConcetratedTableBuilder.java
  SpecificViews.ConcetratedTableBuilder
-JDBCController/ViewUpdater.java
- JDBCController.ViewUpdater
-sistemaceb/RegisterDetailView.java
- sistemaceb.RegisterDetailView
- sistemaceb.RegisterDetailView$1
- sistemaceb.RegisterDetailView$2
- sistemaceb.RegisterDetailView$3
- sistemaceb.RegisterDetailView$4
-RegisterDetailViewProps/AlumnosRegisterProps.java
- RegisterDetailViewProps.AlumnosRegisterProps
-RegisterDetailViewProps/SemestreRegisterProps.java
- RegisterDetailViewProps.SemestreRegisterProps
-RegisterDetailViewProps/GrupoRegisterProps.java
- RegisterDetailViewProps.GrupoRegisterProps
- RegisterDetailViewProps.GrupoRegisterProps$1
- RegisterDetailViewProps.GrupoRegisterProps$2
-RegisterDetailViewProps/ProfesoresRegisterDetail.java
- RegisterDetailViewProps.ProfesoresRegisterDetail
-SpecificViews/MateriasRegisterProps.java
- SpecificViews.MateriasRegisterProps
-RegisterDetailViewProps/RegisterDetail.java
- RegisterDetailViewProps.RegisterDetail
- RegisterDetailViewProps.RegisterDetail$1
- RegisterDetailViewProps.RegisterDetail$2
- RegisterDetailViewProps.RegisterDetail$3
- RegisterDetailViewProps.RegisterDetail$OperationBuilder
-SpecificViews/OperationsManager.java
- SpecificViews.OperationsManager
-RegisterDetailViewProps/PlanosEstudioRegisterProps.java
- RegisterDetailViewProps.PlanosEstudioRegisterProps
- RegisterDetailViewProps.PlanosEstudioRegisterProps$1
- RegisterDetailViewProps.PlanosEstudioRegisterProps$2
+sistemaceb/TagFormBuilder.java
+ sistemaceb.TagFormBuilder
+ sistemaceb.TagFormBuilder$1
+ sistemaceb.TagFormBuilder$2
+ sistemaceb.TagFormBuilder$FormElementDetail
+ sistemaceb.TagFormBuilder$elementTypes
+sistemaceb/stringInputManager.java
+ sistemaceb.stringInputManager
+SpecificViews/DeletePlanosOp.java
+ SpecificViews.DeletePlanosOp
+ SpecificViews.DeletePlanosOp$1
+sistemaceb/FormResponseManager.java
+ sistemaceb.FormResponseManager
+SpecificViews/AnalisisProfesorPDF.java
+ SpecificViews.AnalisisProfesorPDF
+SpecificViews/ProfesoresOperator.java
+ SpecificViews.ProfesoresOperator
+SpecificViews/GrupoModificatorOp.java
+ SpecificViews.GrupoModificatorOp
+ SpecificViews.GrupoModificatorOp$1
+ SpecificViews.GrupoModificatorOp$GrupoModificatorListener
+sistemaceb/styleModel.java
+ sistemaceb.styleModel
+SpecificViews/BuilderBackend.java
+ SpecificViews.BuilderBackend
+ SpecificViews.BuilderBackend$1
+SpecificViews/CuadroResumenPdfBuilder.java
+ SpecificViews.CuadroResumenPdfBuilder
+ SpecificViews.CuadroResumenPdfBuilder$MateriaGrupoInfo
+SpecificViews/ProfesorHorarioPDFBuilder.java
+ SpecificViews.ProfesorHorarioPDFBuilder
+SpecificViews/GrupoPasserInfoStorage.java
+ SpecificViews.GrupoPasserInfoStorage
+sistemaceb/form/FormElementErrors.java
+ sistemaceb.form.FormElementErrors

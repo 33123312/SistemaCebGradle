@@ -26,7 +26,7 @@ public class DBTableMetadata{
 
         }
 
-        public ArrayList<String>  getColumnsMetadata(String popiertyToGet){
+    public ArrayList<String>  getColumnsMetadata(String popiertyToGet){
         makeMetadataConection();
                 ArrayList<String> ColumnsList = new ArrayList();
         try {
@@ -40,6 +40,22 @@ public class DBTableMetadata{
             Logger.getLogger(DataBaseConsulter.class.getName()).log(Level.SEVERE, null, ex);
         }
         return  ColumnsList;
+    }
+
+    public ArrayList<Integer>  getColumnsSize(){
+        makeMetadataConection();
+        ArrayList<Integer> columnsList = new ArrayList();
+        try {
+            ResultSet columns = getMetadata().getColumns(Global.conectionData.currentDatabase,null,table,null);
+
+            while(columns.next())
+                columnsList.add(columns.getInt("COLUMN_SIZE"));
+
+        } catch (SQLException ex) {
+            Logger.getLogger(DataBaseConsulter.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        return  columnsList;
     }
 
     public ArrayList<String> getAutoIncCols(){

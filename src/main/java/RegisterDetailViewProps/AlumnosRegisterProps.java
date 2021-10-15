@@ -1,9 +1,6 @@
 package RegisterDetailViewProps;
 
-import SpecificViews.AlumnoDeleteOp;
-import SpecificViews.BoletaBuilder;
-import SpecificViews.BoletaConsulter;
-import SpecificViews.OperationInfoPanel;
+import SpecificViews.*;
 
 public class AlumnosRegisterProps extends  RegisterDetail{
     public AlumnosRegisterProps(OperationInfoPanel infoPanel) {
@@ -11,5 +8,6 @@ public class AlumnosRegisterProps extends  RegisterDetail{
         overRideDefOp("eliminar",new AlumnoDeleteOp(infoPanel));
         addOperation(new BoletaConsulter(infoPanel));
         addOperation(new BoletaBuilder(infoPanel));
+        addOperation(new DeleteAluOperation(infoPanel));
     }
 }

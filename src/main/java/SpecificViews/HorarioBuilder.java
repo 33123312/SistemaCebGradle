@@ -52,10 +52,11 @@ public class HorarioBuilder extends MultipleFormsOperation{
         if(misingMaterias.isEmpty())
             return true;
         else {
-            FormDialogMessage form = new FormDialogMessage("Error","Las materias " + misingMaterias + " no tienen un profasor asignado.");
+            FormDialogMessage form = new FormDialogMessage("","Las materias " + misingMaterias + " no tienen un profasor asignado, favor ded asignar que profesores impartirán las materias en grupo > asignaturas");
                     form.addOnAcceptEvent(new genericEvents() {
                         @Override
                         public void genericEvent() {
+                            Global.view.currentWindow.cut();
                             form.closeForm();
                         }
                     });
@@ -111,7 +112,7 @@ public class HorarioBuilder extends MultipleFormsOperation{
     }
 
     private void deployMissingPlanMSG(){
-        JLabel missigLabel = new JLabel("     Error: éste grupo no tiene un plan de estudio asignado.");
+        JLabel missigLabel = new JLabel("Éste grupo no tiene un plan de estudio asignado.");
         missigLabel.setFont(new Font("Arial", Font.PLAIN, 30));
         missigLabel.setForeground(new Color(150,150,150));
 
@@ -136,7 +137,7 @@ public class HorarioBuilder extends MultipleFormsOperation{
     private Map<String,String> getCurrentMaterias(String hora){
         DataBaseConsulter con = new DataBaseConsulter("horarios_view");
 
-        String[] columnsToBring = new String[]{"nombre_materia","dia"};
+        String[] columnsToBring = new String[]{"nombre_abr","dia"};
 
         String[] cond = new String[]{"hora","grupo"};
 
@@ -145,7 +146,7 @@ public class HorarioBuilder extends MultipleFormsOperation{
             Table asign = con.bringTable(columnsToBring,cond,value);
 
             ArrayList<String> dias = asign.getColumn("dia");
-            ArrayList<String> materias = asign.getColumn("nombre_materia");
+            ArrayList<String> materias = asign.getColumn("nombre_abr");
 
             Map<String,String> response = new HashMap<>();
 

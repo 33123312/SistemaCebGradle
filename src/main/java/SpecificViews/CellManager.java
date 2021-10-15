@@ -1,9 +1,6 @@
 package SpecificViews;
 
 import JDBCController.*;
-import sistemaceb.RegisterDetailView;
-import sistemaceb.form.FormDialogMessage;
-import sistemaceb.genericEvents;
 
 import java.sql.SQLException;
 import java.util.ArrayList;

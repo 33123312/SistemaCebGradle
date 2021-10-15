@@ -54,21 +54,17 @@ public class RespaldosManager {
                 .POST(HttpRequest.BodyPublishers.ofString(parsedJSON))
                 .build();
 
-        new FormDialogMessage("Error","Error desconocido al hacer el respaldo, no se ha podido realizar");
         try {
             client.send(request, HttpResponse.BodyHandlers.discarding());
             showDiaog("Se ha respaldado exitosamente");
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
-            showDiaog("Error desconocido al hacer el respaldo, no se ha podido realizar");
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-            showDiaog("Error desconocido al hacer el respaldo, no se ha podido realizar");
+            showDiaog("Error desconocido en el servidor al hacer el respaldo, no se ha podido realizar");
         }
     }
 
     private void showDiaog(String message){
-        FormDialogMessage mes = new FormDialogMessage("Error",message);
+        FormDialogMessage mes = new FormDialogMessage("",message);
             mes.addOnAcceptEvent(new genericEvents() {
                 @Override
                 public void genericEvent() {

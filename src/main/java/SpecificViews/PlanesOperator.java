@@ -11,7 +11,7 @@ public class PlanesOperator {
         this.plan = plan;
     }
 
-    public ArrayList<String> getMAterias(){
+    public ArrayList<String> getMaterias(){
         DataBaseConsulter consulter = new DataBaseConsulter("planes_estudio_materias");
 
         String[] cond = new String[]{"clave_plan"};

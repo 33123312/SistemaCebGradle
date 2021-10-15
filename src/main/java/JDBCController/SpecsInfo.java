@@ -30,12 +30,21 @@ public class SpecsInfo {
 
     private ArrayList<String> primaryKeys;
 
+    private ArrayList<Integer> colsSize;
+
     private int colCount;
 
 
     public SpecsInfo(String table){
         thisTable = table;
         colCount =-1;
+    }
+
+    public ArrayList<Integer> getColumnsSize(){
+        if(colsSize == null)
+            colsSize = new DBTableMetadata(thisTable).getColumnsSize();
+
+        return new ArrayList<>(colsSize);
     }
 
     public ArrayList<String> getPrimaryKeys() {

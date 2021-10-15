@@ -36,8 +36,8 @@ public class BoletaConsulter extends TableViewerPDFOp{
         addTable("Numérica","Calificaciones Numéricas","calificacion");
         addTable("Numérica","Faltas","faltas");
 
-        addTable("Boleana","Calificaciones Boleanas","calificacion");
-        addTable("Boleana","Faltas","faltas");
+        addTable("A/NA","Calificaciones Boleanas","calificacion");
+        addTable("A/NA","Faltas","faltas");
 
     }
 
@@ -113,8 +113,8 @@ public class BoletaConsulter extends TableViewerPDFOp{
 
     private Map<String,String> getParams(){
         Map<String,String> params = new HashMap<>();
-            params.put("Alumno",aluOperator.aluInfo.get("nombre_completo"));
-            params.put("Semestre",aluOperator.aluInfo.get("semestre"));
+            params.put("Alumno",aluOperator.getRegisterValue("nombre_completo"));
+            params.put("Semestre",aluOperator.getRegisterValue("semestre"));
         return params;
     }
 

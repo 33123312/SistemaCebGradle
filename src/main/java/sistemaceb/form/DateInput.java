@@ -23,9 +23,9 @@ import javax.swing.text.PlainDocument;
  */
 public class DateInput extends FormElement{
     
-    JTextFieldLimit dia;
-    JTextFieldLimit mes;
-    JTextFieldLimit año;
+    limitedImput dia;
+    limitedImput mes;
+    limitedImput año;
     
     public DateInput(String title){
         super(title);
@@ -68,9 +68,9 @@ public class DateInput extends FormElement{
     private JPanel buildInputsSec(){
         JPanel parentCont = new JPanel(new GridLayout(1,3));
         
-        dia = new JTextFieldLimit(2);
-        mes = new JTextFieldLimit(2);
-        año = new JTextFieldLimit(2);
+        dia = new limitedImput(2);
+        mes = new limitedImput(2);
+        año = new limitedImput(2);
         
         dia.setText("DD");
         mes.setText("MM");
@@ -148,33 +148,6 @@ public class DateInput extends FormElement{
         
         field.addMouseListener(closeOnClick);
     }
-    
-        private class JTextFieldLimit extends JTextField {
-        private final int limit;
 
-        public JTextFieldLimit(int limit) {
-            super();
-            this.limit = limit;
-        }
-
-        @Override
-        protected Document createDefaultModel() {
-            return new LimitDocument();
-        }
-
-        private class LimitDocument extends PlainDocument {
-
-            @Override
-            public void insertString( int offset, String  str, AttributeSet attr ) throws BadLocationException {
-                if (str == null) return;
-
-                if ((getLength() + str.length()) <= limit) {
-                    super.insertString(offset, str, attr);
-                }
-            }       
-
-        }
-
-    }
     
 }

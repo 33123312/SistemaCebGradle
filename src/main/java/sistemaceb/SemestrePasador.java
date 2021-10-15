@@ -1,8 +1,6 @@
 package sistemaceb;
 
 import Generals.BtnFE;
-import JDBCController.DBSTate;
-import JDBCController.DataBaseUpdater;
 import JDBCController.ViewSpecs;
 import JDBCController.dataType;
 import SpecificViews.GrupoPasserInfoStorage;
@@ -73,7 +71,7 @@ public class SemestrePasador extends Window{
                 public String checkForError(String response) {
                     String trueResponse = response.trim();
                     if (trueResponse.contains(" "))
-                        return "Error: los nombres de periodo no pueden contener espacios";
+                        return "Los nombres de periodo no pueden contener espacios";
                     else
                         return "";
                 }
@@ -173,7 +171,7 @@ public class SemestrePasador extends Window{
 
     private JPanel getErrorGrupoMessage(){
         JPanel container = new JPanel(new GridLayout());
-        errorGrupoMessage = new JLabel("Error: uno de los grupos no tiene un grupo al que pasar los alumnos asigndo");
+        errorGrupoMessage = new JLabel("Uno de los grupos no tiene un grupo al que pasar los alumnos seleccionados asigndo");
             errorGrupoMessage.setAlignmentX(SwingConstants.CENTER);
             errorGrupoMessage.setForeground(Color.red);
             errorGrupoMessage.setBorder(new EmptyBorder(10,0,10,0));

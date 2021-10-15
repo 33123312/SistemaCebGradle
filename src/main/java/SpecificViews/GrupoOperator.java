@@ -6,26 +6,12 @@ import JDBCController.TableRegister;
 
 import java.util.ArrayList;
 
-public class GrupoOperator {
+public class GrupoOperator extends TableOperator{
 
-    public String grupo;
-    public String plan;
-    public int numAlumnos;
-    private TableRegister grupoInfo;
-
+    String plan;
     public GrupoOperator(String grupo){
-        this.grupo = grupo;
+        super(grupo,"grupos");
         plan = getPlan();
-        numAlumnos = getNumAlumnos();
-        grupoInfo = getRegisterInfo();
-    }
-
-    public TableRegister getGrupoInfo() {
-        return grupoInfo;
-    }
-
-    private int getNumAlumnos(){
-        return getAlumnos().rowCount();
     }
 
     public Table getMateriasList(String materias){
@@ -36,11 +22,17 @@ public class GrupoOperator {
                     getMaterias("Boleana");
     }
 
+    public int getNumAlu(){
+        String numAlumnos = getRegisterValue("alumnos");
+        return Integer.parseInt(numAlumnos);
+
+    }
+
 
     public Table getMaterias(){
         if(plan != null) {
             DataBaseConsulter consulter = new DataBaseConsulter("planes_estudio_materias_view");
-            String[] columnsToBring = new String[]{"materia","nombre_materia"};
+            String[] columnsToBring = new String[]{"materia","nombre_abr"};
             String[] cond = new String[]{"clave_plan"};
             String[] value = new String[]{plan};
             Table materias = consulter.bringTable(columnsToBring, cond, value);
@@ -55,7 +47,7 @@ public class GrupoOperator {
         if(plan != null) {
             DataBaseConsulter consulter = new DataBaseConsulter("planes_estudio_materias_view");
 
-            String[] columnsToBring = new String[]{"materia","nombre_materia"};
+            String[] columnsToBring = new String[]{"materia","nombre_abr"};
 
             String[] cond = new String[]{"clave_plan","tipo_calificacion"};
 
@@ -74,7 +66,7 @@ public class GrupoOperator {
 
         String[] cond = new String[]{"grupo"};
 
-        String[] value = new String[]{grupo};
+        String[] value = new String[]{tableRegister};
 
         return consulter.bringTable(cond,value).getRegister(0);
 
@@ -87,7 +79,7 @@ public class GrupoOperator {
 
         String[] cond = new String[]{"grupo"};
 
-        String[] value = new String[]{grupo};
+        String[] value = new String[]{tableRegister};
 
         String plan = consulter.bringTable(columnsToBring,cond,value).getUniqueValue();
 
@@ -104,7 +96,7 @@ public class GrupoOperator {
 
             String[] cond = new String[]{"grupo"};
 
-            String[] values = new String[]{grupo};
+            String[] values = new String[]{tableRegister};
 
             Table materias = consulter.bringTable(colsToBring, cond, values);
 
@@ -121,9 +113,10 @@ public class GrupoOperator {
         return new GrupoMateriaOperator(materia);
     }
 
-    public AsignaturaOperatorr getAsignOperator(String materia){
-        return new AsignaturaOperatorr(grupo,materia);
+    public AsignaturaOperator getAsignOperator(String materia){
+        return new AsignaturaOperator(tableRegister,materia);
     }
+
 
     public class GrupoMateriaOperator{
 
@@ -204,27 +197,30 @@ public class GrupoOperator {
         }
 
         private String getPercentage(int reprobado){
-            if(numAlumnos == 0)
+            int intAlu = getNumAlu();
+            if(intAlu == 0)
                 return 0.0 + "";
             else
-                return 100*reprobado/numAlumnos + "";
+                return 100*reprobado/intAlu + "";
         }
 
         public ArrayList<String> getFaltasXAlumno(){
             ArrayList<String> sumatoriaFaltas =  getSumatoriaFaltasXUnidad();
             ArrayList<String> faltasPorUnidad = new ArrayList<>();
+            int intAlu = getNumAlu();
 
             for (String faltasUnidad:sumatoriaFaltas)
                 if(!faltasPorUnidad.equals("")){
                     int faltasInt = Integer.parseInt(faltasUnidad);
-                    if (numAlumnos == 0)
+                    if (intAlu == 0)
                         faltasPorUnidad.add(0.0 + "");
                     else
-                        faltasPorUnidad.add(Double.toString(faltasInt/numAlumnos));
+                        faltasPorUnidad.add(Double.toString(faltasInt/intAlu));
             }
 
             return faltasPorUnidad;
         }
+
 
         private ArrayList<String> getPorcenReprobadosXUnidad(int[] reprobados){
             ArrayList<String> reprobadosPerc = new ArrayList<>();

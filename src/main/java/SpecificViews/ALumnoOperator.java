@@ -1,37 +1,17 @@
 package SpecificViews;
 
-import JDBCController.DBSTate;
 import JDBCController.DataBaseConsulter;
-import JDBCController.TableRegister;
 import sistemaceb.form.Global;
 
 import java.util.ArrayList;
 
-public class  ALumnoOperator {
-    public TableRegister aluInfo;
-    public String aluMatr;
+public class  ALumnoOperator extends TableOperator{
     public GrupoOperator grupoOperator;
 
-    ALumnoOperator(String aluMatr){
-        this.aluMatr = aluMatr;
-        aluInfo = getAluKeyChar();
-        grupoOperator = new GrupoOperator(aluInfo.get("grupo"));
+    public ALumnoOperator(String aluMatr){
+        super(aluMatr,"alumnos");
+        grupoOperator = new GrupoOperator(tableRegister);
     }
-
-
-    private TableRegister getAluKeyChar(){
-        DataBaseConsulter consulter = new DataBaseConsulter("alumnos_visible_view");
-
-        String[] colsToBring = new String[]{"nombre_completo","grupo","semestre"};
-
-        String[] cond = new String[]{"numero_control"};
-
-        String[] values = new String[]{aluMatr};
-
-        return consulter.bringTable(colsToBring,cond,values).getRegister(0);
-    }
-
-
 
     public static String getMateriaType(String materia){
         DataBaseConsulter consulter = new DataBaseConsulter("materias");
@@ -43,15 +23,15 @@ public class  ALumnoOperator {
         String[] val = new String[]{materia};
 
         return consulter.bringTable(colsToBring,cond,val).getUniqueValue();
-
     }
+
     public AluMateriaOperator getMateriaState(String materia){
         return getMateriaState(materia, Global.conectionData.loadedPeriodo);
     }
 
     public AluMateriaOperator getMateriaState(String materia,String periodo){
         String materiaType = getMateriaType(materia);
-        if (materiaType.equals("Boleana"))
+        if (materiaType.equals("A/NA"))
             return new AluMateriaBolOperator(materia,materiaType, periodo,this);
         else
             return new AluMateriaNumOperator(materia,materiaType, periodo,this);
@@ -65,7 +45,7 @@ public class  ALumnoOperator {
         ArrayList<AluMateriaNumOperator> operators;
         ArrayList<String> materias;
 
-        public TodasMateriasOps() {
+        public TodasMateriasOps(){
             operators = new ArrayList<>();
             materias = grupoOperator.getMaterias("Numérica").getColumn(0);
             for (String materia : materias)

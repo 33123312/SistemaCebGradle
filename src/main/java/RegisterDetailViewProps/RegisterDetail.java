@@ -4,6 +4,7 @@ import JDBCController.DataBaseConsulter;
 import JDBCController.TableRegister;
 import JDBCController.ViewSpecs;
 import SpecificViews.*;
+import sistemaceb.RegisterDetailTable;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -14,17 +15,26 @@ public class RegisterDetail {
     public OperationInfoPanel infoPanel;
     public Map<String,OperationBuilder> defaultOperations;
     public ArrayList<Operation> operations;
-    private ArrayList<RegisterDetailTableTrigerer> pills;
+    private ArrayList<RegisterDetailTable> pills;
+    private ArrayList<String> removedPills;
+
+    public void addRemovedPills(String pill){
+
+        removedPills.add(pill);
+    }
+
+    public ArrayList<String> getRemovedPills() {
+        return removedPills;
+    }
 
     public RegisterDetail(OperationInfoPanel infoPanel){
+        removedPills = new ArrayList<>();
         this.infoPanel = infoPanel;
-
         if (!infoPanel.hasRegisterDetail())
             infoPanel.setRegisterDetail(getRegisterInfo());
 
         operations = new ArrayList<>();
         pills  = new ArrayList();
-
         detDefaultOperations();
     }
 
@@ -41,7 +51,7 @@ public class RegisterDetail {
 
     }
 
-    protected void addPill(RegisterDetailTableTrigerer pill){
+    protected void addPill(RegisterDetailTable pill){
         pills.add(pill);
     }
 
@@ -49,7 +59,7 @@ public class RegisterDetail {
         operations.add(op);
     }
 
-    public ArrayList<RegisterDetailTableTrigerer> getPills() {
+    public ArrayList<RegisterDetailTable> getPills() {
         return pills;
     }
 

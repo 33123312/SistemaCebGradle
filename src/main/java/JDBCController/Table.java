@@ -174,16 +174,14 @@ public class Table {
                 currentRegister.add(index,extraCol.get(i));
 
         }
-
     }
 
     public void removeColumn(int index){
-        columnTitles.remove(index);
-        for(ArrayList<String> register: registers){
-            register.remove(index);
+        if(index > -1) {
+            columnTitles.remove(index);
+            for (ArrayList<String> register : registers)
+                register.remove(index);
         }
-
-
     }
 
 }

@@ -6,6 +6,7 @@
 package sistemaceb;
 
 import Generals.BtnFE;
+import SpecificViews.LinearHorizontalLayout;
 import Tables.AdapTableFE;
 import Tables.RowsFactory;
 import Tables.RowsStyles;
@@ -18,6 +19,7 @@ import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.ArrayList;
 import java.util.Map;
 import javax.swing.BorderFactory;
 import javax.swing.JLabel;
@@ -34,15 +36,9 @@ public class CrudWindow extends Window {
     
     public CrudWindow(String view){
         super();
-
         viewSpecs = new ViewSpecs(view);
         setTitle(viewSpecs.getInfo().getHumanName());
-
-        primaryKeyedTable table = new primaryKeyedTable();
         consulterTable = new SimpleInsertTableBuild(view);
-
-        new LinkedTable(view,table);
-
         consulterTable.updateSearch();
         deployAll();
         
@@ -54,15 +50,39 @@ public class CrudWindow extends Window {
     }
 
     private void deployAll(){
+        LinearHorizontalLayout layout = new LinearHorizontalLayout();
+            layout.addElement(getResetButon());
+            layout.addElement(getSearchBar());
+        addToHeader(layout);
+        addBody(deployBodyContainer());
+    }
+
+    private BtnFE getResetButon(){
+        BtnFE btn = new BtnFE("Mostrar todo");
+            btn.setTextColor(new Color(9, 132, 227));
+            btn.setPadding(0,10,0,10);
+            btn.setMargins(0,0,0,10,Color.white);
+            btn.addMouseListener(new MouseAdapter() {
+                @Override
+                public void mousePressed(MouseEvent e) {
+                    super.mousePressed(e);
+                    consulterTable.resetNSearch();
+                }
+            });
+
+        return btn;
+    }
+
+    private reactiveSearchBar getSearchBar(){
         reactiveSearchBar searchBar = consulterTable.getReactiveSearchBar();
         searchBar.addInputManager(new stringInputManager(){
             @Override
             public void manageData(String tagName, String data) {
-                    tagsManager.removeAllTags();
-            } 
+                tagsManager.removeAllTags();
+            }
         });
-        addToHeader(searchBar);
-        addBody(deployBodyContainer());
+
+        return searchBar;
     }
   
     private JPanel deployBodyContainer(){
@@ -73,7 +93,6 @@ public class CrudWindow extends Window {
 
         return container;
     }
-
     
     private JPanel deployTagsSearcher(){
         Color backColor = new Color(247, 247, 247);
@@ -128,8 +147,14 @@ public class CrudWindow extends Window {
                     @Override
                     public void mousePressed(MouseEvent arg0){
                         Formulario tagForm = new FormWindow("Nuevo Tag");
-                        new TagFormBuilder(consulterTable.getViewSpecs(),consulterTable.getViewSpecs().getTableTags(),tagForm,false);
-                        
+                        ArrayList<String> columnsTofilter = viewSpecs.getTableTags();
+                        ArrayList<String> keys = viewSpecs.getPrimaryskey();
+                        if (keys.size() < 2){
+                            String key = keys.get(0);
+                            columnsTofilter.remove(key);
+                        }
+
+                        new TagFormBuilder(viewSpecs,columnsTofilter,tagForm,false);
                         tagForm.addDataManager(
                             new FormResponseManager(){
                                 @Override
@@ -175,7 +200,8 @@ public class CrudWindow extends Window {
             addBtn.setMargins(15,5,0,0,generalContainer.getBackground());
             addBtn.setBackground(new Color(2, 152, 219));
             generalContainer.add(addBtn,BorderLayout.EAST);
-            
+            generalContainer.add(consulterTable.getInstructionsPanel(),BorderLayout.WEST);
+
         return generalContainer;
         
     }

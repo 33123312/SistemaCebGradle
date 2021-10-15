@@ -16,10 +16,19 @@ import java.util.Map;
 
 public class AsignturasPillChoser extends RegisterDetailTable {
 
-    public AsignturasPillChoser(String view, String critKey, ViewSpecs parentSpecs) {
-        super(view, critKey, parentSpecs);
-        keyHiddedCoonsTableBuild build = getBuild(view,critKey,parentSpecs);
-        setbuild(build);
+    public AsignturasPillChoser() {
+        super("asignaturas");
+    }
+
+    @Override
+    public void initRegister( String critKey, ViewSpecs parentSpecs) {
+        super.initRegister( critKey, parentSpecs);
+        setbuild(getBuild());
+    }
+
+    @Override
+    protected void firstImplementation() {
+        super.firstImplementation();
         addLeftButton();
         addHumanTitles();
     }
@@ -42,42 +51,48 @@ public class AsignturasPillChoser extends RegisterDetailTable {
 
     }
 
+    private void deployForm(){
+        FormWindow formWindow = getFormBuild();
+        formWindow.showAll();
+        formWindow.addDataManager(new FormResponseManager() {
+            @Override
+            public void manageData(Formulario form) {
+                Map<String,String> formResponse = form.getData();
+                ArrayList<String> cond = new ArrayList<>(formResponse.keySet());
+                cond.add("grupo");
+                ArrayList<String> values = new ArrayList<>(formResponse.values());
+                values.add(critValue);
+
+                try {
+                    new ViewSpecs("asignaturas").getUpdater().insert(cond,values);
+                } catch (SQLException throwables) {
+                    throwables.printStackTrace();
+                    new FormDialogMessage("Error","El registro que se ha intentado insertar ya éxiste en la base de datos, no se puede insertar nuevamente");
+                }
+                formWindow.getFrame().closeForm();
+                consultTable.updateSearch();
+            }
+        });
+    }
+
     private MouseAdapter getButtonEvent(){
         return new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) {
                 super.mousePressed(e);
-                FormWindow formWindow = getFormBuild();
-                formWindow.showAll();
-                formWindow.addDataManager(new FormResponseManager() {
-                        @Override
-                        public void manageData(Formulario form) {
-                            Map<String,String> formResponse = form.getData();
-                            ArrayList<String> cond = new ArrayList<>(formResponse.keySet());
-                                cond.add("grupo");
-                            ArrayList<String> values = new ArrayList<>(formResponse.values());
-                                values.add(critValue);
+                if (hasMaterias())
+                    deployForm();
 
-                            try {
-                                new ViewSpecs("asignaturas").getUpdater().insert(cond,values);
-                            } catch (SQLException throwables) {
-                                throwables.printStackTrace();
-                                new FormDialogMessage("Error","El registro que se ha intentado insertar ya éxiste en la base de datos, no se puede insertar nuevamente");
-                            }
-                            formWindow.getFrame().closeForm();
-                            consultTable.updateSearch();
-                        }
-                    });
             }
         };
     }
 
     private CrudTable currentBehavior;
 
-    private keyHiddedCoonsTableBuild getBuild(String view, String critKey, ViewSpecs parentSpecs){
-        keyHiddedCoonsTableBuild build = new keyHiddedCoonsTableBuild(view,critKey,parentSpecs);
-
-        currentBehavior = new CrudTable(view,build){
+    private keyHiddedCoonsTableBuild getBuild(){
+        keyHiddedCoonsTableBuild build = new keyHiddedCoonsTableBuild(viewSpecs.getTable(),critValue,parentSpecs);
+        build.setName("Asignaciones de materias");
+        currentBehavior = new CrudTable(build){
             @Override
             public MouseAdapter defineModifyButtonEvent() {
                 return new MouseAdapter() {
@@ -149,6 +164,7 @@ public class AsignturasPillChoser extends RegisterDetailTable {
 
 
     private FormWindow getFormBuild() {
+
         FormWindow form = new FormWindow("");
 
         form.addVirtualParent("grupo", critValue);
@@ -169,10 +185,8 @@ public class AsignturasPillChoser extends RegisterDetailTable {
 
     private Table getAulas(){
         DataBaseConsulter consulter = new DataBaseConsulter("aulas");
-
         return consulter.bringTable();
     }
-
 
     private Table getProfesoresFromMateria(String materiaKey){
         DataBaseConsulter consulter = new DataBaseConsulter("materia_profesor_view");
@@ -186,14 +200,32 @@ public class AsignturasPillChoser extends RegisterDetailTable {
         return consulter.bringTable(colsToBring,cond,values);
     }
 
-    private Table getMaterias(){
+    private Table getMat(){
         GrupoOperator operator = new GrupoOperator(critValue);
-
         Table response = operator.getMaterias();
 
-        if (response.isEmpty()){
-            new FormDialogMessage("Error", "no se hn encontrado materias para este grupo,esto pueeser debia a que no hay un plan asignado, o bien, a que el plan asignado no tiene materias");
+        return response;
+    }
+
+    private boolean hasMaterias(){
+        Table res = getMat();
+            if (res.isEmpty()){
+                FormDialogMessage form = new FormDialogMessage(
+                        "No se han encontrado materias para este grupo",
+                        " Esto puede ser debido a que no hay un plan asignado, o bien, a que el plan asignado no tiene materias");
+                form.addOnAcceptEvent(new genericEvents() {
+                    @Override
+                    public void genericEvent() {
+                        form.closeForm();
+                    }
+                });
+
         }
+        return !getMaterias().isEmpty();
+    }
+
+    private Table getMaterias(){
+        Table response = getMat();
 
         ArrayList<String> humanValues = response.getColumn(1);
         ArrayList<String> keyValues = response.getColumn(0);

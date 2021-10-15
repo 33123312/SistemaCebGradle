@@ -19,7 +19,7 @@ public class ConcentradoTodasMateriasOp extends TableViewerPDFOp{
 
     public ConcentradoTodasMateriasOp(OperationInfoPanel infoPanlel) {
         super(infoPanlel);
-        operation = "Calificaciones";
+        operation = "Concentrado x Unidad";
     }
 
     @Override
@@ -54,8 +54,8 @@ public class ConcentradoTodasMateriasOp extends TableViewerPDFOp{
         ConcentradoTodasMateriasPDF doc = new ConcentradoTodasMateriasPDF(materuiasNom);
         Map<String,String> params = new HashMap<>();
 
-            params.put("Semestre",operator.getGrupoInfo().get("semestre"));
-            params.put("Grupo",operator.grupo);
+            params.put("Semestre",operator.getRegisterValue("semestre"));
+            params.put("Grupo",operator.getTableRegister());
             params.put("Evaluacion",eva);
             doc.addParams(params);
             doc.deploy();

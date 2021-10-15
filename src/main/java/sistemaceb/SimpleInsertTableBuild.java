@@ -1,25 +1,27 @@
 package sistemaceb;
 
-import JDBCController.ViewUpdater;
-import Tables.AdapTableFE;
+import Generals.BtnFE;
+import sistemaceb.form.FormDialogMessage;
 import sistemaceb.form.Formulario;
 import sistemaceb.form.MultipleFormWindow;
-
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Map;
 
 public class SimpleInsertTableBuild extends ConsultTableBuild {
 
     public SimpleInsertTableBuild(String view) {
         super(view);
-        new LinkedTable(view,getOutputTable());
-        setInsertButtonEvent(getButtonEvent());
+        setBehavior(new LinkedTable(view,getOutputTable()));
         setTagsToShow(getTagsToShow());
     }
 
+    @Override
+    public BtnFE getInsertButton() {
+        return super.getInsertButton(getButtonEvent());
+    }
 
     protected MouseAdapter getButtonEvent(){
         ArrayList tags = viewSpecs.getTableTags();
@@ -67,8 +69,21 @@ public class SimpleInsertTableBuild extends ConsultTableBuild {
     }
 
     public void insertData(Map<String,String> valuesToInsert){
-        new ViewUpdater(viewSpecs.getInfo().getView())
-                .insert(valuesToInsert);
+        try {
+            viewSpecs.getUpdater().insert(valuesToInsert);
+        } catch (SQLException throwables) {
+            FormDialogMessage form = new FormDialogMessage(
+                    "COnflicto al agregar Registro",
+                    "No es posible agregar un registro que ya existe a la base de datos"
+            );
+            form.addOnAcceptEvent(new genericEvents() {
+                @Override
+                public void genericEvent() {
+                    form.closeForm();
+                }
+            });
+            throwables.printStackTrace();
+        }
 
     }
 

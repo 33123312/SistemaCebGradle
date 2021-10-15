@@ -14,12 +14,10 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import javax.swing.*;
-
 import RegisterDetailViewProps.RegisterDetail;
 import SpecificViews.DefaultRegisterDetailTable;
 import SpecificViews.Operation;
 import SpecificViews.OperationsManager;
-import SpecificViews.RegisterDetailTableTrigerer;
 
 /**
  *
@@ -31,7 +29,7 @@ public class RegisterDetailView extends Window {
     private final DataBaseSearcher dataConsulter;
     public final infoPackage registerInfo;
     private final String primaryKey;
-    private ArrayList<RegisterDetailTableTrigerer> tablesTrigerers;
+    private ArrayList<RegisterDetailTable> tablesTrigerers;
     private RegisterDetailTable currentPillTable;
 
     public RegisterDetailView(String view, String primaryKey) {
@@ -128,8 +126,10 @@ public class RegisterDetailView extends Window {
         return pillsArea;
     }
 
-    public void addCustomPill(RegisterDetailTableTrigerer trigerer){
-        tablesTrigerers.add(trigerer);
+    private void addPill(RegisterDetailTable table){
+        table.setBorder(BorderFactory.createEmptyBorder(10, 0, 0, 0));
+        table.initRegister(primaryKey,viewSpecs);
+        tablesTrigerers.add(table);
     }
 
     private void addPills(){
@@ -146,41 +146,41 @@ public class RegisterDetailView extends Window {
                 relatedTables.remove(pill);
 
         for (String table:relatedTables)
-            tablesTrigerers.add(new RegisterDetailTableTrigerer(table,new ViewSpecs(table).getInfo().getHumanName()){
-                @Override
-                public RegisterDetailTable getTable( String critKey, ViewSpecs dadSpecs){
-                    return new DefaultRegisterDetailTable(relatedTable,critKey,dadSpecs);
-                }
-            });
+            if(!removedPills.contains(table)){
+                DefaultRegisterDetailTable tableR = new DefaultRegisterDetailTable(table);
+                    addPill(tableR);
+            }
     }
 
     private ArrayList<String> getCurrentPillsRelatedTables(){
         ArrayList<String> currentPills = new ArrayList<>();
-        for (RegisterDetailTableTrigerer trigerer:tablesTrigerers)
-            currentPills.add(trigerer.getRelatedTable());
+        for (RegisterDetailTable table:tablesTrigerers)
+            currentPills.add(table.viewSpecs.getTable());
 
         return currentPills;
     }
 
     private void setPillsTrigers(){
-
-        for (RegisterDetailTableTrigerer trigerer:tablesTrigerers){
-            String humanName = trigerer.pillTitle;
+        for (RegisterDetailTable table:tablesTrigerers){
+            String humanName = table.getTableName();
             if(humanName != null)
-                pillsArea.addPill(humanName, new MouseAdapter() {
+                pillsArea.addPill(humanName, new MouseAdapter(){
                     @Override
                     public void mousePressed(MouseEvent e) {
-                        changePill(trigerer);
+                        table.build();
+                        changePill(table);
                     }
                 });
         }
     }
 
-    private void changePill(RegisterDetailTableTrigerer trigerer){
-        RegisterDetailTable detailTable = trigerer.getTable(primaryKey, viewSpecs);
-        detailTable.setBorder(BorderFactory.createEmptyBorder(20, 0, 0, 0));
+    private void changePill(RegisterDetailTable detailTable){
         pillsArea.setView(detailTable);
         currentPillTable = detailTable;
+    }
+
+    public void updateCurrentPill(){
+        currentPillTable.getConsultTable().updateSearch();
     }
 
     DesplegableMenuFE operationsMenu;
@@ -214,16 +214,18 @@ public class RegisterDetailView extends Window {
     }
 
     private void searchForOperations(RegisterDetail operationsManager){
-
         ArrayList<Operation> operations = operationsManager.getOperations();
         for(Operation op: operations)
             addOperation(op);
     }
-
+    ArrayList<String> removedPills;
     private void searchForPills(RegisterDetail operationsManager){
-        ArrayList<RegisterDetailTableTrigerer> customPills = operationsManager.getPills();
-        for(RegisterDetailTableTrigerer pill: customPills)
-            addCustomPill(pill);
+        ArrayList<RegisterDetailTable> customPills = operationsManager.getPills();
+        removedPills = operationsManager.getRemovedPills();
+
+        for(RegisterDetailTable pill: customPills)
+            addPill(pill);
+
         addPills();
     }
 

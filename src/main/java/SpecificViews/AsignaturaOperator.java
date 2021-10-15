@@ -4,14 +4,12 @@ import JDBCController.DataBaseConsulter;
 import JDBCController.Table;
 import JDBCController.TableRegister;
 
-import java.util.ArrayList;
-
-public class AsignaturaOperatorr {
+public class AsignaturaOperator{
 
     private String grupo;
     private String materia;
 
-    public AsignaturaOperatorr(String grupo,String materia){
+    public AsignaturaOperator(String grupo, String materia){
         this.grupo = grupo;
         this.materia = materia;
     }
@@ -34,10 +32,14 @@ public class AsignaturaOperatorr {
 
     }
 
+    public ProfesoresOperator getProfesorOperator(){
+        return new ProfesoresOperator(getProfesor().get("profesor"));
+    }
+
     public String getNombreMateria(){
         DataBaseConsulter consulter = new DataBaseConsulter("materias");
 
-        String[] colsToBring = new String[]{"nombre_materia"};
+        String[] colsToBring = new String[]{"nombre_abr"};
 
         String[] cond = new String[]{"clave_materia"};
 

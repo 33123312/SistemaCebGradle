@@ -110,7 +110,8 @@ public class GrupoPasserWindow extends Window{
 
     private JPanel getUltimoSemestrePanel(){
         JPanel cont = new JPanel(new GridBagLayout());
-        JLabel label = new JLabel("Los alumnos seleccionado no pasarán a ningún grupo, puesto que pertenecen al último semestre");
+        JLabel label = new JLabel("Los alumnos seleccionado no pasarán a ningún grupo, puesto que pertenecen al último semestre, además, " +
+                "su historial académico se borrará de la base de datos, aunque aún estará disponible en el respaldo de este periodo");
             label.setForeground(Color.red);
 
         cont.add(label);

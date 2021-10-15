@@ -82,8 +82,10 @@ public class TagFormBuilder {
         } else  {
             if(specs.getColumnType(tag) == dataType.DATE)
                 element.setType(elementTypes.DATE_INPUT);
-            else
+            else{
+                element.setSize(specs.getTagSize(tag));
                 element.setType(elementTypes.INPUT);
+            }
         }
         
         return element;
@@ -96,7 +98,7 @@ public class TagFormBuilder {
                 
         switch(type){
             case INPUT:
-                form.addInput(tag,element.getTagType())
+                form.addInput(tag,element.getTagType(),element.getSize())
                     .setRequired(required);
                 break;
             case DATE_INPUT:
@@ -104,7 +106,6 @@ public class TagFormBuilder {
                     .setRequired(required);
                 break;
             case LIST:
-
                 form.addDesplegableMenu(tag)
                     .setRequired(required)
                     .setOptions(element.getOptions());
@@ -144,12 +145,12 @@ private class FormElementDetail{
     private Table options;
     private elementTypes type;
     private dataType tagType;
+    private int size;
 
         public dataType getTagType() {
             return tagType;
         }
 
-        
         public String getTag() {
             return tag;
         }
@@ -170,7 +171,15 @@ private class FormElementDetail{
             return type;
         }
 
-        public void setType(elementTypes type) {
+        public int getSize(){
+            return size;
+        }
+
+        public void setSize(int size) {
+            this.size = size;
+        }
+
+    public void setType(elementTypes type) {
             tagType = specs.getColumnType(tag);
             this.type = type;
         }

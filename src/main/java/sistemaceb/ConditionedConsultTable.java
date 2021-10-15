@@ -6,25 +6,23 @@
 package sistemaceb;
 
 import java.awt.event.MouseAdapter;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 
+import Generals.BtnFE;
 import JDBCController.ViewSpecs;
-import JDBCController.ViewUpdater;
 
 
 public class ConditionedConsultTable extends  NewRegisterGenTableBuild {
 
     public ConditionedConsultTable(String view, String critKey, ViewSpecs dadSpecs) {
         super(view, critKey, dadSpecs);
-        new CrudTable(view, this);
-
-        setInsertButtonEvent(getButtonEvent());
+        setBehavior(new CrudTable(this));
 
     }
 
-
+    @Override
+    public BtnFE getInsertButton() {
+        return super.getInsertButton(getButtonEvent());
+    }
 
     protected MouseAdapter getButtonEvent() {
         return getNewRegisterGenEvent();

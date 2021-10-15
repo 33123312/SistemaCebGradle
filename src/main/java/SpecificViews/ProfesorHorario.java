@@ -38,7 +38,7 @@ public class ProfesorHorario extends Operation {
                 int diaIndex = getDiaIndex(dia);
 
                 ArrayList<String> profInfoToPass = new ArrayList<>();
-                    profInfoToPass.add(asignatura.get("nombre_materia"));
+                    profInfoToPass.add(asignatura.get("nombre_abr"));
                     profInfoToPass.add(asignatura.get("grupo"));
                     profInfoToPass.add(asignatura.get("aula"));
 

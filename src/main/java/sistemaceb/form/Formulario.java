@@ -19,7 +19,6 @@ import sistemaceb.formRelationEvent;
  * @author escal
  */
 public abstract class Formulario extends JPanel {
-
     protected final ArrayList<String> elementTitles;
     protected final ArrayList<FormElement> elements;
 
@@ -43,20 +42,10 @@ public abstract class Formulario extends JPanel {
         virtualParents = new HashMap<>();
 
     }
-
-    public void removeElement(String element){
-
-        int elementIndex = elementTitles.indexOf(element);
-            elementTitles.remove(elementIndex);
-            elements.remove(elementIndex);
-
-
-    }
     
     public void setDefaultValues(ArrayList<String> titles, ArrayList values){
         for (String element:titles)
              setValue(element,titles,values);
-
     }
 
     private void setValue(String title,ArrayList<String> titles,ArrayList<String> values) {
@@ -85,10 +74,6 @@ public abstract class Formulario extends JPanel {
         return true;
     }
 
-    public FormElement getElementFrom(int index){
-        return elements.get(index);
-    }
-
     public ArrayList<String> getParents(String child){
         ArrayList<String> parents = new ArrayList<>();
         for (Map.Entry<String,ArrayList<String>> relaation:relations.entrySet())
@@ -108,29 +93,28 @@ public abstract class Formulario extends JPanel {
             return  null;
     }
 
-
-
     public FormElement getElement(String element){
 
         return elements.get(elementTitles.indexOf(element));
     }
-    
-
 
     public Input addInput(String title,dataType type){
+        Input newInput = new Input(title,type);
+        addElement(title,newInput);
 
-            Input newInput = new Input(title,type);
-            addElement(title,newInput);
+        return newInput;
+    }
 
-            
+    public Input addInput(String title,dataType type,int size){
+        Input newInput = new Input(title,type,size);
+        addElement(title,newInput);
+
         return newInput;
     }
     
     public DateInput addDateInput(String title){
-
-            DateInput newInput = new DateInput(title);
-            addElement(title,newInput);
-
+        DateInput newInput = new DateInput(title);
+        addElement(title,newInput);
             
         return newInput;
     }
@@ -233,9 +217,7 @@ public Map<String,String> getData(){
 
     public Map<String,String> getGUIData(){
         Map<String,String> data = new HashMap();
-
         for(FormElement element: elements){
-
             if(validateElement(element)){
                     String title;
                     String response;
@@ -252,8 +234,6 @@ public Map<String,String> getData(){
                     title = element.getTitle();
 
                     data.put(title,response);
-
-
                 }
             }
 
@@ -262,12 +242,11 @@ public Map<String,String> getData(){
     }
 
     private boolean validateElement(FormElement element){
-
-                if(element.hasErrors())
-                    return false;
-                else
-                    if(element.isEmpty())
-                      return false;
+        if(element.hasErrors())
+            return false;
+        else
+            if(element.isEmpty())
+              return false;
 
         return true;
     }

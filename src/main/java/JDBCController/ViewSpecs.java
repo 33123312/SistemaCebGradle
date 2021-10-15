@@ -8,6 +8,7 @@ import sistemaceb.form.Global;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Map;
 
 public class ViewSpecs {
     private String table;
@@ -38,7 +39,6 @@ public class ViewSpecs {
         return getTag(foreignCols);
     }
 
-
     public ArrayList<String> getFKForeignTags() {
 
         return getFKForeignTags(defProps()).getColumn("alias");
@@ -49,14 +49,12 @@ public class ViewSpecs {
         return new String[]{"alias"};
     }
 
-
     public Table getFKForeignTags(String[] propiertysToGet) {
 
         return getForeignTags(propiertysToGet);
     }
 
     private Table getForeignTags( String[] propiertysToGet) {
-
         ArrayList<String> foreigntables = info.getForeignTables();
         DataBaseConsulter consulter = new DataBaseConsulter("viewsspecs.tags");
 
@@ -75,7 +73,6 @@ public class ViewSpecs {
 
     }
 
-
     public String getPrimarykey() {
         ArrayList<String> primaryKeys = getPrimaryskey();
 
@@ -83,7 +80,6 @@ public class ViewSpecs {
             return primaryKeys.get(0);
         else
             return null;
-
     }
 
     public ArrayList<String> getPrimaryskey(){
@@ -131,6 +127,13 @@ public class ViewSpecs {
     public boolean hasHumanKey() {
 
         return !info.getHumanKey().isEmpty();
+    }
+
+    public String getHumanTag(){
+        ArrayList<String> containerTag = new ArrayList<>();
+            containerTag.add(info.getHumanKey());
+
+        return getTag(containerTag).get(0);
     }
 
     public boolean isMain() {
@@ -235,6 +238,15 @@ public class ViewSpecs {
         return res;
 
     }
+
+    public int getTagSize(String tag){
+        return getColSize(getCol(tag));
+    }
+
+    public int getColSize(String col){
+        return info.getColumnsSize().get(info.getTableCols().indexOf(col));
+    }
+
     private ArrayList<ArrayList<String>> getIndexedTags() {
         ArrayList<ArrayList<String>> netags = new ArrayList<>();
             netags.add(new ArrayList<>(info.getCols()));
@@ -280,6 +292,16 @@ public class ViewSpecs {
             //System.out.println(query);
             info.flushCount();
             Global.SQLConector.getMyStatment().executeUpdate(query);
+
+        }
+
+        public void insert(Map<String, String> data) throws SQLException {
+            ArrayList<String> responseTitles = new ArrayList(data.keySet());
+            responseTitles = new ArrayList(getCol(responseTitles));
+
+            ArrayList<String> responseValues = new ArrayList(data.values());
+
+            insert(responseTitles, responseValues);
 
         }
 
@@ -336,28 +358,33 @@ public class ViewSpecs {
             }
         }
 
-        private void copyOldRegister(String primaryKey,String newValue, String oldValue){
+        private void copyOldRegister(String primaryKey,String newValue, String oldValue) {
             DataBaseConsulter oldRegisterConsulter = new DataBaseConsulter(getTable());
 
             String[] oldConditions = new String[]{primaryKey};
 
             String[] oldValues = new String[]{oldValue};
 
-            TableRegister response = oldRegisterConsulter.bringTable(oldConditions,oldValues).getRegister(0);
+            Table res = oldRegisterConsulter.bringTable(oldConditions, oldValues);
+            if (!res.isEmpty()){
+                TableRegister response = res.getRegister(0);
 
-            ArrayList<String> cols = response.getColumnTitles();
-            cols.remove(primaryKey);
-            cols.add(primaryKey);
+                ArrayList<String> cols = response.getColumnTitles();
+                    cols.remove(primaryKey);
+                    cols.add(primaryKey);
 
-            ArrayList<String> values = response.getValues();
-            values.remove(oldValue);
-            values.add(newValue);
+                ArrayList<String> values = response.getValues();
+                    values.remove(oldValue);
+                    values.add(newValue);
 
-            try {
-                insert(cols,values);
-            } catch (SQLException throwables) {
-                throwables.printStackTrace();
+                try {
+                    insert(cols,values);
+                } catch (SQLException throwables) {
+                    throwables.printStackTrace();
+                }
+
             }
+
         }
 
         private void updteRelatedTables(String newPrimaryValue,String oldValue) throws SQLException {
@@ -392,6 +419,7 @@ public class ViewSpecs {
             stringifiedNewValues +=  " " + colToMod.get(i)  + " = " + mergeBranches(newValues.get(i));
 
             String query = "update " + table + " set "  + stringifiedNewValues + " where " + stringifyConditions(colCondition,conditionValue);
+            System.out.println(query);
             Global.SQLConector.getMyStatment().executeUpdate(query);
 
         }

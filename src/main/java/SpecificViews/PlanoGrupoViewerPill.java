@@ -8,16 +8,20 @@ import sistemaceb.form.MultipleAdderConsultBuild;
 
 public class PlanoGrupoViewerPill extends RegisterDetailTable {
 
-    public PlanoGrupoViewerPill(String view, String critKey, ViewSpecs parentSpecs) {
-        super(view, critKey, parentSpecs);
-        setbuild(getBuild(view,critKey,parentSpecs));
-
+    public PlanoGrupoViewerPill() {
+        super("plan_grupo");
     }
 
-    private ConsultTableBuild getBuild(String view, String critKey, ViewSpecs parentSpecs){
-        MultipleAdderConsultBuild build =
-            new MultipleAdderConsultBuild(view,critKey,parentSpecs);
-        new LinkedTable(view,build.getOutputTable());
+    @Override
+    public void initRegister( String critKey, ViewSpecs parentSpecs) {
+        super.initRegister(critKey, parentSpecs);
+        setbuild(getBuild());
+    }
+
+
+    private ConsultTableBuild getBuild(){
+        MultipleAdderConsultBuild build = new MultipleAdderConsultBuild(viewSpecs.getTable(),critValue,parentSpecs);
+            build.setBehavior(new LinkedTable(viewSpecs.getTable(),"Clave_plan",build.getOutputTable()));
         return build;
     }
 

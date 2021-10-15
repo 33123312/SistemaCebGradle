@@ -2,8 +2,6 @@ package SpecificViews;
 
 import JDBCController.Table;
 import JDBCController.TableRegister;
-import JDBCController.ViewSpecs;
-import RegisterDetailViewProps.RegisterDetail;
 import sistemaceb.form.HorizontalFormPanel;
 
 import java.util.ArrayList;
@@ -19,14 +17,14 @@ public class BitacoraMateriaGrupo extends TableViewerPDFOp{
 
     public BitacoraMateriaGrupo(OperationInfoPanel infoPanlel) {
         super(infoPanlel);
-        operation = "Ver Bitácora";
+        operation = "Ver Listado";
 
     }
 
-    private void addParams( BitacoraMateriaGrupoPDF bitacora,AsignaturaOperatorr operatorr){
+    private void addParams(BitacoraMateriaGrupoPDF bitacora, AsignaturaOperator operatorr){
         Map<String,String> params = new HashMap<>();
-            params.put("Semestre",operator.getGrupoInfo().get("semestre"));
-            params.put("Grupo",operator.grupo);
+            params.put("Semestre",operator.getTableInfo().get("semestre"));
+            params.put("Grupo",operator.getTableRegister());
             String materia = operatorr.getNombreMateria();
             params.put("Materia",materia);
             params.put("Evaluación",evaluacion);
@@ -50,17 +48,30 @@ public class BitacoraMateriaGrupo extends TableViewerPDFOp{
     }
 
     private void buidPdf(){
-        AsignaturaOperatorr asigOperator = operator.getAsignOperator(materia);
-        TableRegister res = asigOperator.getProfesor();
-        String nombreProfesor;
-        if (res == null)
-            nombreProfesor = "No asignado";
-        else
-            nombreProfesor = res.get("nombre_completo");
+        AsignaturaOperator asigOperator = operator.getAsignOperator(materia);
+        String nombreProfesor = getProfesor(asigOperator);
 
         BitacoraMateriaGrupoPDF bitacora = new BitacoraMateriaGrupoPDF(operator.getAlumnos().getRgistersCopy(),nombreProfesor);
         addParams(bitacora,asigOperator);
         bitacora.deployTable();
+    }
+
+    private String getProfesor(AsignaturaOperator asigOperator){
+        TableRegister res = asigOperator.getProfesorOperator().getTableInfo();
+        String nombreProfesor;
+
+        if (res == null)
+            nombreProfesor = "No asignado";
+        else{
+            StringBuilder nom = new StringBuilder();
+                nom.append(res.get("abr_profesion"));
+                nom.append(" ");
+                nom.append(res.get("nombre_completo"));
+
+            nombreProfesor = nom.toString();
+        }
+
+        return nombreProfesor;
     }
 
     private HorizontalFormPanel getFormPanel(){

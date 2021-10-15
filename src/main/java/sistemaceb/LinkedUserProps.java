@@ -137,14 +137,14 @@ public class LinkedUserProps extends JPanel {
 
         JLabel titleLabel= new JLabel(currentTitle + ":");
             titleLabel.setForeground(propertysFontColor);
-            titleLabel.setFont(new Font("Arial", Font.BOLD , 15));
+            titleLabel.setFont(new Font("Arial", Font.BOLD , 17));
             titleLabel.setBorder(propertysMargins);
 
         propertyContainer.add(titleLabel,BorderLayout.WEST);
 
         JLabel valueLabel= new JLabel(currentValue);
             valueLabel.setForeground(propertysFontColor);
-            valueLabel.setFont(new Font("Arial", Font.PLAIN , 15));
+            valueLabel.setFont(new Font("Arial", Font.PLAIN , 19));
             valueLabel.setBorder(propertysMargins);
 
         propertyContainer.add(valueLabel,BorderLayout.CENTER);

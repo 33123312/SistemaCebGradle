@@ -8,7 +8,6 @@ import java.util.ArrayList;
 
 public class ProfesorHorarioPDFBuilder extends PDFPlantillaTable{
 
-
     public ProfesorHorarioPDFBuilder() {
         super("Horario de Profesor");
         initTable();
@@ -27,8 +26,8 @@ public class ProfesorHorarioPDFBuilder extends PDFPlantillaTable{
     }
 
     public void addRowHora(ArrayList<ArrayList<String>> newRow){
-            table.addCell(addTitleStyle(getCell(newRow.get(0).get(0))));
-            newRow.remove(0);
+        table.addCell(addTitleStyle(getCell(newRow.get(0).get(0))));
+        newRow.remove(0);
 
         for (int i = 0;i < 3;i++ )
             for (ArrayList<String> cell : newRow ){

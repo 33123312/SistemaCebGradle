@@ -3,11 +3,11 @@ package sistemaceb;
 import JDBCController.Table;
 import JDBCController.TableRegister;
 import JDBCController.ViewSpecs;
-import JDBCController.ViewUpdater;
-import sistemaceb.form.FormWindow;
+import sistemaceb.form.FormDialogMessage;
 import sistemaceb.form.Global;
 
 import java.awt.event.MouseAdapter;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -27,8 +27,21 @@ public class NewRegisterGenTableBuild extends keyHiddedCoonsTableBuild {
             protected void manageResponse(Map<String, String> valuesToInsert) {
                 valuesToInsert.putAll(virtualTags);
 
-                new ViewUpdater(viewSpecs.getInfo().getView())
-                        .insert(valuesToInsert);
+                try {
+                    viewSpecs.getUpdater().insert(valuesToInsert);
+                } catch (SQLException throwables) {
+                    throwables.printStackTrace();
+                    FormDialogMessage form = new FormDialogMessage(
+                            "Conflicto al agregar registro",
+                            "No se puede agregar un tipo de registro que sólo puede existir una vez en la tabla");
+                    form.addOnAcceptEvent(new genericEvents() {
+                        @Override
+                        public void genericEvent() {
+                            form.closeForm();
+                        }
+                    });
+                }
+
             }
         };
 

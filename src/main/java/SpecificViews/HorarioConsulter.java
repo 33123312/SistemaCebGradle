@@ -3,15 +3,16 @@ package SpecificViews;
 import JDBCController.DataBaseConsulter;
 import JDBCController.Table;
 import JDBCController.ViewSpecs;
+import sistemaceb.form.FormDialogMessage;
+import sistemaceb.genericEvents;
+
 import java.util.ArrayList;
 
-public class HorarioConsulter extends TableViewerOperation {
-    ArrayList<String> columnsToConsult;
+public class HorarioConsulter extends Operation {
+    String[] columnsToConsult;
     ViewSpecs horarioSpecs;
-
-    ArrayList<String> conditions = new ArrayList<>();
-    ArrayList<String> conditionsValues = new ArrayList<>();
-    ArrayList<String> conditionsHorario = new ArrayList<>();
+    ArrayList<String> conditionsValues;
+    String[] conditionsHorario;
 
     public HorarioConsulter(OperationInfoPanel infoPanlel) {
         super(infoPanlel);
@@ -21,70 +22,100 @@ public class HorarioConsulter extends TableViewerOperation {
 
     @Override
     public void buildOperation() {
-        super.buildOperation();
-        thisWindow.setTitle("Horario-" + viewSpecs.getInfo().getUnityName());
-        determinateSearchConditions(keyValue);
-        horarioSpecs = new ViewSpecs("horario");
-        columnsToConsult = getColumnsToConsult();
-        buildAsignaturasTable();
-        buildHorarioTable();
+        //super.buildOperation();
+        //.setTitle("Horario-" + viewSpecs.getInfo().getUnityName());
+        if (hasHorario()){
+            determinateSearchConditions();
+            horarioSpecs = new ViewSpecs("horario");
+            columnsToConsult = getColumnsToConsult();
+            defineRegisters();
+        } else {
+            FormDialogMessage form = new FormDialogMessage(
+                    "Horario no Asignaddo",
+                    "Éste grupo no tiene un horario asignado");
+
+            form.addOnAcceptEvent(new genericEvents() {
+                @Override
+                public void genericEvent() {
+                    form.closeForm();
+                }
+            });
+
+        }
+
+        //buildHorarioTable();
 
     }
 
-
-    private void determinateSearchConditions(String value) {
-        conditions.add("grupo");
-        conditionsValues.add(value);
+    private void determinateSearchConditions() {
+        conditionsValues = new ArrayList<>();
+            conditionsValues.add(keyValue);
 
         determinateSarchHorarioConditions();
     }
 
-    private void determinateSarchHorarioConditions() {
-
-        conditionsHorario = new ArrayList<>(conditions);
-        conditionsHorario.add("hora");
-        conditionsHorario.add("dia");
+    private void determinateSarchHorarioConditions(){
+        conditionsHorario = new String[]{
+            "grupo",
+            "hora",
+            "dia"
+        };
     }
 
-    private ArrayList<String> getColumnsToConsult() {
-        ArrayList<String> aux = horarioSpecs.getViewTags();
-        aux.add("nombre_materia");
-
-        return aux;
+    private String[] getColumnsToConsult() {
+        String[] cols = new String[]{"nombre_abr","nombre_completo","aula"};
+        return cols;
     }
 
-    private ArrayList<String> consultMaterias(String hora) {
-        DataBaseConsulter con = new DataBaseConsulter("horarios_view");
+    private boolean hasHorario(){
+        DataBaseConsulter con = new DataBaseConsulter("horarios");
+        return !con.bringTable(
+                new String[]{"grupo"},
+                new String[]{keyValue}
+        ).isEmpty();
 
+    }
+
+    private ArrayList<ArrayList<String>> getCellDataList(String hora){
+        ArrayList<ArrayList<String>> cellData = new ArrayList<>();
+        ArrayList<String> horaCell = new ArrayList<>();
+        horaCell.add(hora);
+        cellData.add(horaCell);
+
+        return cellData;
+    }
+
+    private ArrayList<ArrayList<String>> consultMaterias(String hora) {
+        DataBaseConsulter con = new DataBaseConsulter("asignaturas_horario_view");
         ArrayList<String> materias = new ArrayList<>();
+        ArrayList<ArrayList<String>> cellData = getCellDataList(hora);
 
         ArrayList<String> dias = getDias();
 
-        java.util.List<String> bring = columnsToConsult;
-        java.util.List<String> cond = conditionsHorario;
-
-
         for (String dia : dias) {
-
-            java.util.List<String> dayConditionsValues = new ArrayList(conditionsValues);
+            ArrayList<String> dayConditionsValues = new ArrayList(conditionsValues);
                 dayConditionsValues.add(hora);
                 dayConditionsValues.add(dia);
 
-            String value =
-                    con.bringTable(
-                            bring.toArray(new String[bring.size()]),
-                            cond.toArray(new String[cond.size()]),
-                            dayConditionsValues.toArray(new String[dayConditionsValues.size()])).
+            Table res = con.bringTable(
+                columnsToConsult,
+                conditionsHorario,
+                dayConditionsValues.toArray(new String[dayConditionsValues.size()])
+            );
 
-                            getUniqueValue();
+            if (res.isEmpty())
+                cellData.add(new ArrayList<>());
+            else{
+                ArrayList<String> cell = res. getRegister(0).
+                        getValues();
+                cellData.add(cell);
+            }
 
-            if (value == null)
-                materias.add("");
-            else
-                materias.add(value);
         }
-        return materias;
+
+        return cellData;
     }
+
 
     private String getTurno() {
         DataBaseConsulter consulter = new DataBaseConsulter(viewSpecs.getTable());
@@ -99,7 +130,6 @@ public class HorarioConsulter extends TableViewerOperation {
     }
 
     private ArrayList<String> getHoras(){
-
 
         return CalifasOperator.getHorasClase(getTurno());
     }
@@ -119,9 +149,12 @@ public class HorarioConsulter extends TableViewerOperation {
         ArrayList<ArrayList<String>> register = new ArrayList<>();
         ArrayList<String> horas = getHoras();
 
+        PdfHorarioGrupoBuilder pdf = new PdfHorarioGrupoBuilder();
         for(String hora: horas)
-            register.add(consultMaterias(hora));
-
+            pdf.addRowHora(consultMaterias(hora));
+            //register.add(consultMaterias(hora));
+        pdf.addTable();
+        pdf.close();
 
         return register;
     }
@@ -131,41 +164,8 @@ public class HorarioConsulter extends TableViewerOperation {
         ArrayList<String> dias = getDias();
 
         ArrayList<ArrayList<String>> materias = defineRegisters();
-        addLateralTable("Horarios",dias,horas,materias);
+        //addLateralTable("Horarios",dias,horas,materias);
 
     }
 
-    private void buildAsignaturasTable() {
-        Table asignaturasTable = getAsignturasRegisters();
-        ArrayList<String> visibleColumnTitles = new ArrayList<>();
-
-            visibleColumnTitles.add("Materia");
-            visibleColumnTitles.add("Nombre Completo");
-            visibleColumnTitles.add("Aula");
-
-        addNormalTable("Asignaturas",visibleColumnTitles,asignaturasTable.getRegisters());
-
-    }
-
-    private Table getAsignturasRegisters(){
-        DataBaseConsulter con = new DataBaseConsulter("asignaturas_visible_view");
-        ViewSpecs specs = new ViewSpecs("asignaturas_visible_view");
-
-        java.util.List<String> columnsToConsult = specs.getInfo().getTableCols();
-            columnsToConsult.remove("grupo");
-            columnsToConsult.remove("materia");
-            columnsToConsult.remove("profesor");
-
-        java.util.List<String> cond = conditions;
-
-        java.util.List<String> values = conditionsValues;
-
-        Table response = con.bringTable(columnsToConsult.toArray(
-                new String[columnsToConsult.size()])
-                ,cond.toArray(new String[cond.size()])
-                ,values.toArray(new String[values.size()]));
-            response.setColumnTitles(specs.getTag(response.getColumnTitles()));
-
-        return response;
-    }
 }

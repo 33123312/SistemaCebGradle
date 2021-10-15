@@ -1,15 +1,12 @@
 package SpecificViews;
 
-import com.itextpdf.kernel.font.PdfFont;
-import com.itextpdf.kernel.geom.Rectangle;
+
 import com.itextpdf.layout.border.Border;
 import com.itextpdf.layout.border.SolidBorder;
 import com.itextpdf.layout.element.Cell;
 import com.itextpdf.layout.element.Paragraph;
 import com.itextpdf.layout.element.Table;
 import com.itextpdf.layout.property.HorizontalAlignment;
-
-import java.awt.*;
 import java.util.ArrayList;
 
 public class BitacoraMateriaGrupoPDF extends PDFPlantillaTable{

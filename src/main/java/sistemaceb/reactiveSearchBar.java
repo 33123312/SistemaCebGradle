@@ -37,18 +37,13 @@ public class reactiveSearchBar extends JPanel {
     protected void executeInputManagers(String tag,String value){
         for(stringInputManager manager:inputManagers)
             manager.manageData(tag, value);
-
     }
-    
 
-        
     private JPanel deployNavContainer(){
-        
          simpleSearchBar = new SearchBar(){
-
             @Override
             public void manageInput(String input){
-                String tag =SimpleSearchMenu.getSelectedItem().toString();
+                String tag = SimpleSearchMenu.getSelectedItem().toString();
                 executeInputManagers(tag,input);
             }
         };
@@ -68,7 +63,6 @@ public class reactiveSearchBar extends JPanel {
             generalContainer.add(simpleSearchBar,BorderLayout.CENTER);
             generalContainer.add(buttonsContainer,BorderLayout.WEST);
             generalContainer.setOpaque(false);
-            
 
         return generalContainer;
     }
@@ -76,8 +70,6 @@ public class reactiveSearchBar extends JPanel {
     public void addInputManager(stringInputManager manager){
         inputManagers.add(0,manager);
     }
-    
- 
     
     private JComboBox deployCriterioBusqueda(){
         
@@ -98,8 +90,8 @@ public class reactiveSearchBar extends JPanel {
 
         for(String item: items)
             SimpleSearchMenu.addItem(item);
+
     }
-    
     
     private class ItemChangeListener implements ItemListener{
         @Override

@@ -1,5 +1,6 @@
 package sistemaceb.form;
 
+import Generals.BtnFE;
 import JDBCController.*;
 import SpecificViews.LinkedInterTable;
 import sistemaceb.*;
@@ -12,18 +13,18 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class MultipleAdderConsultBuild extends keyHiddedCoonsTableBuild {
-    String columnToRelate;
-    ViewSpecs tableToRelate;
+    protected String columnToRelate;
+    protected ViewSpecs tableToRelate;
 
-    public MultipleAdderConsultBuild(
-         String view,
-         String critKey,
-         ViewSpecs dadSpecs
-         ){
-            super(view,critKey,dadSpecs);
-            setRelatedTable();
-            setInsertButtonEvent(getButtonEvent());
+    public MultipleAdderConsultBuild(String view, String critKey, ViewSpecs dadSpecs){
+        super(view,critKey,dadSpecs);
+        setRelatedTable();
+        setName(tableToRelate.getInfo().getHumanName());
 
+    }
+
+    public BtnFE getInsertButton(){
+        return super.getInsertButton(tableToRelate.getInfo().getUnityName(),getButtonEvent());
     }
 
     public String getParentAsColumn(){
@@ -61,6 +62,27 @@ public class MultipleAdderConsultBuild extends keyHiddedCoonsTableBuild {
         this.tableToRelate = new ViewSpecs(tableToRelate);
         this.columnToRelate = primaryKeys.get(primaryKeysTables.indexOf(tableToRelate));
     }
+    protected void insertValues(ArrayList<String> data){
+        ArrayList<String> columnsToInsert = new ArrayList<>();
+        ArrayList<String> valuesToInsert = new ArrayList<>();
+
+        columnsToInsert.add(critCol);
+        columnsToInsert.add(columnToRelate);
+
+        columnsToInsert = viewSpecs.getCol(columnsToInsert);
+
+        valuesToInsert.add(critValue);
+        valuesToInsert.add("");
+
+        for (String key:data){
+            valuesToInsert.set(1,key);
+            try {
+                viewSpecs.getUpdater().insert(columnsToInsert,valuesToInsert);
+            } catch (SQLException throwables) {
+                throwables.printStackTrace();
+            }
+        }
+    }
 
     private MouseAdapter getRelationalBag(){
         return new MouseAdapter(){
@@ -70,53 +92,75 @@ public class MultipleAdderConsultBuild extends keyHiddedCoonsTableBuild {
                 buildGroup();
             }
 
-            private void inssertValues(ArrayList<String> data){
-                ArrayList<String> columnsToInsert = new ArrayList<>();
-                ArrayList<String> valuesToInsert = new ArrayList<>();
-
-                columnsToInsert.add(critCol);
-                columnsToInsert.add(columnToRelate);
-
-                columnsToInsert = viewSpecs.getCol(columnsToInsert);
-
-                valuesToInsert.add(critValue);
-                valuesToInsert.add("");
-
-                for (String key:data){
-                    valuesToInsert.set(1,key);
-                    try {
-                        viewSpecs.getUpdater().insert(columnsToInsert,valuesToInsert);
-                    } catch (SQLException throwables) {
-                        throwables.printStackTrace();
-                    }
-                }
-            }
 
             protected GroupRelationarForm buildGroup() {
-                ArrayList<String> reciclerArray = new ArrayList<>();
-                CommonRegistersGetter possibleValuesGetter = new CommonRegistersGetter(parentSpecs);
-                reciclerArray.add(tableToRelate.getTable());
+                GroupRelationarForm groupRelationarForm =
+                        new GroupRelationarForm(
+                                "Añadir " + tableToRelate.getTable(),tableToRelate.getInfo().getHumanName());
 
-                possibleValuesGetter.setQuickOptionsGetters(reciclerArray);
-                possibleValuesGetter.useRegisterAsConditions(critValue);
-
-                Table options = possibleValuesGetter.getOptions(tableToRelate.getTable());
-
-
-
-                GroupRelationarForm groupRelationarForm = new GroupRelationarForm("Títulos",tableToRelate.getInfo().getHumanName());
-                groupRelationarForm.setGetterValues(options);
+                groupRelationarForm.setGetterValues(getMergedOptions());
                 groupRelationarForm.addOnAcceptEvent(new genericEvents() {
                     @Override
                     public void genericEvent(){
                         groupRelationarForm.closeForm();
-                        inssertValues(groupRelationarForm.getAddedValues());
+                        insertValues(groupRelationarForm.getAddedValues());
                         updateSearch();
                     }
                 });
                 return groupRelationarForm;
             }
         };
+    }
+
+    private Table getMergedOptions(){
+        Table options = getOptions();
+
+
+        ArrayList<String> ocupedOp = getAlredyAddedElements();
+
+        ArrayList<ArrayList<String>> registers = options.getRegisters();
+
+        int index;
+        if (options.columnCount() == 2)
+            index = 1;
+        else
+            index = 0;
+
+        System.out.println(ocupedOp);
+        System.out.println(registers);
+
+        for (String oc:ocupedOp){
+            for (ArrayList<String> reg: registers)
+                if (reg.get(index).equals(oc)){
+                    registers.remove(reg);
+                    break;
+
+                }
+        }
+
+        options.setRegisters(registers);
+
+        return options;
+    }
+
+    private Table getOptions(){
+        ArrayList<String> reciclerArray = new ArrayList<>();
+        CommonRegistersGetter possibleValuesGetter = new CommonRegistersGetter(parentSpecs);
+        reciclerArray.add(tableToRelate.getTable());
+
+        possibleValuesGetter.setQuickOptionsGetters(reciclerArray);
+        possibleValuesGetter.useRegisterAsConditions(critValue);
+
+        Table options = possibleValuesGetter.getOptions(tableToRelate.getTable());
+
+        return options;
+    }
+
+    private ArrayList<String> getAlredyAddedElements(){
+        DataBaseConsulter consulter = new DataBaseConsulter(viewSpecs.getTable());
+        Table res = consulter.bringTable(new String[]{viewSpecs.getCol(columnToRelate)},new String[]{viewSpecs.getCol(critCol)},new String[]{critValue});
+
+        return res.getColumn(0);
     }
 
     protected MouseAdapter getButtonEvent() {
@@ -165,8 +209,21 @@ public class MultipleAdderConsultBuild extends keyHiddedCoonsTableBuild {
                     trueValuesToInsert.put(entry.getKey(), entry.getValue());
                     i++;
                 }
-                new ViewUpdater(viewSpecs.getInfo().getView())
-                        .insert(trueValuesToInsert);
+                try {
+                    viewSpecs.getUpdater().insert(trueValuesToInsert);
+                } catch (SQLException throwables) {
+                    FormDialogMessage form = new FormDialogMessage(
+                            "Conflicto al agregar registro",
+                            "No es posible agregar registros que ya existen en la tabla, se ha cancelado la aoperación"
+                    );
+                    form.addOnAcceptEvent(new genericEvents() {
+                        @Override
+                        public void genericEvent() {
+                            form.closeForm();
+                        }
+                    });
+                    throwables.printStackTrace();
+                }
             }
         };
 

@@ -7,14 +7,16 @@ package sistemaceb;
 
 import JDBCController.*;
 import sistemaceb.form.Global;
+
+import javax.swing.*;
+import java.awt.*;
 import java.util.ArrayList;
 
 /**
- *
+ *n
  * @author escal
  */
 public class LinkedTable extends KeyedTableBehavior {
-
     String primarykey;
 
     public LinkedTable(String view,primaryKeyedTable table){
@@ -22,6 +24,11 @@ public class LinkedTable extends KeyedTableBehavior {
         setDefultPrimaryKey();
         setReferences(table);
 
+    }
+
+    @Override
+    public String getInstructions() {
+        return "Da click en un registro para conocer los detalles del mismo";
     }
 
     public LinkedTable(String originalTable, String mainKey,primaryKeyedTable table ){

@@ -23,9 +23,7 @@ public class DataBaseConsulter {
     protected final String table;
     
    public  DataBaseConsulter(String table){
-
         this.table = table;
-
     }
 
     public String getTable() {
@@ -37,8 +35,7 @@ public class DataBaseConsulter {
    }
 
     public Table bringTable(){
-
-          return buildRegisters(buildSelect("*",""));
+        return buildRegisters(buildSelect("*",""));
     }
     
     public Table bringTable(String[] columnsToSearch){
@@ -178,6 +175,28 @@ public class DataBaseConsulter {
         return relatedTableInfo.getColumn(0);
     }
 
+    public String getPrametrizd(String[] params){
+       int arraySize = params.length -1;
+       if (arraySize < 0){
+           StringBuilder builder = new StringBuilder();
+           for (int i = 0; i < arraySize;i++){
+               builder.append("'");
+               builder.append(params[i]);
+               builder.append("',");
+           }
 
+           builder.append("'");
+           builder.append(params[arraySize]);
+           builder.append("'");
+
+           return builder.toString();
+       }
+       return "";
+    }
+
+    public Table getFunction(String function,String[] params){
+       String query = "select " + function + "(" + getPrametrizd(params) + ")";
+       return buildRegisters(query);
+    }
 
 }

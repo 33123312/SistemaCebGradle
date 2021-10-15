@@ -19,11 +19,23 @@ import javax.swing.JComboBox;
  */
 public class DesplegableMenu extends formElementWithOptions{
     private JComboBox menu;
+    private String defaultSelection;
 
     public DesplegableMenu(String title){
         super(title);
         buildMenu();
         setTrigerEvent();
+        defaultSelection = "";
+    }
+
+    public DesplegableMenu setDefaultSelection(String defaultSelection) {
+        this.defaultSelection = defaultSelection;
+
+        return this;
+    }
+
+    public String getDefaultSelection() {
+        return defaultSelection;
     }
 
     @Override
@@ -38,7 +50,7 @@ public class DesplegableMenu extends formElementWithOptions{
     @Override
     protected void buildGUIOptions() {
         super.buildGUIOptions();
-        addOption("");
+        addOption(defaultSelection);
         menu.setSelectedIndex(menu.getItemCount()-1);
     }
 

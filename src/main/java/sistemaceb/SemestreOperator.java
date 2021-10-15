@@ -3,14 +3,13 @@ package sistemaceb;
 import JDBCController.DataBaseConsulter;
 import JDBCController.DataBaseResManager;
 import JDBCController.Table;
+import SpecificViews.TableOperator;
 
 import java.util.ArrayList;
 
-public class SemestreOperator {
-    String semestre;
-
-    public SemestreOperator(String semestre){
-        this.semestre = semestre;
+public class SemestreOperator extends TableOperator {
+    public SemestreOperator(String semestre) {
+        super(semestre,"semestres");
     }
 
     public ArrayList<String> getGrupos() {
@@ -18,7 +17,7 @@ public class SemestreOperator {
 
         String[] cond = new String[]{"semestre"};
 
-        String[] values = new String[]{semestre};
+        String[] values = new String[]{tableRegister};
 
         return consulter.bringTable(cond,values).getColumn(0);
 

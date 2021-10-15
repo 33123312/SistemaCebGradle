@@ -32,7 +32,7 @@ AluMateriaOperator{
 
 
     public boolean isBoolean(){
-        return materiaType.equals("Boleana");
+        return materiaType.equals("A/NA");
     }
 
     public String getEvaluacionCalif(String eva){
@@ -106,10 +106,10 @@ AluMateriaOperator{
 
         String[] values = new String[]{
                 periodo,
-                aLumnoOperator.aluInfo.get("semestre"),
+                aLumnoOperator.getRegisterValue("semestre"),
                 materia,
                 evaluacion,
-                aLumnoOperator.aluMatr
+                aLumnoOperator.getTableRegister()
 
 
         };

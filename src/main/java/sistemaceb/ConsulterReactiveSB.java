@@ -31,12 +31,10 @@ public class ConsulterReactiveSB extends reactiveSearchBar{
 
     @Override
     public ArrayList<String> giveOptions(String selectedTag){
-
         if(getter.hasOptions(selectedTag))
             return getGUIOptions(selectedTag);
         else
             return new ArrayList();
-        
     }
     
     private ArrayList<String> getGUIOptions(String selectedTag){
@@ -53,22 +51,16 @@ public class ConsulterReactiveSB extends reactiveSearchBar{
             GUIOptions.add(visibleOption);
             
         }
-            
         return GUIOptions;
-        
     }
-
 
     
     @Override
         protected void executeInputManagers(String tag,String value){
-        if(GUITranslations.containsKey(value)){
+        if(GUITranslations.containsKey(value))
             value = GUITranslations.get(value);
-        }
         
         super.executeInputManagers(tag, value);
-
     }
-    
-    
+
 }

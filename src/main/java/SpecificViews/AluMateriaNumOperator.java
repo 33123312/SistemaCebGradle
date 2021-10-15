@@ -25,7 +25,7 @@ public class AluMateriaNumOperator extends AluMateriaOperator{
 
         String[] cond = new String[]{"periodo","clave_alumno","semestre","materia"};
 
-        String[] val = new String[]{periodo,aLumnoOperator.aluMatr,aLumnoOperator.aluInfo.get("semestre"),materia};
+        String[] val = new String[]{periodo,aLumnoOperator.getTableRegister(),aLumnoOperator.getRegisterValue("semestre"),materia};
 
         String semestral = consulter.bringTable(colsToBring,cond,val).getUniqueValue();
         if( semestral == null)

@@ -44,8 +44,7 @@ public class SwitcheableWindowPills extends JPanel{
         
         pillsBackGround = Color.white;
         currentView= new JPanel();
-        
-        
+
     }
     
     private JPanel deploypillsArea(){
@@ -95,7 +94,7 @@ public class SwitcheableWindowPills extends JPanel{
     private void setInitialStyle(BtnFE pill){
         
         pill.setPadding(10, 50, 10, 50);
-        pill.setFuente(new Font("Arial", Font.PLAIN , 13));
+        pill.setFuente(new Font("Arial", Font.PLAIN , 15));
         giveDeselectedDesign(pill);
         
     }
@@ -106,7 +105,6 @@ public class SwitcheableWindowPills extends JPanel{
         
             pill.addMouseListener(new MouseAdapter(){
                 final int key = pills.size();
-                
                 @Override
                 public void mousePressed (MouseEvent e){
                     selectPill(key);
@@ -120,19 +118,20 @@ public class SwitcheableWindowPills extends JPanel{
             position.weightx =  1;
             position.fill = GridBagConstraints.HORIZONTAL;
             position.gridx = pills.size();
-            
-                    
+
         pillsEvent.add(event);
         pills.add(pill);
         pillsArea.add(pill);
-        
+
     }
     
     public void setView(JPanel view){
+        setVisible(false);
         remove(currentView);
+        setVisible(true);
         add(view,BorderLayout.CENTER);
         currentView = view;
-        
+
     }
             
     

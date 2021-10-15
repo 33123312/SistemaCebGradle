@@ -2,7 +2,7 @@ package sistemaceb;
 
 import JDBCController.ViewSpecs;
 
-public class KeyedTableBehavior {
+public abstract class KeyedTableBehavior {
 
     protected primaryKeyedTable table ;
     protected ViewSpecs viewSpecs;
@@ -11,4 +11,7 @@ public class KeyedTableBehavior {
         viewSpecs = new ViewSpecs(view);
 
     }
+
+
+    public abstract String getInstructions();
 }

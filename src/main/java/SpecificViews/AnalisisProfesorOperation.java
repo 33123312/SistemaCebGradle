@@ -43,9 +43,9 @@ public class AnalisisProfesorOperation extends Operation{
 
     private ArrayList<String> buildRegister(TableRegister AsignInfo){
         String materia = AsignInfo.get("materia");
-        if(!ALumnoOperator.getMateriaType(materia).equals("Boleana")){
+        if(!ALumnoOperator.getMateriaType(materia).equals("A/NA")){
             String grupo = AsignInfo.get("grupo");
-            String nombreMateria = AsignInfo.get("nombre_materia");
+            String nombreMateria = AsignInfo.get("nombre_abr");
             GrupoOperator groupOp = new GrupoOperator(grupo);
             GrupoOperator.GrupoMateriaOperator materiaOp = groupOp.getGrupoMateriaOp(materia);
 
@@ -53,7 +53,7 @@ public class AnalisisProfesorOperation extends Operation{
 
             register.add(grupo);
             register.add(nombreMateria);
-            register.add(Integer.toString(groupOp.numAlumnos));
+            register.add(Integer.toString(groupOp.getNumAlu()));
 
             register.addAll(materiaOp.getPromedioUnidades());
             register.addAll(materiaOp.getPorcentajeReprobacionXUnidad());

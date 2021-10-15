@@ -170,7 +170,7 @@ public class CuadroResumenPdfBuilder extends PDFPlantillaTable{
         String reprobados;
 
         MateriaGrupoInfo(GrupoOperator operator,String materia) {
-            this.grupo = operator.grupo;
+            this.grupo = operator.getTableRegister();
             GrupoOperator.GrupoMateriaOperator operator1 = operator.getGrupoMateriaOp(materia);
             this.porcentajeRepro = operator1.getPorcentajeReprobadosEnUnidad(evaluacion);
             this.promedioTotal = operator1.getPromedioUnidad(evaluacion);

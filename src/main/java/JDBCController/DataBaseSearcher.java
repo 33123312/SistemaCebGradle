@@ -14,7 +14,6 @@ import sistemaceb.form.OptionsGetter;
  * @author escal
  */
 public class DataBaseSearcher {
-
     protected final DataBaseConsulter consulterView;
     protected final DataBaseConsulter visibleTagsConsulter;
 
@@ -165,25 +164,30 @@ public class DataBaseSearcher {
         return titles;
     }
 
+
     private Table getViewExactFiltered(){
         Table unsortedViewsTable;
 
         if(currentTagsToExactSearch.isEmpty())
             unsortedViewsTable = consulterView.bringTable();
+
         else{
             Collection<String> exactValue = getValues(currentTagsToExactSearch);
 
             ArrayList<String> viewTagTypesArray = new ArrayList(getTags(currentTagsToExactSearch));
+
             String[] viewTagValuesArray = exactValue.toArray(new String[exactValue.size()]);
 
             List<String> temV = specs.getCol(viewTagTypesArray);
 
-            unsortedViewsTable= consulterView.bringTable(temV.toArray(new String[temV.size()]), viewTagValuesArray);
+            unsortedViewsTable= consulterView.bringTable(
+                    temV.toArray(new String[temV.size()]),
+                    viewTagValuesArray);
         }
 
         unsortedViewsTable.setColumnTitles(specs.getTag(unsortedViewsTable.getColumnTitles()));
-        return unsortedViewsTable;
 
+        return unsortedViewsTable;
     }
 
     private Table getUnsortedVisible(){
@@ -199,13 +203,18 @@ public class DataBaseSearcher {
 
         merge(unsortedVisible, unsortedView);
 
+
         if(!currentTagsToAproximatedSearch.isEmpty())
             return getRatedValues(unsortedView,unsortedVisible,columnsToBring);
+
+        removeCols(unsortedVisible,columnsToBring);
+        //removeCols(unsortedView,columnsToBring);
 
         return new infoPackage(unsortedVisible,unsortedView);
     }
 
-    private infoPackage getRatedValues(Table unsortedView,Table unsortedVisible,ArrayList<String> columnsToBring){
+    private infoPackage getRatedValues(Table unsortedView,Table unsortedVisible,ArrayList<String> colsToBring){
+
         Table ratedViewRegisters;
         Table ratedVisibleRegisters;
 
@@ -216,8 +225,10 @@ public class DataBaseSearcher {
         else
             ratedVisibleRegisters = viewSearcher.getRatedNSortedRegisters();
 
-        removeCols(ratedVisibleRegisters,columnsToBring);
         ratedViewRegisters = viewSearcher.getRatedNSortedRegisters();
+
+        //removeCols(ratedViewRegisters,colsToBring);
+        removeCols(ratedVisibleRegisters,colsToBring);
 
         return new infoPackage(ratedVisibleRegisters,ratedViewRegisters);
 
@@ -227,22 +238,16 @@ public class DataBaseSearcher {
        return !visibleTagsConsulter.getTable().equals(specs.getTable());
     }
 
-    private void removeCols(Table ratedVisibleRegisters,ArrayList<String> columnsToBring){
+    private void removeCols(Table sortedTable,ArrayList<String> columnsToBring){
         if(!columnsToBring.isEmpty()) {
-            ArrayList<String> visibleColummnTitles = ratedVisibleRegisters.getColumnTitles();
-            visibleColummnTitles = new ArrayList(visibleColummnTitles);
-
-            for (String col : columnsToBring)
-                visibleColummnTitles.remove(col);
-
+            ArrayList<String> visibleColummnTitles = new ArrayList(sortedTable.getColumnTitles());
             for (String col : visibleColummnTitles)
-                ratedVisibleRegisters.removeColumn(col);
-
+                if (!columnsToBring.contains(col))
+                    sortedTable.removeColumn(col);
         }
     }
 
     private Table getRatedVisibleView(Table unsortedVisible,complexSearcher viewSearcher){
-
             complexSearcher visibleSearcher = getSearcher(unsortedVisible,specs.getVisibleTags());
 
             mergeRates(visibleSearcher, viewSearcher);

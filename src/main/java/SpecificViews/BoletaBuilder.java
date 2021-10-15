@@ -2,6 +2,7 @@ package SpecificViews;
 
 import JDBCController.*;
 import RegisterDetailViewProps.RegisterDetail;
+import sistemaceb.form.ErrorChecker;
 import sistemaceb.form.FormElement;
 import sistemaceb.form.Formulario;
 import sistemaceb.form.Global;
@@ -37,7 +38,7 @@ public class BoletaBuilder extends MultipleFormsOperation{
         addCalNumFrame();
         addAsistenciasArea("Numérica","calificaciones_numericas");
         addCalBolFrame();
-        addAsistenciasArea("Boleana","calificaciones_booleanas");
+        addAsistenciasArea("A/NA","calificaciones_booleanas");
 
         semestresForm = new SemestralCalifasChoser(operator.grupoOperator.getMateriasList("Numérica"),getConditions(),values);
         addElement("Calificaciones Semestrales",semestresForm);
@@ -102,7 +103,20 @@ public class BoletaBuilder extends MultipleFormsOperation{
             @Override
             public FormElement buildElement(Formulario form, String title,String row) {
                return form.addInput(title,dataType.FLOAT).
-                        setRequired(false);
+                        setRequired(false).addErrorChecker(new ErrorChecker() {
+                   @Override
+                   public String checkForError(String response) {
+                       try {
+                           double califa = Double.parseDouble(response);
+                           if (califa > 10)
+                               return "Error: La calificación ingresada es mayor a 10";
+
+                       } catch (Exception e){
+                           return "Error: La calificación no puede contener números";
+                       }
+                       return "";
+                   }
+               });
             }
         };
 
@@ -184,8 +198,8 @@ public class BoletaBuilder extends MultipleFormsOperation{
 
     private ArrayList<String> getValues(){
         ArrayList<String> conditions = new ArrayList<>();
-        conditions.add(operator.aluMatr);
-        conditions.add(operator.aluInfo.get("semestre"));
+        conditions.add(operator.getTableRegister());
+        conditions.add(operator.getRegisterValue("semestre"));
         conditions.add(Global.conectionData.loadedPeriodo);
 
 

@@ -69,7 +69,7 @@ public class HorariosPlanosBuilder extends Operation{
             ArrayList<String> titles = new ArrayList<>();
             ArrayList<String> values = new ArrayList<>();
             for (TableRegister register:registers){
-                titles.add(register.get("nombre_materia"));
+                titles.add(register.get("nombre_abr"));
                 values.add(register.get("nombre_completo"));
             }
 
@@ -89,7 +89,7 @@ public class HorariosPlanosBuilder extends Operation{
     private TableRegister getGrupoDiaHora(String grupo, String dia, String hora){
         DataBaseConsulter consulter = new DataBaseConsulter("horarios_view");
 
-        String[] colsToBring = new String[]{"nombre_materia","materia"};
+        String[] colsToBring = new String[]{"nombre_abr","materia"};
 
         String[] cond = new String[]{"grupo","dia","hora"};
 
@@ -98,7 +98,7 @@ public class HorariosPlanosBuilder extends Operation{
         Table register = consulter.bringTable(colsToBring,cond,values);
 
         ArrayList<String> newTitles = new ArrayList<>();
-            newTitles.add("nombre_materia");
+            newTitles.add("nombre_abr");
             newTitles.add("nombre_completo");
 
         register.setColumnTitles(newTitles);

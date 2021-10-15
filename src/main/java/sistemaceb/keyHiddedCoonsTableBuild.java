@@ -1,5 +1,6 @@
 package sistemaceb;
 
+import Generals.BtnFE;
 import JDBCController.ViewSpecs;
 import java.util.ArrayList;
 
@@ -8,40 +9,45 @@ public class keyHiddedCoonsTableBuild extends ConsultTableBuild{
     public   String critValue;
     protected  ViewSpecs parentSpecs;
 
-
     public keyHiddedCoonsTableBuild(String view, String critKey, ViewSpecs dadSpecs) {
         super(view);
-        commonCons(critKey,dadSpecs);
-        setTagsToShow(getTagsToShow());
-
-    }
-
-    private void commonCons(String critKey,ViewSpecs dadSpecs){
         parentSpecs = dadSpecs;
         critCol = viewSpecs.getTagFromTable(parentSpecs.getTable());
         critValue = critKey;
         dataBaseConsulter.addPermanentSearch(critCol,critKey);
+        setTagsToShow(getTagsToShow());
+
     }
 
     protected ArrayList<String> getRemovedVisibleTags() {
         ArrayList<String> tagsToInsert = viewSpecs.getVisibleTags();
-            tagsToInsert.remove(critCol);
 
-       // if (viewSpecs.hasHumanKey())
-       //     tagsToInsert.remove(viewSpecs.getInfo().getHumanKey());
-        return tagsToInsert;
+        return getProcList(tagsToInsert);
     }
 
     protected ArrayList<String> getRemovedTableTags(){
         ArrayList<String> tagsToInsert = viewSpecs.getTableTags();
-        System.out.println(tagsToInsert);
-            tagsToInsert.remove(critCol);
 
-        return tagsToInsert;
+        return getProcList(tagsToInsert);
+    }
+
+    private ArrayList<String> getProcList(ArrayList<String> list){
+        list.remove(critCol);
+        if(parentSpecs.hasHumanKey()) {
+            String humanKey = parentSpecs.getHumanTag();
+            if (list.contains(humanKey))
+                list.remove(humanKey);
+        }
+        return list;
     }
 
     protected ArrayList<String> getTagsToShow() {
 
         return getRemovedVisibleTags();
+    }
+
+    @Override
+    public BtnFE getInsertButton() {
+        return null;
     }
 }

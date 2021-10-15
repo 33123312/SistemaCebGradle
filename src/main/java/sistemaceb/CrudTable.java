@@ -18,32 +18,28 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Map;
 
-public class CrudTable extends KeyedTableBehavior {
+public class CrudTable extends keyedBuildBehavior {
 
     public int selectedRow;
     public keyHiddedCoonsTableBuild build;
 
-    public CrudTable(String view,keyHiddedCoonsTableBuild build){
-        super(view,build.getOutputTable());
+    public CrudTable(keyHiddedCoonsTableBuild build){
+        super(build);
         this.build = build;
         deploy();
     }
 
     private void deploy(){
-
         table.addRowStyle(new StyleRowModel() {
             @Override
             public RowsFactory.row setStyleModel(RowsFactory.row row) {
-
                 row.addMouseListener(new MouseAdapter() {
                     @Override
                     public void mousePressed(MouseEvent e) {
                         super.mousePressed(e);
                         selectedRow = row.getKey();
-
                     }
                 });
-
                 DesplegableMenuFE menu = new DesplegableMenuFE(row) {
                     @Override
                     public BtnFE buttonsEditor(BtnFE button) {
@@ -52,16 +48,12 @@ public class CrudTable extends KeyedTableBehavior {
                         return button;
                     }
                 };
-
                 menu.setSize(new Dimension(150,100));
                     menu.addButton("Modificar", defineModifyButtonEvent());
                     menu.addButton("Eliminar",defineDeleteButtonEvent() );
-
-
                 return row;
             }
         });
-
     }
 
     public MouseAdapter defineDeleteButtonEvent(){
@@ -69,12 +61,13 @@ public class CrudTable extends KeyedTableBehavior {
             @Override
             public void mousePressed(MouseEvent e) {
                 super.mousePressed(e);
-                ArrayList<String> updateConditions  = build.viewSpecs.getInfo().getTableCols();
+                ArrayList<String> updateConditions  = viewSpecs.getInfo().getTableCols();
                 ArrayList<String> updateValues = table.getTrueData(selectedRow);
 
-                rowUpdateConfirmationFrame confirmationForm = new rowUpdateConfirmationFrame(
-                        "¿Está completamente seguro de eliminar el siguiente registro?",updateConditions,updateValues);
-                confirmationForm.addOnAcceptEvent(new genericEvents(){
+                rowUpdateConfirmationFrame confirmationForm =
+                    new rowUpdateConfirmationFrame(
+                    "¿Está completamente seguro de eliminar el siguiente registro?",updateConditions,updateValues);
+                    confirmationForm.addOnAcceptEvent(new genericEvents(){
                           @Override
                           public void genericEvent(){
                               try {
@@ -137,7 +130,8 @@ public class CrudTable extends KeyedTableBehavior {
                                           viewSpecs.getUpdater().update(responseTitles, responseValues, updateConditions2, selectedRegister);
                                       } catch (SQLException throwables) {
                                           throwables.printStackTrace();
-                                          new FormDialogMessage("Error","El registro que se ha intentdo añadir ya existe");
+                                          new FormDialogMessage("Conflicto al insertar registro",
+                                                  "El registro que se ha intentdo añadir ya existe");
                                       }
                                       build.updateSearch();
                                       ((FormWindow) form).getFrame().closeForm();
@@ -146,13 +140,13 @@ public class CrudTable extends KeyedTableBehavior {
                         );
                     }
                 });
+                }
+            };
+        }
 
-            }
-        };
 
+    @Override
+    public String getInstructions() {
+        return "Da click en un registro para modificarlo o eliminarlo";
     }
-
-
-
-
 }

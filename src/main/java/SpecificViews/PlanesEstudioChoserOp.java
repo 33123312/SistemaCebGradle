@@ -1,5 +1,4 @@
 package SpecificViews;
-
 import JDBCController.DataBaseConsulter;
 import JDBCController.DataBaseUpdater;
 import JDBCController.Table;
@@ -15,9 +14,7 @@ import sistemaceb.form.Global;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Map;
-
 public class PlanesEstudioChoserOp extends Operation{
-
     PlanEstudioMateriasUpdater updater;
 
     public PlanesEstudioChoserOp(OperationInfoPanel infoPanlel) {
@@ -32,16 +29,21 @@ public class PlanesEstudioChoserOp extends Operation{
     }
     private void deployForm (){
         FormWindow formulario = new FormWindow("Cambiar Plan de Estudio");
-            formulario.addDesplegableMenu("Nuevo Plan").setOptions(getPlanes());
+            formulario.addDesplegableMenu("Nuevo Plan").setDefaultSelection("Ninguno").setOptions(getPlanes());
 
         formulario.addDataManager(new FormResponseManager() {
             @Override
             public void manageData(Formulario form) {
-                FormDialogMessage dialog = new FormDialogMessage("Cambiar Plan del grupo",getCoonfirmationMessage());
+                FormDialogMessage dialog = new FormDialogMessage(
+                    "Cambiar Plan del grupo",
+                    getCoonfirmationMessage());
+
                 dialog.addOnAcceptEvent(new genericEvents() {
                     @Override
                     public void genericEvent() {
                         updatePlan(formulario.getData());
+                        RegisterDetailView currentViewWindow = (RegisterDetailView)Global.view.currentWindow.thisWindow;
+                            currentViewWindow.updateCurrentPill();
                         dialog.closeForm();
                         formulario.getFrame().closeForm();
                     }
@@ -53,9 +55,16 @@ public class PlanesEstudioChoserOp extends Operation{
 
     private Table getPlanes(){
         DataBaseConsulter consulter = new DataBaseConsulter("planes_estudio");
+
+        String semestre = new GrupoOperator(keyValue).getRegisterValue("semestre");
+
         String[] colsToBring = new String[]{"nombre_plan","clave_plan"};
 
-        return consulter.bringTable(colsToBring);
+        String[] cond = new String[]{"semestre"};
+
+        String[] val = new String[]{semestre};
+
+        return consulter.bringTable(colsToBring,cond,val);
     }
 
     private String getCoonfirmationMessage(){

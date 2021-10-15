@@ -47,7 +47,7 @@ public class ConcetratedTableBuilder {
     private void buildRegisters(){
         String type = getMateriaType();
 
-        if(type.equals("Boleana"))
+        if(type.equals("A/NA"))
             addBolTable();
         else if(type.equals("Numérica"))
             addNumTable();
@@ -85,7 +85,7 @@ public class ConcetratedTableBuilder {
 
     private Map<String,String> getParams(){
         Map<String,String> params= new HashMap<>();
-            params.put("Semestre",califasChoser.groupoOerator.getGrupoInfo().get("semestre"));
+            params.put("Semestre",califasChoser.groupoOerator.getRegisterValue("semestre"));
             params.put("Materia",materiaName);
 
         return params;

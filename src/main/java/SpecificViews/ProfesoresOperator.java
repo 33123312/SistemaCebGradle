@@ -6,36 +6,21 @@ import JDBCController.TableRegister;
 
 import java.util.ArrayList;
 
-public class ProfesoresOperator {
+public class ProfesoresOperator extends TableOperator{
 
-    String claveProfesor;
-    TableRegister profesorInfo;
     public ProfesoresOperator(String profesorMatricula){
-        claveProfesor = profesorMatricula;
-        profesorInfo = getInfo();
+        super(profesorMatricula,"profesores");
 
-
-    }
-
-    private TableRegister getInfo(){
-        DataBaseConsulter consulter = new DataBaseConsulter("profesores_visible_view");
-
-        String[] conditions = new String[]{"clave_profesor"};
-
-        String[] values = new String[]{claveProfesor};
-
-
-        return consulter.bringTable(conditions,values).getRegister(0);
     }
 
     public Table getGruposList(){
         DataBaseConsulter consulter = new DataBaseConsulter("asignaturas_visible_view");
 
-        String[] colsToBring = new String[]{"grupo","materia","nombre_materia"};
+        String[] colsToBring = new String[]{"grupo","materia","nombre_abr"};
 
         String[] conditions = new String[]{"profesor"};
 
-        String[] values = new String[]{claveProfesor};
+        String[] values = new String[]{tableRegister};
 
         return consulter.bringTable(colsToBring,conditions,values);
     }

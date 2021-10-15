@@ -4,9 +4,10 @@
  * and open the template in the editor.
  */
 package sistemaceb;
-
 import Generals.BtnFE;
 import JDBCController.ViewSpecs;
+import SpecificViews.LinearHorizontalLayout;
+import SpecificViews.LinearVerticalLayout;
 import Tables.AdapTableFE;
 import Tables.RowsFactory;
 import Tables.RowsStyles;
@@ -20,31 +21,55 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import javax.swing.*;
-
+import javax.swing.border.EmptyBorder;
 /**
  *
  * @author escal
  */
-public class RegisterDetailTable extends JPanel {
-    
+public abstract class RegisterDetailTable extends JPanel{
     private AdapTableFE outputTable;
     private reactiveSearchBar searchInput;
-    protected final ViewSpecs viewSpecs;
+    protected  ViewSpecs viewSpecs;
     public ConsultTableBuild consultTable;
     protected ViewSpecs parentSpecs;
-    protected final String critValue;
+    protected  String critValue;
+    private boolean isInit;
 
-    public RegisterDetailTable(String view,String critKey, ViewSpecs parentSpecs){
+    public RegisterDetailTable(String view){
         viewSpecs = new ViewSpecs(view);
+    }
+
+    public void initRegister(String critKey, ViewSpecs parentSpecs){
         critValue = critKey;
         this.parentSpecs = parentSpecs;
+        isInit = false;
+    }
 
+    public void build(){
+        if (isInit)
+            reOpen();
+        else {
+            isInit = true;
+            firstImplementation();
+        }
+    }
+
+    protected void firstImplementation(){
+
+        consultTable.updateSearch();
+        deployGUI();
+    };
+
+    protected void reOpen(){
+        consultTable.updateSearch();
+    }
+
+    public String getTableName() {
+        return consultTable.getName();
     }
 
     public void setbuild(ConsultTableBuild consultTable){
         this.consultTable = consultTable;
-        consultTable.updateSearch();
-        deployGUI();
 
     }
 
@@ -81,7 +106,6 @@ public class RegisterDetailTable extends JPanel {
     }
 
     private JPanel deployTable(){
-
         outputTable = consultTable.getOutputTable();
         outputTable.setBorder(BorderFactory.createEmptyBorder(20,0,0,0));
         outputTable.addTitleStyle(new StyleRowModel(){
@@ -127,16 +151,26 @@ public class RegisterDetailTable extends JPanel {
 
     JPanel SearchOptionsContainer;
     private JPanel deploySearchOptions(){
+        LinearVerticalLayout headerPanel = new LinearVerticalLayout();
+
          SearchOptionsContainer = new JPanel(new BorderLayout());
             SearchOptionsContainer.setBorder(BorderFactory.createEmptyBorder(0,0,0,20));
 
-        
-        return SearchOptionsContainer;
+        headerPanel.addElement(SearchOptionsContainer);
+
+        if (consultTable.hasBehavior()){
+            JPanel layout = consultTable.getInstructionsPanel();
+                layout.setBorder(new EmptyBorder(10,0,0,20));
+                headerPanel.addElement(layout);
+        }
+
+        return headerPanel;
     }
             
     public void addDefInsertButton(){
         BtnFE responseBtn = consultTable.getInsertButton();
         setBtnStyles(responseBtn);
+
         addLeftControls(responseBtn);
 
     }
