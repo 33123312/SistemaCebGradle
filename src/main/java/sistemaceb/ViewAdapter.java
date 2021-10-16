@@ -1,12 +1,15 @@
 package sistemaceb;
 
 import DInamicPanels.View;
+import com.itextpdf.io.image.ImageDataFactory;
+import com.itextpdf.layout.element.Image;
 import sistemaceb.form.Global;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.net.MalformedURLException;
 
 public class ViewAdapter extends  JPanel{
 

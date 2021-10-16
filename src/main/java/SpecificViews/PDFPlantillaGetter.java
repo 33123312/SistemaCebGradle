@@ -1,25 +1,27 @@
 package SpecificViews;
 
-import JDBCController.DBSTate;
-import JDBCController.DataBaseResManager;
 import com.itextpdf.io.font.FontConstants;
+import com.itextpdf.io.image.ImageDataFactory;
 import com.itextpdf.kernel.font.PdfFont;
 import com.itextpdf.kernel.font.PdfFontFactory;
 import com.itextpdf.kernel.pdf.PdfDocument;
 import com.itextpdf.kernel.pdf.PdfWriter;
 import com.itextpdf.layout.Document;
 import com.itextpdf.layout.border.Border;
-import com.itextpdf.layout.element.Cell;
-import com.itextpdf.layout.element.Paragraph;
-import com.itextpdf.layout.element.Table;
+import com.itextpdf.layout.element.*;
+import com.itextpdf.layout.element.Image;
 import com.itextpdf.layout.property.TextAlignment;
+import com.itextpdf.layout.property.VerticalAlignment;
 import sistemaceb.form.Global;
 
-
+import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.nio.file.Files;
 import java.util.Map;
 
 public class PDFPlantillaGetter extends Document{
@@ -67,18 +69,59 @@ public class PDFPlantillaGetter extends Document{
                 setTextAlignment(TextAlignment.CENTER).
                 setFontSize(12);
 
-        PdfFont cornerValue = PdfFontFactory.createFont(FontConstants.HELVETICA_BOLD);
-        Paragraph corner = new Paragraph(Global.conectionData.loadedPeriodo).
-                setFont(cornerValue).
-                setTextAlignment(TextAlignment.RIGHT).
-                setFontSize(12);
 
-        add(corner);
+
+        addMembrete();
+
         add(title);
         add(subtitle);
         add(new Paragraph(""));
 
+    }
 
+    private void removeBorder(Table table)
+    {
+        for (IElement iElement : table.getChildren()) {
+            ((Cell)iElement).setBorder(Border.NO_BORDER);
+        }
+    }
+
+    private void addMembrete(){
+        Table table = new Table(new float[]{1,1,1});
+            table.setBorder(Border.NO_BORDER);
+            table.setWidthPercent(100);
+
+        table.addCell(getLogo());
+
+        try {
+            PdfFont cornerValue = PdfFontFactory.createFont(FontConstants.HELVETICA_BOLD);
+            table.addCell(getCell(Global.conectionData.loadedPeriodo, TextAlignment.RIGHT))
+                    .setFont(cornerValue);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        removeBorder(table);
+        add(table);
+    }
+
+    private Image getLogo(){
+        String imgPath = "images/ceb-logo.png";
+        URL a = this.getClass().getResource(imgPath);
+
+        Image logo = new Image(ImageDataFactory.create(a));
+            logo.scaleAbsolute(100,45);
+
+        return logo;
+    }
+
+    private Cell getCell(String text, TextAlignment alignment) {
+        Cell cell = new Cell().add(new Paragraph(text));
+        cell.setPadding(0);
+        cell.setVerticalAlignment(VerticalAlignment.MIDDLE);
+        cell.setTextAlignment(alignment);
+        cell.setBorder(Border.NO_BORDER);
+        return cell;
     }
 
     public void addParams(Map<String,String> params){
