@@ -1,17 +1,9 @@
 package SpecificViews;
 
-import Generals.BtnFE;
-import JDBCController.ViewSpecs;
-import RegisterDetailViewProps.RegisterDetail;
-import Tables.AdapTableFE;
-import Tables.RowsFactory;
-import Tables.StyleCellModel;
-import Tables.StyleRowModel;
+import Tables.*;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 
 public abstract class TableViewerOperation extends OperationWindow {
@@ -30,14 +22,12 @@ public abstract class TableViewerOperation extends OperationWindow {
 
     }
 
-
     private JScrollPane getBody(){
         JScrollPane scroll = new JScrollPane();
             body = new LinearVerticalLayout();
             scroll.setViewportView(body);
 
         return scroll;
-
     }
 
     protected  void removeAllTables(){
@@ -47,14 +37,13 @@ public abstract class TableViewerOperation extends OperationWindow {
         body.setVisible(true);
     }
 
-
     protected void addLateralTable(String title,ArrayList<String> titles,ArrayList<String> lateralTitles,ArrayList<ArrayList<String>> registers){
         tables.add(new tableToPrint(title,titles,lateralTitles,registers));
         AdapTableFE outputTable = getLateralTable();
-
-        outputTable.setTitles(titles);
-        outputTable.setLateralTitles(lateralTitles);
-        outputTable.addNShow(registers);
+            outputTable.setTitles(titles);
+            outputTable.setLateralTitles(lateralTitles);
+            outputTable.setRows(registers);
+            outputTable.showAll();
 
         addTableContainer(title, outputTable);
     }
@@ -63,14 +52,15 @@ public abstract class TableViewerOperation extends OperationWindow {
         tables.add(new tableToPrint(title,titles,registers));
         AdapTableFE outputTable = getOutPutTable();
         outputTable.setTitles(titles);
-        outputTable.addNShow(registers);
+        outputTable.setRows(registers);
+        outputTable.showAll();
         addTableContainer(title, outputTable);
 
     }
 
     private AdapTableFE getLateralTable(){
         AdapTableFE resT  = getOutPutTable();
-            resT.addLateralStyle(new StyleCellModel() {
+            resT.getFactory().addLateralStyle(new StyleCellModel() {
                 @Override
                 public void setCellStyle(JLabel a) {
                     a.setForeground(Color.white);
@@ -85,18 +75,9 @@ public abstract class TableViewerOperation extends OperationWindow {
     private AdapTableFE getOutPutTable(){
         AdapTableFE outputTable = new AdapTableFE();
 
-        outputTable.addRowStyle(new StyleRowModel() {
+        outputTable.getFactory().addTitleStyle(new StyleRowModel() {
             @Override
-            public RowsFactory.row setStyleModel(RowsFactory.row row) {
-                row.setBackground(Color.white);
-                row.setBorder(BorderFactory.createMatteBorder(0,0,1,0,new Color(240,240,240)));
-                return row;
-            }
-        });
-
-        outputTable.addTitleStyle(new StyleRowModel() {
-            @Override
-            public RowsFactory.row setStyleModel(RowsFactory.row row) {
+            public TableRow setStyleModel(TableRow row) {
                 row.setTextColor(Color.white);
                 row.setBackground(new Color(116, 185, 255));
                 return row;

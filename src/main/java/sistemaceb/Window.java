@@ -5,32 +5,25 @@
  */
 package sistemaceb;
 
-import DInamicPanels.View;
 import SpecificViews.LinearHorizontalLayout;
 import sistemaceb.form.Global;
 
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Font;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.GridLayout;
-import javax.swing.BorderFactory;
-import javax.swing.JComponent;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
+import javax.swing.*;
+import java.awt.*;
+import java.util.ArrayList;
 
 /**
  *
  * @author escal
  */
-public  class Window extends JPanel{
+public class Window extends JPanel{
     
     private JLabel titleLabel;
     protected LinearHorizontalLayout header;
     private JPanel buttonsPlace;
     
     public Window(){
+        closePermisions = new ArrayList<>();
         setLayout(new BorderLayout());
         header = new LinearHorizontalLayout();
             header.setOpaque(false);
@@ -38,9 +31,29 @@ public  class Window extends JPanel{
         
     }
 
+    public interface ClosePermision{
+        boolean canClose(genericEvents e);
+    }
+
+    private ArrayList<ClosePermision> closePermisions;
+
+    public void addClosePermision(ClosePermision closePermision){
+        closePermisions.add(closePermision);
+    }
+
     public void update(){
 
     };
+
+    public void tryToClose(genericEvents e){
+        if (closePermisions.isEmpty())
+            e.genericEvent();
+        else
+            for (ClosePermision permision: closePermisions)
+                if (!permision.canClose(e))
+                    return;
+
+    }
     
     public void addToHeader(JComponent componet){
         

@@ -34,7 +34,6 @@ public class CuadroDeHonorOperation extends OperationWindow{
             DesplegableMenu menuEva = formPanel.addDesplegableMenu("Evaluación");
             menuEva.setOptions(evaluaciones);
             menuEva.setRequired(true);
-            formPanel.showAll();
 
         JComboBox desplegableMenu = menuEva.getMenu();
 

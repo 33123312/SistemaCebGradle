@@ -7,12 +7,11 @@ import javax.swing.border.EmptyBorder;
 import java.awt.*;
 
 public class HorizontalFormPanel extends Formulario{
-    public LinearHorizontalLayout elementsArea;
-    JPanel generalArea;
+    private LinearHorizontalLayout elementsArea;
+    private JPanel generalArea;
 
     public HorizontalFormPanel(){
         super();
-
         setLayout(new GridLayout(1,1));
         setBorder(new EmptyBorder(10,0,0,0));
         generalArea =  new JPanel(new BorderLayout());
@@ -20,6 +19,16 @@ public class HorizontalFormPanel extends Formulario{
         add(generalArea);
         deploy();
 
+    }
+
+    @Override
+    public void removeElement(int i) {
+        super.removeElement(i);
+        elementsArea.removeElement(i);
+    }
+
+    public LinearHorizontalLayout getElementsArea() {
+        return elementsArea;
     }
 
     private void  deploy(){
@@ -31,7 +40,6 @@ public class HorizontalFormPanel extends Formulario{
 
     public void addLateral(JComponent component){
         generalArea.add(component,BorderLayout.WEST);
-
         laterals = component;
     }
 
@@ -67,6 +75,7 @@ public class HorizontalFormPanel extends Formulario{
 
     @Override
     protected void addElement(FormElement element) {
+        super.addElement(element);
         elementsArea.addElement(element);
     }
 

@@ -6,27 +6,19 @@
 package sistemaceb;
 
 import Generals.BtnFE;
-import SpecificViews.LinearHorizontalLayout;
-import Tables.AdapTableFE;
-import Tables.RowsFactory;
-import Tables.RowsStyles;
-import Tables.StyleRowModel;
 import Generals.TagList;
 import JDBCController.ViewSpecs;
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Font;
-import java.awt.GridLayout;
+import SpecificViews.LinearHorizontalLayout;
+import Tables.*;
+import sistemaceb.form.FormWindow;
+import sistemaceb.form.Formulario;
+
+import javax.swing.*;
+import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.Map;
-import javax.swing.BorderFactory;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-
-import sistemaceb.form.FormWindow;
-import sistemaceb.form.Formulario;
 
 public class CrudWindow extends Window {
     
@@ -207,34 +199,23 @@ public class CrudWindow extends Window {
     }
         
     public JPanel deployTableContainer(){
-
         AdapTableFE outputTable  = consulterTable.getOutputTable();
             outputTable.setBorder(BorderFactory.createEmptyBorder(10,0,10,0));
-            outputTable.addTitleStyle(new StyleRowModel(){
+            outputTable.getFactory().addTitleStyle(new StyleRowModel(){
             @Override
-                public RowsFactory.row setStyleModel(RowsFactory.row component) {
+                public TableRow setStyleModel(TableRow component) {
                     component.setBackground(Color.WHITE);
                     return component;
                 }
-
-            });
-
-            outputTable.addRowStyle(new StyleRowModel(){
-                @Override
-                public RowsFactory.row setStyleModel(RowsFactory.row component) {
-                    component.setBackground(Color.WHITE);
-                    component.setBorder(BorderFactory.createMatteBorder(0, 0, 1, 0, new Color(240,240,240)));
-                    return component;
-                }
-
             });
             
-            outputTable.addRowStyle(RowsStyles.iluminateOnOver(new Color(245,245,245)));
+            outputTable.getFactory().addRowStyle(RowsStyles.iluminateOnOver(new Color(245,245,245)));
             outputTable.setBackground(Color.white);
 
 
         JPanel generalContainer = new JPanel(new GridLayout());
             generalContainer.add(outputTable);
+        outputTable.showAll();
 
         return generalContainer;
     }

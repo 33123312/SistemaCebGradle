@@ -1,6 +1,5 @@
 package SpecificViews;
 
-import JDBCController.DBU;
 import JDBCController.DataBaseConsulter;
 import JDBCController.Table;
 import JDBCController.ViewSpecs;
@@ -13,7 +12,6 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
 
 public class MultipleFormsPanel extends LinearVerticalLayout {
 
@@ -82,7 +80,7 @@ public class MultipleFormsPanel extends LinearVerticalLayout {
 
     private int getRow(FormElement element){
         for (keyedHForm form:forms){
-            Component[] componnts = form.elementsArea.getComponents();
+            Component[] componnts = form.getElementsArea().getComponents();
             ArrayList<Component> componentsList = new ArrayList<>(Arrays.asList(componnts));
             if (componentsList.contains(element))
                 return forms.indexOf(form);
@@ -92,7 +90,7 @@ public class MultipleFormsPanel extends LinearVerticalLayout {
     }
 
     private int getColCount(){
-        return forms.get(0).elementsArea.getComponentCount();
+        return forms.get(0).getElementsArea().getComponentCount();
     }
 
     private ArrayList<String> getLateraltrueTiles(){
@@ -110,7 +108,6 @@ public class MultipleFormsPanel extends LinearVerticalLayout {
                 ele.setResponse(curentValue);
         }
 
-        newForm.showAll();
         newForm.addDataManager(back.getResponseManager());
         newForm.addTitle(visibleRowTitles.get(getCount()));
 

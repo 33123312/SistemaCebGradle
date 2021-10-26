@@ -2,8 +2,14 @@
 package sistemaceb;
 
 import Generals.BtnFE;
-import JDBCController.*;
+import JDBCController.DataBaseSearcher;
+import JDBCController.ViewSpecs;
+import JDBCController.infoPackage;
+import sistemaceb.form.FormWindow;
+import sistemaceb.form.Formulario;
+import sistemaceb.form.proccesStateStorage;
 
+import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -11,22 +17,15 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-import Tables.AdapTableFE;
-import sistemaceb.form.FormWindow;
-import sistemaceb.form.Formulario;
-import sistemaceb.form.proccesStateStorage;
-
-import javax.swing.*;
-
 /**
  *
  * @author escal
  */
 public abstract class ConsultTableBuild {
 
-    protected ViewSpecs viewSpecs;
+    public ViewSpecs viewSpecs;
     protected DataBaseSearcher dataBaseConsulter;
-    protected primaryKeyedTable outputTable;
+    private final primaryKeyedTable outputTable;
     private ArrayList<String> tagsToShow;
     private KeyedTableBehavior behavior;
     private String name;
@@ -34,8 +33,10 @@ public abstract class ConsultTableBuild {
     public ConsultTableBuild(String view) {
         dataBaseConsulter = new DataBaseSearcher(view);
         viewSpecs = dataBaseConsulter.getViewSpecs();
-        setOutputTable(new primaryKeyedTable());
         name = viewSpecs.getInfo().getHumanName();
+
+        outputTable = new primaryKeyedTable();
+        setTagsToShow(viewSpecs.getVisibleTags());
     }
 
     public String getName() {
@@ -83,8 +84,7 @@ public abstract class ConsultTableBuild {
     }
     public void updateSearch(){
         infoPackage currentSearch = dataBaseConsulter.getSearch(tagsToShow);
-
-        outputTable.addNShow(
+        outputTable.setRows(
                 currentSearch.getVisibleRegisters().getRegisters(),
                 currentSearch.getViewRegisters()
         );
@@ -93,13 +93,12 @@ public abstract class ConsultTableBuild {
     public abstract BtnFE getInsertButton();
 
     public primaryKeyedTable getOutputTable(){
-
         return outputTable;
     }
 
     public void setTagsToShow(ArrayList<String> tagsToShow) {
         this.tagsToShow = tagsToShow;
-        initTable();
+        outputTable.setTitles(tagsToShow);
     }
 
     public reactiveSearchBar getReactiveSearchBar(){
@@ -117,19 +116,7 @@ public abstract class ConsultTableBuild {
             });
             searchBar.addItems(searchTags);
         }
-
         return searchBar;
-
-    }
-
-    public void setOutputTable(primaryKeyedTable table){
-        outputTable = table;
-        setTagsToShow(viewSpecs.getViewTags());
-    }
-
-    private void initTable(){
-        outputTable.setTitles(tagsToShow);
-        outputTable.showAll();
     }
 
 
@@ -184,9 +171,9 @@ public abstract class ConsultTableBuild {
         }
 
         proccesStateStorage runingForm = new proccesStateStorage();
+
         @Override
         public void mousePressed(MouseEvent arg0){
-
             if(!runingForm.runing){
                 FormWindow insertForm = buildForm();
                 insertForm.getFrame().addRuningStatusDownShoter(runingForm);
@@ -198,11 +185,9 @@ public abstract class ConsultTableBuild {
                             manageResponse(trueData);
                             updateSearch();
                             insertForm.getFrame().closeForm();
-
                         }
                     }
                 );
-
             }
         }
 

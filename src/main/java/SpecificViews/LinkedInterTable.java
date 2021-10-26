@@ -2,18 +2,20 @@ package SpecificViews;
 
 import Generals.BtnFE;
 import Generals.DesplegableMenuFE;
-import JDBCController.DBU;
 import JDBCController.DataBaseConsulter;
-import JDBCController.DataBaseUpdater;
+import JDBCController.Table;
 import JDBCController.ViewSpecs;
-import org.glassfish.jersey.message.internal.DataSourceProvider;
-import sistemaceb.*;
-import sistemaceb.form.FormDialogMessage;
+import Tables.AdapTableFE;
+import Tables.RowsFactory;
+import Tables.TableRow;
+import sistemaceb.FormResponseManager;
+import sistemaceb.LinkedTable;
+import sistemaceb.TagFormBuilder;
 import sistemaceb.form.FormWindow;
 import sistemaceb.form.Formulario;
 import sistemaceb.form.MultipleAdderConsultBuild;
+import sistemaceb.primaryKeyedTable;
 
-import javax.xml.parsers.SAXParser;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -33,24 +35,25 @@ public class LinkedInterTable extends LinkedTable {
     @Override
     protected void setReferences(primaryKeyedTable table) {
         super.setReferences(table);
-        table.addRightRowEvents(new primaryKeyedTable.clickedRowEvent(){
+        table.getFactory().addRightClickEvnt(new AdapTableFE.rowSelectionEvnt() {
             @Override
-            public void onClick(int key) {
+            public void whenSelect(TableRow row) {
+                int key = row.getKey();
                 DesplegableMenuFE menu = new DesplegableMenuFE(){
-                @Override
-                public BtnFE buttonsEditor(BtnFE button) {
-                    button.setTextColor(Color.black);
-                    return super.buttonsEditor(button);
-                }
-            };
-                if (!getModificableCols().isEmpty())
-                menu.addButton("Modificar", new MouseAdapter() {
                     @Override
-                    public void mousePressed(MouseEvent e) {
-                        super.mousePressed(e);
-                        modifyElement(getPrimaryKey(key));
+                    public BtnFE buttonsEditor(BtnFE button) {
+                        button.setTextColor(Color.black);
+                        return super.buttonsEditor(button);
                     }
-                });
+                };
+                if (!getModificableCols().isEmpty())
+                    menu.addButton("Modificar", new MouseAdapter() {
+                        @Override
+                        public void mousePressed(MouseEvent e) {
+                            super.mousePressed(e);
+                            modifyElement(getPrimaryKey(key));
+                        }
+                    });
 
                 menu.addButton("Remover", new MouseAdapter() {
                     @Override

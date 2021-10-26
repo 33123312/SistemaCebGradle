@@ -1,6 +1,5 @@
 package sistemaceb.form;
 
-import JDBCController.DBSTate;
 import JDBCController.DataBaseResManager;
 
 public class PeriodosManager {

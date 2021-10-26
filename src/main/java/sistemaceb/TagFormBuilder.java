@@ -8,13 +8,12 @@ package sistemaceb;
 import JDBCController.Table;
 import JDBCController.ViewSpecs;
 import JDBCController.dataType;
-import java.util.ArrayList;
-import java.util.Map;
-
-import sistemaceb.form.FormWindow;
+import sistemaceb.form.Formulario;
 import sistemaceb.form.OptionsGetter;
 import sistemaceb.form.formElementWithOptions;
-import sistemaceb.form.Formulario;
+
+import java.util.ArrayList;
+import java.util.Map;
 
 /**
  *
@@ -35,7 +34,6 @@ public class TagFormBuilder {
         this.form = form;
         optionsGetter = new OptionsGetter(specs);
         buildFormSections();
-        form.showAll();
 
     }
 

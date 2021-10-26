@@ -5,10 +5,10 @@
  */
 package sistemaceb;
 
-import java.awt.event.MouseAdapter;
-
 import Generals.BtnFE;
 import JDBCController.ViewSpecs;
+
+import java.awt.event.MouseAdapter;
 
 
 public class ConditionedConsultTable extends  NewRegisterGenTableBuild {

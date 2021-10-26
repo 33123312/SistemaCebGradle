@@ -1,6 +1,5 @@
 package RegisterDetailViewProps;
 
-import JDBCController.TableRegister;
 import SpecificViews.*;
 
 
@@ -20,6 +19,7 @@ public class GrupoRegisterProps extends RegisterDetail{
     }
 
     private void addOps(){
+        addOperation(new GrupoCalifChoserOp(infoPanel));
         addOperation(new HorarioBuilder(infoPanel));
         addOperation(new HorarioConsulter(infoPanel));
         addOperation(new GrupoCalifConsulter(infoPanel));

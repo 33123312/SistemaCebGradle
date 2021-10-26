@@ -5,12 +5,9 @@
  */
 package sistemaceb;
 
-import java.awt.Color;
-import java.awt.Dimension;
-import javax.swing.BorderFactory;
-import javax.swing.JButton;
-import javax.swing.JScrollPane;
+import javax.swing.*;
 import javax.swing.plaf.basic.BasicScrollBarUI;
+import java.awt.*;
 
 /**
  *

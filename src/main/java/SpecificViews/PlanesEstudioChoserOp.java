@@ -1,15 +1,16 @@
 package SpecificViews;
-import JDBCController.DataBaseConsulter;
-import JDBCController.DataBaseUpdater;
-import JDBCController.Table;
 
+import JDBCController.DataBaseConsulter;
+import JDBCController.Table;
 import JDBCController.ViewSpecs;
-import RegisterDetailViewProps.RegisterDetail;
-import sistemaceb.*;
+import sistemaceb.FormResponseManager;
+import sistemaceb.PlanEstudioMateriasUpdater;
+import sistemaceb.RegisterDetailView;
 import sistemaceb.form.FormDialogMessage;
 import sistemaceb.form.FormWindow;
 import sistemaceb.form.Formulario;
 import sistemaceb.form.Global;
+import sistemaceb.genericEvents;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -29,7 +30,7 @@ public class PlanesEstudioChoserOp extends Operation{
     }
     private void deployForm (){
         FormWindow formulario = new FormWindow("Cambiar Plan de Estudio");
-            formulario.addDesplegableMenu("Nuevo Plan").setDefaultSelection("Ninguno").setOptions(getPlanes());
+            formulario.addDesplegableMenu("Nuevo Plan").setOptions(getPlanes()).setDefaultValue("Ninguno");
 
         formulario.addDataManager(new FormResponseManager() {
             @Override
@@ -37,7 +38,8 @@ public class PlanesEstudioChoserOp extends Operation{
                 FormDialogMessage dialog = new FormDialogMessage(
                     "Cambiar Plan del grupo",
                     getCoonfirmationMessage());
-
+                dialog.addCloseButton();
+                dialog.addAcceptButton();
                 dialog.addOnAcceptEvent(new genericEvents() {
                     @Override
                     public void genericEvent() {
@@ -50,7 +52,6 @@ public class PlanesEstudioChoserOp extends Operation{
                 });
             }
         });
-        formulario.showAll();
     }
 
     private Table getPlanes(){

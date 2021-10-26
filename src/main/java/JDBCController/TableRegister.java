@@ -6,6 +6,8 @@
 package JDBCController;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  *
@@ -42,4 +44,16 @@ public class TableRegister {
         
         return  values.get(index);
     }
+
+    public Map<String,String> toMap(){
+        Map<String,String> val = new HashMap<>();
+        int size = columnTitles.size();
+        for (int i = 0; i < size; i++)
+            val.put(
+                columnTitles.get(i),
+                values.get(i)
+            );
+        return val;
+    }
+
 }

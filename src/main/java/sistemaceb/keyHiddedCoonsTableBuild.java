@@ -2,6 +2,7 @@ package sistemaceb;
 
 import Generals.BtnFE;
 import JDBCController.ViewSpecs;
+
 import java.util.ArrayList;
 
 public class keyHiddedCoonsTableBuild extends ConsultTableBuild{

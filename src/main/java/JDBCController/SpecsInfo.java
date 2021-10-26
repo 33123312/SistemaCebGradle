@@ -1,7 +1,5 @@
 package JDBCController;
 
-import com.itextpdf.layout.element.Tab;
-
 import java.util.ArrayList;
 
 public class SpecsInfo {

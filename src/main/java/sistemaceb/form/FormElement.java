@@ -5,44 +5,79 @@
  */
 package sistemaceb.form;
 
-import JDBCController.dataType;
-
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Font;
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionListener;
 import java.util.ArrayList;
-import javax.swing.BorderFactory;
-import javax.swing.JComponent;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
 
 /**
  *
  * @author escal
  */
-public abstract class FormElement extends JPanel{
+public abstract class
+FormElement extends JPanel{
     
     private final JLabel errorLabel;
-    public String title;
+    private String title;
+    private String trueTitle;
     protected boolean required;
     protected JComponent currentElement;
     private ArrayList<ErrorChecker> errorChecker;
     private int index;
+    protected ArrayList<TrigerElemetGetter> trigerElementEvents;
+    private String defaultValue;
 
-    public FormElement(String title){
+    public FormElement(String title,String defaultValue){
+        trigerElementEvents = new ArrayList();
         errorChecker = new ArrayList();
+        this.defaultValue = defaultValue;
         setBackground(Color.white);
         this.title = title;
+        trueTitle = title;
         addEmptyError();
         setLayout(new BorderLayout());
         errorLabel = deployErrorLabel();
         setBorder(BorderFactory.createEmptyBorder(0,20,0,20)); 
         setOpaque(false);
-        
         add(deployTitle(title),BorderLayout.NORTH);
         add(errorLabel,BorderLayout.SOUTH);
         
     }
+
+    public ArrayList<TrigerElemetGetter> getTrigerElementEvents() {
+        return trigerElementEvents;
+    }
+
+    public FormElement setTrueTitle(String trueTitle) {
+        this.trueTitle = trueTitle;
+        return this;
+    }
+
+    public abstract void useDefval();
+
+    public void setDefaultValue(String defaultValue) {
+        this.defaultValue = defaultValue;
+    }
+
+    public String getDefaultValue() {
+        return defaultValue;
+    }
+
+    protected void executeTrigerEvents(){
+        for(TrigerElemetGetter currentEvent: trigerElementEvents)
+            currentEvent.onTrigger(this);
+
+    }
+
+    public String getTrueTitle(){
+        return trueTitle;
+    };
+
+    public FormElement addTrigerGetterEvent(TrigerElemetGetter event){
+        trigerElementEvents.add(event);
+        return this;
+    }
+
 
     public int getIndex(){
         return index;
@@ -94,7 +129,11 @@ public abstract class FormElement extends JPanel{
 
         return currentElement;
     }
-    
+
+    public JComponent getCurrentElement() {
+        return currentElement;
+    }
+
     protected void addElement(JComponent component){
         currentElement = component;
         add(component,BorderLayout.CENTER);
@@ -151,7 +190,17 @@ private void addEmptyError(){
     });
 }
 
-public abstract void setResponse(String txt);
+private String originalValue;
+public boolean hasBeenModfied(){
+
+    System.out.println(originalValue + "-" + getResponse());
+    return !originalValue.equals(getResponse());
+}
+
+public void setResponse(String txt){
+    if (originalValue == null)
+        originalValue= txt;
+};
 
 public boolean isSetted(){ return !getResponse().equals("");
 }

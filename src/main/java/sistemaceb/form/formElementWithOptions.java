@@ -4,26 +4,20 @@ package sistemaceb.form;
 import JDBCController.Table;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
 
 public abstract class formElementWithOptions extends FormElement {
     
-    protected ArrayList<EventListener> trigerEvents;
-    protected ArrayList<TrigerElemetGetter> trigerElementEvents;
     protected ArrayList<String> GUIOptions;
     protected ArrayList<String> trueOptions;
-    protected String trueTitle;
 
     private Map<String,Table> incomeOptions;
     
-    public formElementWithOptions(String title){
-        super(title);
+    public formElementWithOptions(String title,String deV){
+        super(title,deV);
         incomeOptions = new HashMap<>();
-        trigerEvents = new ArrayList();
-        trigerElementEvents = new ArrayList<>();
     }
     
     private void resetOptions(){
@@ -40,7 +34,6 @@ public abstract class formElementWithOptions extends FormElement {
 
     @Override
     public String getResponse(){
-
         if(hasOptions()){
             if(hasTrueOptions())
                 return getTrueResponse();
@@ -72,7 +65,6 @@ public abstract class formElementWithOptions extends FormElement {
     }
 
     protected void buildGUIOptions(){
-        removetriggerEvent();
         removeGUIOptions();
 
         String trueOptionsShower;
@@ -84,42 +76,15 @@ public abstract class formElementWithOptions extends FormElement {
            addOption(trueOptionsShower);
 
         }
-        setTrigerEvent();
     }
-
-    protected abstract void setTrigerEvent();
-
-    protected  abstract void removetriggerEvent();
     
     public boolean hasTrueOptions(){
 
         return GUIOptions != trueOptions;
     }
-    
-    public String getTrueTitle(){
-        
-        return trueTitle;
-    }
 
-    public formElementWithOptions setTrueTitle(String trueTitle){
-        this.trueTitle = trueTitle;
-        
-    return this;
-    }
-
-    
     public ArrayList<String> getTrueOptions(){
         return new ArrayList(trueOptions);
-    }
-
-    protected void executeTrigerEvents(){
-
-        for(EventListener currentEvent: trigerEvents)
-            currentEvent.onTriger(getResponse());
-
-        for(TrigerElemetGetter currentEvent: trigerElementEvents)
-            currentEvent.onTrigger(this);
-        
     }
     
     protected String convertResponseToTrue(String response){
@@ -225,7 +190,7 @@ public abstract class formElementWithOptions extends FormElement {
             if(options.columnCount() == 2){
                 ArrayList<String> trueOptions = new ArrayList(options.getColumn(1)) ;
                 setOptions(GUIoptions,trueOptions);
-                setTrueDefTitle(options.getColumnTitles().get(1));
+                setTrueTitle(options.getColumnTitles().get(1));
 
             }else
                 setOptions(GUIoptions);
@@ -233,20 +198,13 @@ public abstract class formElementWithOptions extends FormElement {
         return this;
     }
 
-    public void setOptions(ArrayList<String> options){
+    public formElementWithOptions setOptions(ArrayList<String> options){
             removeOptions();
             options = new ArrayList(options);
             setOptions(options, options);
 
- 
+        return this;
     }
-
-    private void setTrueDefTitle(String newValue){
-        if(trueTitle == null)
-            trueTitle = newValue;
-
-    }
-
 
     public abstract void setSelection(String selection);
 
@@ -256,17 +214,8 @@ public abstract class formElementWithOptions extends FormElement {
 
     return this;
     }
-    
-    
-    public formElementWithOptions addTrigerEvent(EventListener event){
-        trigerEvents.add(event);
-        return this;
-    }
 
-    public formElementWithOptions addTrigerGetterEvent(TrigerElemetGetter event){
-        trigerElementEvents.add(event);
-        return this;
-    }
+
 
         
     public void removeOptions(){

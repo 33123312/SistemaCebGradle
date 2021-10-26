@@ -5,13 +5,9 @@
  */
 package sistemaceb.form;
 
-import JDBCController.DBU;
-import JDBCController.Table;
 import JDBCController.ViewSpecs;
-import JDBCController.optionsGetter;
+
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 
 
 /**

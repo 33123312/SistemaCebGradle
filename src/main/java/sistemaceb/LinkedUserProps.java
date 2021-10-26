@@ -1,12 +1,9 @@
 package sistemaceb;
 
-import JDBCController.DBU;
 import JDBCController.Table;
 import JDBCController.ViewSpecs;
 import sistemaceb.form.Global;
-import sistemaceb.form.ViewsRelationState;
 
-import javax.management.remote.JMXPrincipal;
 import javax.swing.*;
 import javax.swing.border.Border;
 import java.awt.*;

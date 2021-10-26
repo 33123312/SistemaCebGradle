@@ -1,15 +1,15 @@
 package SpecificViews;
+
 import JDBCController.DataBaseConsulter;
 import JDBCController.Table;
 import JDBCController.ViewSpecs;
-import RegisterDetailViewProps.RegisterDetail;
-import sistemaceb.RegisterDetailView;
 import sistemaceb.form.*;
 import sistemaceb.genericEvents;
 
 import javax.swing.*;
-import javax.swing.text.html.FormSubmitEvent;
 import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -52,7 +52,8 @@ public class HorarioBuilder extends MultipleFormsOperation{
         if(misingMaterias.isEmpty())
             return true;
         else {
-            FormDialogMessage form = new FormDialogMessage("","Las materias " + misingMaterias + " no tienen un profasor asignado, favor ded asignar que profesores impartirán las materias en grupo > asignaturas");
+            FormDialogMessage form = new FormDialogMessage("","Las materias " + misingMaterias + " no tienen un profasor asignado, favor de asignar que profesores impartirán las materias en grupo > asignaturas");
+                    form.addAcceptButton();
                     form.addOnAcceptEvent(new genericEvents() {
                         @Override
                         public void genericEvent() {
@@ -191,7 +192,7 @@ public class HorarioBuilder extends MultipleFormsOperation{
 
                 Map<String,String> currentValues = getCurrentMaterias(row);
 
-                formElementWithOptions newElement = form.addDesplegableMenu(title).
+                formElementWithOptions newElement = (formElementWithOptions)form.addDesplegableMenu(title).
                         setRequired(false).
                         setOptions(getNewMaterias(title)).
                         addTrigerGetterEvent(getElementTrigererEvent(panel));
@@ -207,7 +208,7 @@ public class HorarioBuilder extends MultipleFormsOperation{
     private TrigerElemetGetter getElementTrigererEvent(MultipleFormsPanel panel){
         return new TrigerElemetGetter() {
             @Override
-            public void onTrigger(formElementWithOptions element) {
+            public void onTrigger(FormElement element) {
                 if(panel.isSeted)
                 alredyExists(element,panel);
 
@@ -233,27 +234,28 @@ public class HorarioBuilder extends MultipleFormsOperation{
         return prof;
     }
 
-    private void alredyExists(formElementWithOptions element,MultipleFormsPanel panel) {
-        String hora = panel.getElementRowValue(element);
-        String dia = panel.getElementColValue(element);
+    private void alredyExists(FormElement element,MultipleFormsPanel panel) {
+        formElementWithOptions elementoOp = (formElementWithOptions)element;
+        String hora = panel.getElementRowValue(elementoOp);
+        String dia = panel.getElementColValue(elementoOp);
 
-        String prof = getProfesor(element);
+        String prof = getProfesor(elementoOp);
 
         if (checkIfHoraIsOcupada(prof,hora,dia)) {
 
             FormDialogMessage errorMesagge = new FormDialogMessage("Error al asignar materia",
                     "No se puede asignar la materia, pues el profesor que imparte esta materia ya tine una clase a esa hora");
 
-            errorMesagge.btnAceptar.setText("Mostrar horario del profesor");
-
-            errorMesagge.addOnAcceptEvent(new genericEvents() {
+            errorMesagge.addCloseButton();
+            errorMesagge.addButton("Mostrar horario del profesor").addMouseListener( new MouseAdapter() {
                 @Override
-                public void genericEvent() {
+                public void mousePressed(MouseEvent e) {
+                    super.mousePressed(e);
                     showHorarioPDF(prof);
                 }
             });
 
-            element.selectEmptyResponse();
+            elementoOp.selectEmptyResponse();
 
         }
     }

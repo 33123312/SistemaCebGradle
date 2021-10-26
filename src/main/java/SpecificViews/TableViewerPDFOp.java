@@ -1,8 +1,6 @@
 package SpecificViews;
 
 import Generals.BtnFE;
-import JDBCController.ViewSpecs;
-import RegisterDetailViewProps.RegisterDetail;
 
 import java.awt.*;
 import java.awt.event.MouseAdapter;

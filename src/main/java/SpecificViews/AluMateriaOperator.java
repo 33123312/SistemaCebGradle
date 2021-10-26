@@ -1,9 +1,7 @@
 package SpecificViews;
 
 import JDBCController.DataBaseConsulter;
-import JDBCController.TableRegister;
 
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 public abstract class
@@ -64,7 +62,7 @@ AluMateriaOperator{
     }
 
     private String getOrigin(){
-        if(materiaType.equals("Boleana"))
+        if(materiaType.equals("A/NA"))
             return "calificaciones_booleanas_view";
         else
             return  "calificaciones_numericas_view";

@@ -19,7 +19,7 @@ public class GrupoOperator extends TableOperator{
             return getMaterias("Numérica");
         else
             return
-                    getMaterias("Boleana");
+                    getMaterias("A/NA");
     }
 
     public int getNumAlu(){

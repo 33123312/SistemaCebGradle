@@ -1,10 +1,12 @@
 package SpecificViews;
+
 import com.itextpdf.io.font.FontConstants;
 import com.itextpdf.kernel.font.PdfFontFactory;
 import com.itextpdf.layout.border.Border;
 import com.itextpdf.layout.border.SolidBorder;
 import com.itextpdf.layout.element.Cell;
 import com.itextpdf.layout.property.HorizontalAlignment;
+
 import java.io.IOException;
 import java.util.ArrayList;
 

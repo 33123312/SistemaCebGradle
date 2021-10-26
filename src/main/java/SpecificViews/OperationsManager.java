@@ -1,13 +1,8 @@
 package SpecificViews;
 
-import JDBCController.DataBaseConsulter;
 import JDBCController.TableRegister;
 import JDBCController.ViewSpecs;
 import RegisterDetailViewProps.*;
-import sistemaceb.RegisterDetailTable;
-import sistemaceb.RegisterDetailView;
-
-import java.util.ArrayList;
 
 public class
 OperationsManager {

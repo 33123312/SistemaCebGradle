@@ -1,6 +1,9 @@
 package SpecificViews;
 
-import JDBCController.*;
+import JDBCController.DataBaseConsulter;
+import JDBCController.Table;
+import JDBCController.ViewSpecs;
+import JDBCController.dataType;
 import sistemaceb.FormResponseManager;
 import sistemaceb.form.Formulario;
 import sistemaceb.form.HorizontalFormPanel;
@@ -126,8 +129,6 @@ public class SemestralCalifasChoser extends  HorizontalFormPanel{
             if (!currentCalifa.isEmpty())
                 in.setResponse(currentCalifa.getColumn("calificacion").get(0));
         }
-
-        showAll();
     }
 
 

@@ -8,13 +8,10 @@ package sistemaceb;
 import Tables.AdapTableFE;
 import Tables.RowsFactory;
 import Tables.StyleRowModel;
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
+
+import javax.swing.*;
+import java.awt.*;
 import java.util.ArrayList;
-import javax.swing.BorderFactory;
-import javax.swing.JPanel;
 
 /**
  *
@@ -32,7 +29,7 @@ public class rowUpdateConfirmationFrame extends SubmitFrame {
         this.data = data;
         addBody(deployTable());
         setSize(new Dimension(800,300));
-        
+        addAcceptButton();
         
     }
 
@@ -41,16 +38,10 @@ public class rowUpdateConfirmationFrame extends SubmitFrame {
         AdapTableFE rowTable = new AdapTableFE();
             
             rowTable.setTitles(titles);
-            rowTable.addRow(data);
+            ArrayList<ArrayList<String>> dataA =new ArrayList<>();
+                dataA.add(data);
+
             rowTable.setBorder(BorderFactory.createEmptyBorder(10,10,10,10));
-            
-            rowTable.addRowStyle(new StyleRowModel(){
-                 public RowsFactory.row setStyleModel(RowsFactory.row component){
-                     
-                     component.setBackground(Color.white);
-                     return component;
-                 }     
-            });
            
             GridBagConstraints tableConstraints = new GridBagConstraints();
             tableConstraints.weightx  = 1;

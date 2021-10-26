@@ -1,9 +1,7 @@
 package SpecificViews;
 
-import JDBCController.*;
-import RegisterDetailViewProps.RegisterDetail;
+import JDBCController.Table;
 
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -202,7 +200,7 @@ public class BoletaConsulter extends TableViewerPDFOp{
     }
 
     private boolean isBol(String type){
-        return type.equals("Boleana");
+        return type.equals("A/NA");
     }
 
     private void getBolCols(AluMateriaOperator operator,ArrayList<String> register){

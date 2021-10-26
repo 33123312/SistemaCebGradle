@@ -7,10 +7,11 @@ package sistemaceb;
 
 import JDBCController.Table;
 import JDBCController.ViewSpecs;
+import sistemaceb.form.OptionsGetter;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-import sistemaceb.form.OptionsGetter;
 
 /**
  *

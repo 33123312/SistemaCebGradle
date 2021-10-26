@@ -34,6 +34,7 @@ public class HorarioConsulter extends Operation {
                     "Horario no Asignaddo",
                     "Éste grupo no tiene un horario asignado");
 
+            form.addAcceptButton();
             form.addOnAcceptEvent(new genericEvents() {
                 @Override
                 public void genericEvent() {

@@ -1,18 +1,7 @@
 package SpecificViews;
 
-import Generals.BtnFE;
-import JDBCController.*;
-import RegisterDetailViewProps.GrupoRegisterProps;
-import RegisterDetailViewProps.RegisterDetail;
-import sistemaceb.RegisterDetailView;
-import sistemaceb.Window;
-import sistemaceb.form.Global;
-
-import javax.swing.*;
-import java.awt.*;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.util.ArrayList;
+import JDBCController.TableRegister;
+import JDBCController.ViewSpecs;
 
 public abstract class Operation{
     public String operation;

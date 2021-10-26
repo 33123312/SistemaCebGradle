@@ -1,8 +1,6 @@
 package SpecificViews;
 
 import JDBCController.Table;
-import JDBCController.ViewSpecs;
-import RegisterDetailViewProps.RegisterDetail;
 import sistemaceb.form.HorizontalFormPanel;
 
 import java.util.ArrayList;
@@ -41,7 +39,6 @@ public class ConcentradoTodasMateriasOp extends TableViewerPDFOp{
         HorizontalFormPanel form = new HorizontalFormPanel();
 
         form.addDesplegableMenu("Evaluacion").setRequired(true).setOptions(getEvaluaciones());
-        form.showAll();
         thisWindow.addToHeader(form);
         return form;
     }

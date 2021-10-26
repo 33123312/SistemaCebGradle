@@ -3,7 +3,10 @@ package RegisterDetailViewProps;
 import JDBCController.DataBaseConsulter;
 import JDBCController.TableRegister;
 import JDBCController.ViewSpecs;
-import SpecificViews.*;
+import SpecificViews.DefaultDeleteRegisterOp;
+import SpecificViews.DefaultModifyRegisterOp;
+import SpecificViews.Operation;
+import SpecificViews.OperationInfoPanel;
 import sistemaceb.RegisterDetailTable;
 
 import java.util.ArrayList;

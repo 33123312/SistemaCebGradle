@@ -5,7 +5,6 @@
  */
 package sistemaceb;
 
-import JDBCController.Table;
 import sistemaceb.form.formElementWithOptions;
 
 /**

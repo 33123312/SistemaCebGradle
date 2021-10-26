@@ -5,24 +5,14 @@
  */
 package sistemaceb;
 
-import DInamicPanels.DinamicPanel;
 import Generals.BtnFE;
-import JDBCController.CrudCerator;
 import sistemaceb.form.Global;
 
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Font;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.GridLayout;
+import javax.swing.*;
+import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
-import javax.swing.BorderFactory;
-import javax.swing.ImageIcon;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
 
 /**
  *
@@ -121,7 +111,7 @@ public  class ListButton extends JPanel {
                 @Override
                 public void mousePressed(MouseEvent e) {
                     super.mousePressed(e);
-                    Global.view.setView(new ViewAdapter(builder.buildWindow()));
+                    Global.view.setNewView(new ViewAdapter(builder.buildWindow()));
                 }
             });
             return this;
@@ -135,7 +125,7 @@ public  class ListButton extends JPanel {
                     if(window == null)
                         window = builder.buildWindow();
 
-                    Global.view.setView(new ViewAdapter(window));
+                    Global.view.setNewView(new ViewAdapter(window));
                 }
             });
             return this;

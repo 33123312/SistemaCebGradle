@@ -2,8 +2,6 @@ package SpecificViews;
 
 import JDBCController.TableRegister;
 import JDBCController.ViewSpecs;
-import RegisterDetailViewProps.RegisterDetail;
-import sistemaceb.RegisterDetailView;
 
 public class OperationInfoPanel {
     private ViewSpecs viewSpecs;

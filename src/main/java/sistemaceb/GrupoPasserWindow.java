@@ -1,12 +1,9 @@
 package sistemaceb;
 
 import Generals.BtnFE;
-import JDBCController.Table;
 import SpecificViews.GrupoOperator;
 import SpecificViews.GrupoPasserInfoStorage;
-import SpecificViews.LinearHorizontalLayout;
 import SpecificViews.LinearVerticalLayout;
-import sistemaceb.form.FormElement;
 import sistemaceb.form.Global;
 import sistemaceb.form.HorizontalFormPanel;
 import sistemaceb.form.formElementWithOptions;
@@ -17,7 +14,6 @@ import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
-
 
 public class GrupoPasserWindow extends Window{
 
@@ -102,7 +98,6 @@ public class GrupoPasserWindow extends Window{
         nextGrupoGetter = new HorizontalFormPanel();
         gruposDesplegableMenu = nextGrupoGetter.addDesplegableMenu("Nuevo Grupo");
         updateNextgrupos();
-        nextGrupoGetter.showAll();
 
         return nextGrupoGetter;
 

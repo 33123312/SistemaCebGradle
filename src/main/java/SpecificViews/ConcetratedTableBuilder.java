@@ -2,6 +2,7 @@ package SpecificViews;
 
 import JDBCController.DataBaseConsulter;
 import JDBCController.Table;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -31,21 +32,10 @@ public class ConcetratedTableBuilder {
 
     }
 
-    private String getMateriaType(){
-        DataBaseConsulter consulter = new DataBaseConsulter("materias");
 
-        String[] colsToBring = new String[]{"tipo_calificacion"};
-
-        String[] cond = new String[]{"clave_materia"};
-
-        String[] val = new String[]{materiaKey};
-
-        return consulter.bringTable(colsToBring,cond,val).getUniqueValue();
-
-    }
 
     private void buildRegisters(){
-        String type = getMateriaType();
+        String type = MateriaOperator.getMateriaType(materiaKey);
 
         if(type.equals("A/NA"))
             addBolTable();

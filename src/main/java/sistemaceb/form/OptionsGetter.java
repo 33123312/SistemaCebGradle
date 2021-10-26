@@ -5,7 +5,6 @@
  */
 package sistemaceb.form;
 
-import JDBCController.StaticOptionsGetter;
 import JDBCController.Table;
 import JDBCController.ViewSpecs;
 import JDBCController.optionsGetter;

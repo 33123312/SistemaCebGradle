@@ -5,8 +5,6 @@
  */
 package JDBCController;
 
-import java.util.ArrayList;
-
 public class DBU {
 
 

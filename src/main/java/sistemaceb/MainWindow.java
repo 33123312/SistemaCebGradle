@@ -6,14 +6,13 @@
 package sistemaceb;
 
 import Generals.BtnFE;
-import JDBCController.DBSTate;
 import sistemaceb.form.Global;
 
+import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.IOException;
-import javax.swing.*;
 
 /**
  *

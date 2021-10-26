@@ -31,6 +31,7 @@ public class DefaultDeleteRegisterOp extends Operation{
         } catch (Exception e){
             FormDialogMessage message = new FormDialogMessage(
                     "No se puede eliminar el " + viewSpecs.getInfo().getUnityName(),getFormMessage());
+            message.addAcceptButton();
             message.addOnAcceptEvent(new genericEvents() {
                 @Override
                 public void genericEvent() {

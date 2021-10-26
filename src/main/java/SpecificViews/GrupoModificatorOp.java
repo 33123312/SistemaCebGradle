@@ -1,10 +1,8 @@
 package SpecificViews;
 
 import JDBCController.DataBaseConsulter;
-import JDBCController.DataBaseUpdater;
 import JDBCController.TableRegister;
 import JDBCController.ViewSpecs;
-import RegisterDetailViewProps.RegisterDetail;
 import sistemaceb.FormResponseManager;
 import sistemaceb.form.Formulario;
 

@@ -1,7 +1,9 @@
 package SpecificViews;
 
 import Generals.BtnFE;
-import JDBCController.*;
+import JDBCController.DataBaseConsulter;
+import JDBCController.Table;
+import JDBCController.ViewSpecs;
 import sistemaceb.*;
 import sistemaceb.form.FormDialogMessage;
 import sistemaceb.form.FormWindow;
@@ -24,23 +26,13 @@ public class AsignturasPillChoser extends RegisterDetailTable {
     public void initRegister( String critKey, ViewSpecs parentSpecs) {
         super.initRegister( critKey, parentSpecs);
         setbuild(getBuild());
+        consultTable.getOutputTable().showAll();
     }
 
     @Override
     protected void firstImplementation() {
         super.firstImplementation();
         addLeftButton();
-        addHumanTitles();
-    }
-
-    private void addHumanTitles(){
-        ArrayList<String> trueTitles = new ArrayList<>();
-            trueTitles.add("Clave Materia");
-            trueTitles.add("Materia");
-            trueTitles.add("Clave Profesor");
-            trueTitles.add("Profesor");
-            trueTitles.add("Aula");
-        consultTable.getOutputTable().setTitles(trueTitles);
     }
 
     private void addLeftButton(){
@@ -53,7 +45,6 @@ public class AsignturasPillChoser extends RegisterDetailTable {
 
     private void deployForm(){
         FormWindow formWindow = getFormBuild();
-        formWindow.showAll();
         formWindow.addDataManager(new FormResponseManager() {
             @Override
             public void manageData(Formulario form) {
@@ -67,7 +58,14 @@ public class AsignturasPillChoser extends RegisterDetailTable {
                     new ViewSpecs("asignaturas").getUpdater().insert(cond,values);
                 } catch (SQLException throwables) {
                     throwables.printStackTrace();
-                    new FormDialogMessage("Error","El registro que se ha intentado insertar ya éxiste en la base de datos, no se puede insertar nuevamente");
+                    FormDialogMessage mess = new FormDialogMessage("Error","El registro que se ha intentado insertar ya éxiste en la base de datos, no se puede insertar nuevamente");
+                    mess.addAcceptButton();
+                    mess.addOnAcceptEvent(new genericEvents() {
+                        @Override
+                        public void genericEvent() {
+                            mess.closeForm();
+                        }
+                    });
                 }
                 formWindow.getFrame().closeForm();
                 consultTable.updateSearch();
@@ -99,7 +97,6 @@ public class AsignturasPillChoser extends RegisterDetailTable {
                     @Override
                     public void mousePressed(MouseEvent e) {
                         deployModifyWindow();
-
                     }
                 };
             }
@@ -131,8 +128,6 @@ public class AsignturasPillChoser extends RegisterDetailTable {
         defautValues.remove(grupoIndex);
 
         formWindow.setDefaultValues(defaultConditions,defautValues);
-
-        formWindow.showAll();
 
         formWindow.addDataManager(new FormResponseManager() {
             @Override
@@ -213,6 +208,7 @@ public class AsignturasPillChoser extends RegisterDetailTable {
                 FormDialogMessage form = new FormDialogMessage(
                         "No se han encontrado materias para este grupo",
                         " Esto puede ser debido a que no hay un plan asignado, o bien, a que el plan asignado no tiene materias");
+                form.addAcceptButton();
                 form.addOnAcceptEvent(new genericEvents() {
                     @Override
                     public void genericEvent() {

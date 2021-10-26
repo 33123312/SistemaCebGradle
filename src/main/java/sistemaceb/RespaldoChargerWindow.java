@@ -1,10 +1,12 @@
 package sistemaceb;
+
 import Generals.BtnFE;
 import JDBCController.DBSTate;
 import SpecificViews.LinearHorizontalLayout;
 import SpecificViews.LinearVerticalLayout;
 import sistemaceb.form.FormDialogMessage;
 import sistemaceb.form.Global;
+
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.MatteBorder;
@@ -254,7 +256,7 @@ public class RespaldoChargerWindow extends Window {
 
         private void changeSelection(JLabel row){
             selectedText = row.getText();
-            row.setBackground(new Color(50,50,50));
+            row.setBackground(new Color(240,240,240));
 
             if(selectedRow != null)
                 selectedRow.setBackground(Color.white);

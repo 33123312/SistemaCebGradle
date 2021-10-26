@@ -10,7 +10,8 @@ public class  ALumnoOperator extends TableOperator{
 
     public ALumnoOperator(String aluMatr){
         super(aluMatr,"alumnos");
-        grupoOperator = new GrupoOperator(tableRegister);
+        grupoOperator =
+                new GrupoOperator(getTableInfo().get("grupo"));
     }
 
     public static String getMateriaType(String materia){

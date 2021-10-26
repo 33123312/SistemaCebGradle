@@ -5,9 +5,12 @@
  */
 package JDBCController;
 
-import java.util.*;
-
 import sistemaceb.form.OptionsGetter;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
 
 /**
  *
@@ -203,9 +206,9 @@ public class DataBaseSearcher {
 
         merge(unsortedVisible, unsortedView);
 
-
         if(!currentTagsToAproximatedSearch.isEmpty())
             return getRatedValues(unsortedView,unsortedVisible,columnsToBring);
+
 
         removeCols(unsortedVisible,columnsToBring);
         //removeCols(unsortedView,columnsToBring);
@@ -228,6 +231,7 @@ public class DataBaseSearcher {
         ratedViewRegisters = viewSearcher.getRatedNSortedRegisters();
 
         //removeCols(ratedViewRegisters,colsToBring);
+
         removeCols(ratedVisibleRegisters,colsToBring);
 
         return new infoPackage(ratedVisibleRegisters,ratedViewRegisters);
@@ -241,6 +245,7 @@ public class DataBaseSearcher {
     private void removeCols(Table sortedTable,ArrayList<String> columnsToBring){
         if(!columnsToBring.isEmpty()) {
             ArrayList<String> visibleColummnTitles = new ArrayList(sortedTable.getColumnTitles());
+
             for (String col : visibleColummnTitles)
                 if (!columnsToBring.contains(col))
                     sortedTable.removeColumn(col);

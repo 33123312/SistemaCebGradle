@@ -8,20 +8,19 @@ import com.itextpdf.kernel.pdf.PdfDocument;
 import com.itextpdf.kernel.pdf.PdfWriter;
 import com.itextpdf.layout.Document;
 import com.itextpdf.layout.border.Border;
-import com.itextpdf.layout.element.*;
+import com.itextpdf.layout.element.Cell;
 import com.itextpdf.layout.element.Image;
+import com.itextpdf.layout.element.Paragraph;
+import com.itextpdf.layout.element.Table;
 import com.itextpdf.layout.property.TextAlignment;
+import com.itextpdf.layout.property.UnitValue;
 import com.itextpdf.layout.property.VerticalAlignment;
 import sistemaceb.form.Global;
-
-import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.net.URL;
-import java.nio.file.Files;
 import java.util.Map;
 
 public class PDFPlantillaGetter extends Document{
@@ -53,73 +52,73 @@ public class PDFPlantillaGetter extends Document{
     }
 
     private void addTitle() throws IOException {
-
-        PdfFontFactory.createFont();
-
-        PdfFont fontTitle = PdfFontFactory.createFont(FontConstants.HELVETICA);
-        Paragraph title = new Paragraph("CENTRO DE ESTUDIOS DE BACHILLERATO 6/4").
-                setFont(fontTitle).
-                setTextAlignment(TextAlignment.CENTER).
-                setFontSize(12);
-
-
-        PdfFont fontSubTitle = PdfFontFactory.createFont(FontConstants.COURIER);
-        Paragraph subtitle = new Paragraph(this.title).
-                setFont(fontSubTitle).
-                setTextAlignment(TextAlignment.CENTER).
-                setFontSize(12);
-
-
-
         addMembrete();
-
-        add(title);
-        add(subtitle);
         add(new Paragraph(""));
 
     }
 
-    private void removeBorder(Table table)
-    {
-        for (IElement iElement : table.getChildren()) {
-            ((Cell)iElement).setBorder(Border.NO_BORDER);
-        }
-    }
-
     private void addMembrete(){
-        Table table = new Table(new float[]{1,1,1});
-            table.setBorder(Border.NO_BORDER);
+        Table table = new Table(UnitValue.createPercentArray(new float[]{1,3,1}));
             table.setWidthPercent(100);
 
         table.addCell(getLogo());
 
+        table.addCell(
+                getCell("CENTRO DE ESTUDIOS DE BACHILLERATO 6/4",0,0));
+
+        PdfFont cornerValue = null;
+        PdfFont fontSubTitle = null;
         try {
-            PdfFont cornerValue = PdfFontFactory.createFont(FontConstants.HELVETICA_BOLD);
-            table.addCell(getCell(Global.conectionData.loadedPeriodo, TextAlignment.RIGHT))
-                    .setFont(cornerValue);
+             cornerValue = PdfFontFactory.createFont(FontConstants.HELVETICA_BOLD);
+             fontSubTitle = PdfFontFactory.createFont(FontConstants.COURIER);
+
         } catch (IOException e) {
             e.printStackTrace();
         }
 
-        removeBorder(table);
+        int fontSize = 11;
+
+        table.addCell(
+            getCell(Global.conectionData.loadedPeriodo,3,0)
+                .setFont(cornerValue)
+                .setFontSize(11));
+
+        table.addCell(
+                getCell("Privada de Guadalupe 108, Delicias, Chih.",0,0)
+                    .setFont(fontSubTitle)
+                    .setFontSize(11));
+
+        table.addCell(
+                getCell(title,0,0)
+                    .setFont(fontSubTitle)
+                    .setFontSize(11));
+
         add(table);
     }
 
-    private Image getLogo(){
+    private Cell getLogo(){
         String imgPath = "images/ceb-logo.png";
         URL a = this.getClass().getResource(imgPath);
 
         Image logo = new Image(ImageDataFactory.create(a));
             logo.scaleAbsolute(100,45);
 
-        return logo;
+        Cell cell = getCell(3,0);
+            cell.add(logo);
+
+        return cell;
     }
 
-    private Cell getCell(String text, TextAlignment alignment) {
-        Cell cell = new Cell().add(new Paragraph(text));
+    private Cell getCell(String text,int row,int col) {
+
+        return getCell(row,col).add(new Paragraph(text));
+    }
+
+    private Cell getCell(int row,int col){
+        Cell cell = new Cell(row,col);
         cell.setPadding(0);
         cell.setVerticalAlignment(VerticalAlignment.MIDDLE);
-        cell.setTextAlignment(alignment);
+        cell.setTextAlignment(TextAlignment.CENTER);
         cell.setBorder(Border.NO_BORDER);
         return cell;
     }

@@ -4,15 +4,21 @@
  * and open the template in the editor.
  */
 package sistemaceb.form;
+
 import JDBCController.dataType;
+import com.mysql.cj.protocol.a.NativeConstants;
+import sistemaceb.FormResponseManager;
+import sistemaceb.formRelationEvent;
+
+import javax.swing.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import javax.swing.*;
-
-import sistemaceb.FormResponseManager;
-import sistemaceb.formRelationEvent;
 
 /**
  *
@@ -21,17 +27,15 @@ import sistemaceb.formRelationEvent;
 public abstract class Formulario extends JPanel {
     protected final ArrayList<String> elementTitles;
     protected final ArrayList<FormElement> elements;
-
     protected final ArrayList<String> elementWithOptionsTitles;
     protected final ArrayList<formElementWithOptions> elementsWithOptions;
-
-    protected Map <String,String> virtualParents;
-
+    protected Map<String, String> virtualParents;
     protected final List<FormResponseManager> dataManagers;
+    protected final Map<String, ArrayList<String>> relations;
 
-    protected final Map<String,ArrayList<String>> relations;
+    protected int focusedElementIndex;
 
-    public Formulario(){
+    public Formulario() {
         super();
         relations = new HashMap<>();
         dataManagers = new ArrayList();
@@ -42,7 +46,20 @@ public abstract class Formulario extends JPanel {
         virtualParents = new HashMap<>();
 
     }
-    
+
+    public int getElementCount(){
+        return elements.size();
+    }
+
+    public FormElement getElement(int i){
+        return elements.get(i);
+    }
+
+    public void resetToDefaultValues(){
+        for (FormElement element: elements)
+            element.useDefval();
+    }
+
     public void setDefaultValues(ArrayList<String> titles, ArrayList values){
         for (String element:titles)
              setValue(element,titles,values);
@@ -127,11 +144,22 @@ public abstract class Formulario extends JPanel {
         
         return newMenu;
     }
+
+    public boolean hasBeenModified(){
+        for (FormElement element:elements)
+            if (element.hasBeenModfied())
+                return true;
+
+        return false;
+    }
     
-    void addElement(String title,FormElement newElement){
-        newElement.setIndex(elements.size());
-        elements.add(newElement);
-        elementTitles.add(title); 
+    private void addElement(String title,FormElement newElement){
+        if(!elementTitles.contains(title)){
+            newElement.setIndex(elements.size());
+            elements.add(newElement);
+            elementTitles.add(title);
+            addElement(newElement);
+        }
     }
     
     private void addElementWithOptions(String title,formElementWithOptions newElement){
@@ -144,25 +172,32 @@ public abstract class Formulario extends JPanel {
         return virtualParents.containsKey(title);
     }
 
-    public void addElementRelation(String parentElementName,String childElementName,formRelationEvent event){
-            formElementWithOptions childElement= getElementWithOptionsFromTitle(childElementName);
+    public void addElementRelation(
+            String parentElementName,
+            String childElementName,
+            formRelationEvent event){
 
-            EventListener triggerEvent = new EventListener(){
-                @Override
-                public void onTriger(String elementInput){
-                    if(!(parentsAreSetted(childElementName) && isVirtual(childElementName))){
-                        event.getNewOptions(elementInput,childElement);
-                    }
+        formElementWithOptions childElement= getElementWithOptionsFromTitle(childElementName);
 
-                }
-            };
+        TrigerElemetGetter triggerEvent = new TrigerElemetGetter() {
+            @Override
+            public void onTrigger(FormElement element) {
+                if(!(parentsAreSetted(childElementName) && isVirtual(childElementName)))
+                    event.getNewOptions(element.getResponse(),childElement);
+            }
+        };
 
             if(virtualParents.containsKey(parentElementName)){
-                triggerEvent.onTriger(virtualParents.get(parentElementName));
-            } else {
+                Input auxCtrl = new Input("",dataType.VARCHAR);
+                    auxCtrl.setResponse(virtualParents.get(parentElementName));
+
+                triggerEvent.onTrigger(auxCtrl);
+            }
+
+            else {
                 addRelation(parentElementName,childElementName);
                 formElementWithOptions parentElement= getElementWithOptionsFromTitle(parentElementName);
-                parentElement.addTrigerEvent(triggerEvent);
+                parentElement.addTrigerGetterEvent(triggerEvent);
             }
     }
 
@@ -174,15 +209,53 @@ public abstract class Formulario extends JPanel {
     }
 
 
-    public void  showAll(){
-        for(FormElement section:elements)
-            addElement(section);
-            
+    public void removeElement(int i){
+        if(elementWithOptionsTitles.contains(elementTitles.get(i))){
+            int indOp = elementWithOptionsTitles.indexOf(elementTitles.get(i));
+            elementsWithOptions.remove(indOp);
+            elementWithOptionsTitles.remove(indOp);
+        }
+
+        elements.remove(i);
+        elementTitles.remove(i);
+
+    };
+
+    public void removeElement(String title){
+
+        int index =  elementTitles.indexOf(title);
+        if(index > -1)
+            removeElement(index);
+
+    };
+
+    protected void addElement(FormElement element){
+        element.getCurrentElement().
+            addFocusListener(new FocusAdapter() {
+                @Override
+                public void focusGained(FocusEvent e) {
+                super.focusGained(e);
+                focusedElementIndex = elements.indexOf(element);
+                }
+            });
+        element.addTrigerGetterEvent(new TrigerElemetGetter() {
+            @Override
+            public void onTrigger(FormElement element) {
+                changeFocusToNext();
+            }
+        });
+    };
+
+    public void changeFocusTo(int i){
+        elements.get(i).currentElement.requestFocus();
     }
 
-    protected abstract void addElement(FormElement element);
-    
+    private void changeFocusToNext(){
+        int nextIndex = focusedElementIndex+1;
+        if (nextIndex < elements.size())
+            changeFocusTo(nextIndex);
 
+    }
 
     public boolean hasErrors(){
         boolean error = false;
@@ -192,63 +265,60 @@ public abstract class Formulario extends JPanel {
 
         return error;
     }
+
+    public Map<String,String> getAllData(){
+        Map<String,String> data = new HashMap();
+        for(FormElement element: elements)
+            if(validateElementErrors(element))
+                data.put(element.getTrueTitle(),element.getResponse());
+
+        return data;
+    }
+
+    public Map<String,String> getAllGuiData(){
+        Map<String,String> data = new HashMap();
+        for(FormElement element: elements)
+            if(validateElementErrors(element))
+                data.put(element.getTitle(),element.getResponse());
+
+        return data;
+    }
     
-public Map<String,String> getData(){
+    public Map<String,String> getData(){
+        Map<String,String> data = new HashMap();
+        for(FormElement element: elements)
+            if(validateElement(element))
+                data.put(element.getTrueTitle(),element.getResponse());
 
-    Map<String,String> data = new HashMap();
-
-    for(FormElement element: elements)
-        if(validateElement(element)){
-                String title = element.getTitle();
-                String response;
-
-                if(elementWithOptionsTitles.contains(title)){
-                    formElementWithOptions optionedElement = (formElementWithOptions)element;
-                    if(optionedElement.hasTrueOptions())
-                        title = optionedElement.getTrueTitle();
-                }
-                response = element.getResponse();
-                data.put(title,response);
-        }
-    return data;
-}
-
-
+        return data;
+    }
 
     public Map<String,String> getGUIData(){
         Map<String,String> data = new HashMap();
-        for(FormElement element: elements){
-            if(validateElement(element)){
-                    String title;
-                    String response;
-                    if(elementWithOptionsTitles.contains(element.getTitle()) ){
-                        formElementWithOptions optionedElement = (formElementWithOptions)element;
-                        if(optionedElement.hasTrueOptions())
-                            response = optionedElement.getGUIResponse();
-                        else
-                            response = element.getResponse();
-                    } else{
-                         response = element.getResponse();
-                    }
-
-                    title = element.getTitle();
-
-                    data.put(title,response);
-                }
-            }
+        for(FormElement element: elements)
+            if(validateElement(element))
+                data.put(element.getTitle(),element.getResponse());
 
         return data;
+    }
 
+
+
+    private boolean validateElementErrors(FormElement element){
+        if(element.hasErrors())
+            return false;
+
+        return true;
     }
 
     private boolean validateElement(FormElement element){
-        if(element.hasErrors())
-            return false;
-        else
-            if(element.isEmpty())
-              return false;
+        if(validateElementErrors(element)) {
+            if (element.isEmpty())
+                return false;
+        } else return false;
 
         return true;
+
     }
 
     public void manageData(){

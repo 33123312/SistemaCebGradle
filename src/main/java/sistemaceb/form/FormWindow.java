@@ -1,6 +1,7 @@
 package sistemaceb.form;
-import sistemaceb.genericEvents;
+
 import sistemaceb.SubmitFrame;
+import sistemaceb.genericEvents;
 
 import javax.swing.*;
 import java.awt.*;
@@ -21,6 +22,8 @@ public class FormWindow extends Formulario{
 
         addSection();
         addEvents();
+        frame.addCloseButton();
+        frame.addAcceptButton();
         frame.setVisible(true);
     }
 
@@ -63,16 +66,11 @@ public class FormWindow extends Formulario{
 
     }
 
-    @Override
-    public void showAll() {
-        super.showAll();
-
-    }
-
     int sectionsCounter = 0;
 
     @Override
     protected void addElement(FormElement element) {
+        super.addElement(element);
         Section currentSection = sections.get(sectionsCounter);
 
             if (currentSection.isntFull())

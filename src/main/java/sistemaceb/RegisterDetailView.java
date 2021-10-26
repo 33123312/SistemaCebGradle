@@ -7,17 +7,20 @@ package sistemaceb;
 
 import Generals.BtnFE;
 import Generals.DesplegableMenuFE;
-import JDBCController.*;
-
-import java.awt.*;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.util.ArrayList;
-import javax.swing.*;
+import JDBCController.DataBaseSearcher;
+import JDBCController.Table;
+import JDBCController.ViewSpecs;
+import JDBCController.infoPackage;
 import RegisterDetailViewProps.RegisterDetail;
 import SpecificViews.DefaultRegisterDetailTable;
 import SpecificViews.Operation;
 import SpecificViews.OperationsManager;
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.util.ArrayList;
 
 /**
  *

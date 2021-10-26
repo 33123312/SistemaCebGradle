@@ -1,7 +1,5 @@
 package SpecificViews;
 
-import JDBCController.ViewSpecs;
-import RegisterDetailViewProps.RegisterDetail;
 import sistemaceb.Window;
 import sistemaceb.form.Global;
 

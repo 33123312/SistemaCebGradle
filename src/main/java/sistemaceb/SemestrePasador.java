@@ -76,7 +76,6 @@ public class SemestrePasador extends Window{
                         return "";
                 }
             });
-            newPeriodoGetter.showAll();
 
         cont.setBorder(new EmptyBorder(10,0,10,0));
         cont.add(newPeriodoGetter);
@@ -131,8 +130,6 @@ public class SemestrePasador extends Window{
     private void addGruposPanels(){
         gruposPanel = new LinearVerticalLayout();
         gruposPanel.setOpaque(false);
-        addGrupos();
-
         controlsPanel.addElement(getControlsSection("Manejar Grupos",gruposPanel));
     }
 
@@ -153,6 +150,7 @@ public class SemestrePasador extends Window{
         currentPasadoresInfoPackage = collectInfoFromPassers();
         grupoPassers = new ArrayList<>();
         gruposPanel.removeAll();
+
         for (String semestre:semestres)
             gruposPanel.addElement(getGruposToPassPanel(semestre));
         setDefInfo();

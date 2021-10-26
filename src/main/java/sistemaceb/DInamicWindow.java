@@ -2,8 +2,6 @@ package sistemaceb;
 
 import DInamicPanels.DinamicPanel;
 
-import javax.swing.*;
-
 public class DInamicWindow extends DinamicPanel {
 
     public ViewAdapter currentWindow;
@@ -12,9 +10,19 @@ public class DInamicWindow extends DinamicPanel {
 
     }
 
-    public void setView(ViewAdapter view) {
-        super.setView(view);
-        view.getWIndow().update();
-        currentWindow = view;
+    public void setNewView(ViewAdapter view) {
+        genericEvents closeE = new genericEvents() {
+            @Override
+            public void genericEvent() {
+                setView(view);
+                view.getWIndow().update();
+                currentWindow = view;
+            }
+        };
+
+        if (currentWindow == null)
+            closeE.genericEvent();
+        else
+            currentWindow.trytoClose(closeE);
     }
 }

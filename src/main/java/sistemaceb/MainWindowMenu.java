@@ -5,9 +5,9 @@
  */
 package sistemaceb;
 
-import Generals.DesplegableMenuFE;
-import JDBCController.*;
-import sistemaceb.form.DesplegableMenu;
+import JDBCController.DBSTate;
+import JDBCController.Table;
+import JDBCController.TableRegister;
 import sistemaceb.form.Global;
 import sistemaceb.form.MenuListsContainer;
 

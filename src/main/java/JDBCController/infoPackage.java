@@ -6,8 +6,6 @@
 package JDBCController;
 
 
-import java.util.ArrayList;
-
 public class infoPackage{
     
         private final Table viewRegisters;

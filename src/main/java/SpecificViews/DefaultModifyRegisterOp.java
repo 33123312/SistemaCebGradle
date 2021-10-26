@@ -1,13 +1,13 @@
 package SpecificViews;
 
-import JDBCController.DBU;
-import JDBCController.DataBaseUpdater;
 import JDBCController.TableRegister;
-import RegisterDetailViewProps.RegisterDetail;
-import sistemaceb.*;
+import sistemaceb.FormResponseManager;
+import sistemaceb.TagFormBuilder;
 import sistemaceb.form.FormWindow;
 import sistemaceb.form.Formulario;
 import sistemaceb.form.Global;
+import sistemaceb.genericEvents;
+import sistemaceb.rowUpdateConfirmationFrame;
 
 import java.sql.SQLException;
 import java.util.ArrayList;

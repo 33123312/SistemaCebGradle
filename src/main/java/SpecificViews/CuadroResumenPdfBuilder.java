@@ -1,7 +1,6 @@
 package SpecificViews;
 
 import JDBCController.Table;
-
 import com.itextpdf.layout.border.Border;
 import com.itextpdf.layout.element.Cell;
 import sistemaceb.SemestreOperator;

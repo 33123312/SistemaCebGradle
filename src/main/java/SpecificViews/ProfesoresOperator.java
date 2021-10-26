@@ -2,9 +2,6 @@ package SpecificViews;
 
 import JDBCController.DataBaseConsulter;
 import JDBCController.Table;
-import JDBCController.TableRegister;
-
-import java.util.ArrayList;
 
 public class ProfesoresOperator extends TableOperator{
 

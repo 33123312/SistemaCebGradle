@@ -1,13 +1,11 @@
 package sistemaceb.form;
 
-import javax.swing.*;
-
 import Generals.BtnFE;
 import JDBCController.Table;
 import sistemaceb.SubmitFrame;
 
+import javax.swing.*;
 import java.awt.*;
-
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
@@ -28,6 +26,8 @@ public class GroupRelationarForm extends SubmitFrame {
         trueAdderValues = new ArrayList();
         trueGetterValues = new ArrayList();
         setSize(700,500);
+        addAcceptButton();
+        addCloseButton();
         deploy();
     }
 

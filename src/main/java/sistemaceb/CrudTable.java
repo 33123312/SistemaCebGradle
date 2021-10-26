@@ -2,14 +2,14 @@ package sistemaceb;
 
 import Generals.BtnFE;
 import Generals.DesplegableMenuFE;
-import JDBCController.*;
+import JDBCController.Table;
 import Tables.AdapTableFE;
 import Tables.RowsFactory;
 import Tables.StyleRowModel;
+import Tables.TableRow;
 import sistemaceb.form.FormDialogMessage;
 import sistemaceb.form.FormWindow;
 import sistemaceb.form.Formulario;
-import sistemaceb.form.proccesStateStorage;
 
 import java.awt.*;
 import java.awt.event.MouseAdapter;
@@ -30,16 +30,10 @@ public class CrudTable extends keyedBuildBehavior {
     }
 
     private void deploy(){
-        table.addRowStyle(new StyleRowModel() {
+        table.getFactory().addGralClickEvnt(new AdapTableFE.rowSelectionEvnt() {
             @Override
-            public RowsFactory.row setStyleModel(RowsFactory.row row) {
-                row.addMouseListener(new MouseAdapter() {
-                    @Override
-                    public void mousePressed(MouseEvent e) {
-                        super.mousePressed(e);
-                        selectedRow = row.getKey();
-                    }
-                });
+            public void whenSelect(TableRow row) {
+                selectedRow = row.getKey();
                 DesplegableMenuFE menu = new DesplegableMenuFE(row) {
                     @Override
                     public BtnFE buttonsEditor(BtnFE button) {
@@ -49,9 +43,8 @@ public class CrudTable extends keyedBuildBehavior {
                     }
                 };
                 menu.setSize(new Dimension(150,100));
-                    menu.addButton("Modificar", defineModifyButtonEvent());
-                    menu.addButton("Eliminar",defineDeleteButtonEvent() );
-                return row;
+                menu.addButton("Modificar", defineModifyButtonEvent());
+                menu.addButton("Eliminar",defineDeleteButtonEvent() );
             }
         });
     }

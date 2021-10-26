@@ -1,9 +1,12 @@
 package sistemaceb.form;
 
 import Generals.BtnFE;
-import JDBCController.*;
-import SpecificViews.LinkedInterTable;
-import sistemaceb.*;
+import JDBCController.DataBaseConsulter;
+import JDBCController.Table;
+import JDBCController.ViewSpecs;
+import sistemaceb.TagFormBuilder;
+import sistemaceb.genericEvents;
+import sistemaceb.keyHiddedCoonsTableBuild;
 
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -125,9 +128,6 @@ public class MultipleAdderConsultBuild extends keyHiddedCoonsTableBuild {
             index = 1;
         else
             index = 0;
-
-        System.out.println(ocupedOp);
-        System.out.println(registers);
 
         for (String oc:ocupedOp){
             for (ArrayList<String> reg: registers)

@@ -6,16 +6,14 @@
 package sistemaceb;
 
 import Generals.BtnFE;
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Font;
-import java.awt.GridLayout;
+import SpecificViews.LinearHorizontalLayout;
+import sistemaceb.form.proccesStateStorage;
+
+import javax.swing.*;
+import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
-import javax.swing.*;
-
-import sistemaceb.form.proccesStateStorage;
 
 /**
  *
@@ -45,6 +43,17 @@ public class SubmitFrame extends JFrame {
         setVisible(true);
 
     }
+
+    public BtnFE addButton(String text){
+        BtnFE btnAceptar = new BtnFE(text);
+            btnAceptar.setBackground(new Color(107, 117, 255));
+            btnAceptar.setTextColor(Color.white);
+            btnAceptar.setPadding(10, 20, 10, 20);
+            btnAceptar.setMargins(15, 15, 15, 15,Color.white);
+        buttonsContainer.add(btnAceptar);
+
+        return btnAceptar;
+    }
     
     private void initializeEventsLists(){
         acceptEvents = new ArrayList();
@@ -62,8 +71,6 @@ public class SubmitFrame extends JFrame {
             }
         );
     }
-    
-    
     
     private JPanel deployPanelPrincipal(String title){
         
@@ -178,43 +185,55 @@ public class SubmitFrame extends JFrame {
             );
         }
 
-        public BtnFE btnAceptar = new BtnFE("Aceptar");
-        private JPanel deployButtonsContainer(){
-
-        btnAceptar = new BtnFE("Aceptar");
+        private BtnFE getAcceptBtn(){
+            BtnFE btnAceptar = new BtnFE("Aceptar");
             btnAceptar.setBackground(new Color(107, 117, 255));
             btnAceptar.setTextColor(Color.white);
             btnAceptar.setPadding(10, 20, 10, 20);
             btnAceptar.setMargins(15, 15, 15, 15,Color.white);
             btnAceptar.addMouseListener(new MouseAdapter(){
-                
                 @Override
                 public void mousePressed(MouseEvent arg0){
                     triggerAcceptEvents();
                 }
 
-                });
-            
-        BtnFE btnCancelar = new BtnFE("Cancelar");
+            });
+
+            return btnAceptar;
+        }
+
+        private BtnFE getCancelBtn(){
+            BtnFE btnCancelar = new BtnFE("Cancelar");
             btnCancelar.setBackground(new Color(220, 220, 220));
             btnCancelar.setTextColor(new Color(100, 100, 100));
             btnCancelar.setPadding(10, 20, 10, 20);
             btnCancelar.setMargins(15, 15, 15, 15,Color.white);
-            btnCancelar.addMouseListener(new MouseAdapter(){
-                
-                @Override
-                public void mousePressed(MouseEvent arg0){
-                    triggerDimissEvents();
-                    closeForm();
+            btnCancelar.addMouseListener(
+                new MouseAdapter(){
+                     @Override
+                     public void mousePressed(MouseEvent arg0){
+                         triggerDimissEvents();
+                         closeForm();
 
-                }
-
-    }
+                     }
+                 }
             );
 
-        JPanel buttonsContainer = new JPanel(new BorderLayout());
-            buttonsContainer.add(btnAceptar,BorderLayout.EAST); 
-            buttonsContainer.add(btnCancelar,BorderLayout.WEST);  
+            return btnCancelar;
+        }
+
+    public void addAcceptButton(){
+        buttonsContainer.addElement(getAcceptBtn());
+    }
+
+    public void addCloseButton(){
+        buttonsContainer.addElement(getCancelBtn());
+    }
+
+    private LinearHorizontalLayout buttonsContainer;
+
+    private JPanel deployButtonsContainer(){
+        buttonsContainer = new LinearHorizontalLayout();
             buttonsContainer.setOpaque(false);
         
         JPanel generalContainer = new JPanel(new BorderLayout());
@@ -238,8 +257,6 @@ public class SubmitFrame extends JFrame {
             child.closeForm();
         
         childForms = new ArrayList();
-        
-        
     }
     
 }

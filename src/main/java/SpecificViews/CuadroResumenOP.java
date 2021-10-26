@@ -2,7 +2,6 @@ package SpecificViews;
 
 import Generals.BtnFE;
 import JDBCController.DataBaseConsulter;
-import RegisterDetailViewProps.RegisterDetail;
 import sistemaceb.form.HorizontalFormPanel;
 
 import java.awt.*;
@@ -58,7 +57,6 @@ public class CuadroResumenOP extends OperationWindow{
     private HorizontalFormPanel defineEvaForm(){
         form = new HorizontalFormPanel();
         form.addDesplegableMenu("Evaluacion").setRequired(true).setOptions(getFormOptions());
-        form.showAll();
 
         return form;
     }

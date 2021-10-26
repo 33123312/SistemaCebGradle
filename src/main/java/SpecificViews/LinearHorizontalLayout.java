@@ -2,13 +2,10 @@ package SpecificViews;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 public class LinearHorizontalLayout extends JPanel{
-
-
 
     GridBagConstraints cons;
     JLabel filler;
@@ -34,20 +31,25 @@ public class LinearHorizontalLayout extends JPanel{
     }
 
     public void addElement(Component element) {
+        setVisible(false);
         remove(filler);
-        add(element,cons);
+        super.add(element,cons);
         cons.gridx++;
         addFiller();
+        setVisible(true);
     }
 
-    public void removeElement(JComponent element) {
+    public void removeElement(int element) {
         List<Component> components =  Arrays.asList(getComponents());
-        components.remove(element);
-        components.remove(filler);
-        removeAll();
-        for(Component com: components)
-            addElement(com);
-        addFiller();
+        removeElement(components.get(element));
 
+    }
+
+    public void removeElement(Component element) {
+        setVisible(false);
+            remove(element);
+            remove(filler);
+        addFiller();
+        setVisible(true);
     }
 }

@@ -79,7 +79,6 @@ public class BitacoraMateriaGrupo extends TableViewerPDFOp{
 
         form.addDesplegableMenu("Materia").setOptions(getMaterias());
         form.addDesplegableMenu("Evaluacion").setOptions(getEvaluaciones());
-        form.showAll();
 
         thisWindow.addToHeader(form);
 

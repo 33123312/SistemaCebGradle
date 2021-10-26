@@ -1,7 +1,5 @@
 package JDBCController;
 
-import sistemaceb.form.Global;
-
 import java.io.*;
 
 public class DataBaseResManager {

@@ -5,13 +5,7 @@
  */
 package JDBCController;
 
-import sistemaceb.form.Global;
-
-import javax.swing.text.View;
-import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 
 /**

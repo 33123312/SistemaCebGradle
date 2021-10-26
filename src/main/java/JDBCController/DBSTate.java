@@ -1,6 +1,5 @@
 package JDBCController;
 
-import sistemaceb.RespaldosManager;
 import sistemaceb.form.Global;
 
 import java.util.ArrayList;
@@ -49,7 +48,7 @@ public class DBSTate {
 
         Table reponse = consulter.bringTable(period);
 
-        loadedPeriodo = reponse.getColumn("periodo").get(0);
+        loadedPeriodo = reponse.getUniqueValue();
         getParidad();
     }
 

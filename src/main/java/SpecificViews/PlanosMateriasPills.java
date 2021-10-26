@@ -2,9 +2,11 @@ package SpecificViews;
 
 import JDBCController.DataBaseConsulter;
 import JDBCController.ViewSpecs;
-import sistemaceb.*;
+import sistemaceb.PlanEstudioMateriasUpdater;
+import sistemaceb.RegisterDetailTable;
 import sistemaceb.form.FormDialogMessage;
 import sistemaceb.form.MultipleAdderConsultBuild;
+import sistemaceb.genericEvents;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -28,18 +30,6 @@ public class PlanosMateriasPills extends RegisterDetailTable {
     protected void firstImplementation() {
         super.firstImplementation();
         addDefInsertButton();
-        addHumanTitles();
-    }
-
-    private void addHumanTitles(){
-        ArrayList<String> trueTitles = new ArrayList<>();
-
-        trueTitles.add("Clave Materia");
-        trueTitles.add("Materia");
-        trueTitles.add("Tipo");
-        trueTitles.add("Orden");
-
-        consultTable.getOutputTable().setTitles(trueTitles);
     }
 
     private MultipleAdderConsultBuild getOverRidenBuild(){
@@ -70,6 +60,7 @@ public class PlanosMateriasPills extends RegisterDetailTable {
                                 "No se pudieron añadir las materias",
                                 "Se intentó añadir materias que ya estaban en el plan ded estudios, " +
                                         "asi que se canceló la operación, asegurese de añadir únicamente materias que no están ya en el plan de estudios");
+                        form.addAcceptButton();
                         form.addOnAcceptEvent(new genericEvents() {
                             @Override
                             public void genericEvent() {
@@ -102,7 +93,9 @@ public class PlanosMateriasPills extends RegisterDetailTable {
             protected void removeElemt(String selectdKey) {
                 FormDialogMessage form = new FormDialogMessage(
                         "Advertencia",
-                        "Al remover ésta materia del plan de estudios, también se removerá de los horarios y asignaturas de todos los grupos que tengan éste plan <br><br> presonee ACEPTAR para eliminar la materia del plan ");
+                        "Al remover ésta materia del plan de estudios, también se removerá de los horarios y asignaturas de todos los                                   grupos que tengan éste plan <br><br> presonee ACEPTAR para eliminar la materia del plan ");
+                form.addCloseButton();
+                form.addAcceptButton();
                 form.addOnAcceptEvent(new genericEvents() {
                     @Override
                     public void genericEvent() {

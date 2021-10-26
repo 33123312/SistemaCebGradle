@@ -7,8 +7,6 @@ package sistemaceb;
 
 import sistemaceb.form.Global;
 
-import java.io.IOException;
-
 
 /**
  *

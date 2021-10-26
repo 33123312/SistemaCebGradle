@@ -1,7 +1,6 @@
 package sistemaceb;
 
 import JDBCController.DataBaseConsulter;
-import JDBCController.DataBaseUpdater;
 import JDBCController.TableRegister;
 import JDBCController.ViewSpecs;
 import SpecificViews.GrupoOperator;

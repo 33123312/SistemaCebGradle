@@ -1,14 +1,13 @@
 package SpecificViews;
 
-import JDBCController.*;
-import RegisterDetailViewProps.RegisterDetail;
+import JDBCController.Table;
+import JDBCController.dataType;
 import sistemaceb.form.ErrorChecker;
 import sistemaceb.form.FormElement;
 import sistemaceb.form.Formulario;
 import sistemaceb.form.Global;
 
 import java.util.ArrayList;
-
 
 public class BoletaBuilder extends MultipleFormsOperation{
     private  ArrayList<String> values;
@@ -20,7 +19,6 @@ public class BoletaBuilder extends MultipleFormsOperation{
     public BoletaBuilder(OperationInfoPanel infoPanlel){
         super( infoPanlel);
         operation = "Modificar Boleta";
-
     }
 
     @Override
@@ -39,10 +37,8 @@ public class BoletaBuilder extends MultipleFormsOperation{
         addAsistenciasArea("Numérica","calificaciones_numericas");
         addCalBolFrame();
         addAsistenciasArea("A/NA","calificaciones_booleanas");
-
         semestresForm = new SemestralCalifasChoser(operator.grupoOperator.getMateriasList("Numérica"),getConditions(),values);
         addElement("Calificaciones Semestrales",semestresForm);
-
 
     }
 
@@ -94,7 +90,7 @@ public class BoletaBuilder extends MultipleFormsOperation{
             }
         };
 
-        addCalForm("Boleana","calificaciones_booleanas","Materias Boleanas",builder);
+        addCalForm("A/NA","calificaciones_booleanas","Materias De A/NA",builder);
 
     }
 
@@ -120,19 +116,19 @@ public class BoletaBuilder extends MultipleFormsOperation{
             }
         };
 
-        addCalForm("Numérica","calificaciones_numericas","Materia Numéricas",builder);
+        addCalForm("Numérica","calificaciones_numericas","Materias Numéricas",builder);
     }
 
 
     private void addCalForm(String tipo,String table,String title, MultipleFormsPanel.FormElementBuilder builder){
         BuilderBackend2 back = new BuilderBackend2(
- table,
-    "evaluacion",
-    "materia",
-"calificacion_clave",
-            getEvaluaciones(),
+                table,
+        "evaluacion",
+        "materia",
+        "calificacion_clave",
+                getEvaluaciones(),
         "calificaciones",
-        "calificacion"
+            "calificacion"
 
         );
         back.setConditions(getConditions());
@@ -171,6 +167,7 @@ public class BoletaBuilder extends MultipleFormsOperation{
                         setRequired(false);
             }
         };
+        System.out.println(operator.grupoOperator.getMateriasList(tipo).getRegisters());
         MultipleFormsPanel panel = new MultipleFormsPanel(
                 back,
                 operator.grupoOperator.getMateriasList(tipo),

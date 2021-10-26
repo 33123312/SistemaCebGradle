@@ -7,11 +7,12 @@ package sistemaceb.form;
 
 import JDBCController.Table;
 
-import java.awt.Color;
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
+import javax.swing.*;
+import javax.swing.event.PopupMenuEvent;
+import javax.swing.event.PopupMenuListener;
+import java.awt.*;
+import java.awt.event.*;
 import java.util.ArrayList;
-import javax.swing.JComboBox;
 
 /**
  *
@@ -19,23 +20,10 @@ import javax.swing.JComboBox;
  */
 public class DesplegableMenu extends formElementWithOptions{
     private JComboBox menu;
-    private String defaultSelection;
 
     public DesplegableMenu(String title){
-        super(title);
+        super(title,"");
         buildMenu();
-        setTrigerEvent();
-        defaultSelection = "";
-    }
-
-    public DesplegableMenu setDefaultSelection(String defaultSelection) {
-        this.defaultSelection = defaultSelection;
-
-        return this;
-    }
-
-    public String getDefaultSelection() {
-        return defaultSelection;
     }
 
     @Override
@@ -50,19 +38,51 @@ public class DesplegableMenu extends formElementWithOptions{
     @Override
     protected void buildGUIOptions() {
         super.buildGUIOptions();
-        addOption(defaultSelection);
+        addOption(getDefaultValue());
         menu.setSelectedIndex(menu.getItemCount()-1);
+
     }
 
     private void buildMenu(){
         menu = new JComboBox();
+        menu.addPopupMenuListener(new PopupMenuListener() {
+            @Override
+            public void popupMenuWillBecomeVisible(PopupMenuEvent e) {
+            }
+
+            @Override
+            public void popupMenuWillBecomeInvisible(PopupMenuEvent e) {
+                executeTrigerEvents();
+            }
+
+            @Override
+            public void popupMenuCanceled(PopupMenuEvent e) {
+            }
+        });
+        menu.addFocusListener(new FocusAdapter() {
+            @Override
+            public void focusGained(FocusEvent e) {
+                super.focusGained(e);
+                if(isVisible())
+                menu.showPopup();
+            }
+
+        });
+
         menu.setForeground(new Color(100,100,100));
+        currentElement = menu;
         addElement(menu);
         
     }
 
     @Override
+    public void useDefval() {
+        menu.setSelectedIndex(menu.getItemCount());
+    }
+
+    @Override
     public void setResponse(String txt) {
+        super.setResponse(txt);
        if(trueOptions.contains(txt))
            setSelection(GUIOptions.get(trueOptions.indexOf(txt)));
        else if(GUIOptions.contains(txt))
@@ -86,6 +106,12 @@ public class DesplegableMenu extends formElementWithOptions{
         return menu.getSelectedIndex();
     }
 
+
+    @Override
+    public formElementWithOptions setOptions(Table options) {
+        return super.setOptions(options);
+    }
+
     @Override
     public void addOption(String option){
         menu.addItem(option);
@@ -96,32 +122,11 @@ public class DesplegableMenu extends formElementWithOptions{
          menu.removeAllItems();
     }
 
-    ItemListener lis = new ItemListener(){
-
-        @Override
-        public void itemStateChanged(ItemEvent event) {
-            if (event.getStateChange() == ItemEvent.SELECTED)
-                executeTrigerEvents();
-
-        }
-    };
-
     @Override
     public void setSelection(String selection) {
         menu.setEnabled(true);
         menu.setSelectedIndex(GUIOptions.indexOf(selection));
     }
-
-    protected void setTrigerEvent(){
-        menu.addItemListener(lis);
-    }
-
-    @Override
-    protected void removetriggerEvent() {
-        menu.removeItemListener(lis);
-    }
-
-
     
 }
 

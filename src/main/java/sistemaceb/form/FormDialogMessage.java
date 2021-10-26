@@ -1,7 +1,6 @@
 package sistemaceb.form;
 
 import sistemaceb.SubmitFrame;
-import sistemaceb.genericEvents;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -13,7 +12,6 @@ public class FormDialogMessage extends SubmitFrame {
         super(title);
         setSize(new Dimension(600,300));
         addTextMessage(mesage);
-
     }
 
     private void addTextMessage(String mesage){

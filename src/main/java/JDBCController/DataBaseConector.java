@@ -7,7 +7,10 @@ package JDBCController;
 
 import sistemaceb.form.Global;
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.logging.Level;
@@ -43,18 +46,8 @@ public class DataBaseConector {
             public void run() {
                 isChecked = false;
             }
-        },600000);
+        },60000);
 
-    }
-
-    private boolean makeTestConsult(){
-        try {
-            DataBaseConsulter consulter = new DataBaseConsulter("viewsspecs.tags");
-            consulter.bringTable();
-            return true;
-        } catch(Exception e){
-            return false;
-        }
     }
 
     public void endConection(){

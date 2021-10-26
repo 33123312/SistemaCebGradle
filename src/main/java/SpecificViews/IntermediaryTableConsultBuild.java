@@ -2,9 +2,6 @@ package SpecificViews;
 
 import JDBCController.ViewSpecs;
 import sistemaceb.form.MultipleAdderConsultBuild;
-import sistemaceb.keyHiddedCoonsTableBuild;
-
-import java.util.ArrayList;
 
 public class IntermediaryTableConsultBuild extends MultipleAdderConsultBuild {
 

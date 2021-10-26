@@ -281,11 +281,10 @@ public class ViewSpecs {
 
     }
 
-
     public Updater getUpdater(){
         return new Updater();
     }
-    public class Updater{
+    public class Updater extends QueryParser{
 
         public void delete(ArrayList<String> columnCondition, ArrayList<String> values) throws SQLException {
             String query = "delete from " + table + " where "  + stringifyConditions(columnCondition,values);
@@ -307,8 +306,8 @@ public class ViewSpecs {
 
         public void insert(ArrayList<String> columns,ArrayList<String> values) throws SQLException {
 
-            String query = "insert into " + table + "(" + stringifyColumns(columns) + ") values (" + stringifyValues(values) + ")";
-            //System.out.println(query);
+            String query = "insert into " + table + "(" + stringifyColumns(columns) + ") values (" + getPrametrized(values.toArray(new String[values.size()])) + ")";
+            System.out.println(query);
             info.flushCount();
             Global.SQLConector.getMyStatment().executeUpdate(query);
 
@@ -424,64 +423,10 @@ public class ViewSpecs {
 
         }
 
-        private String stringifyConditions(ArrayList<String> columnCondition,ArrayList<String> values){
-            StringBuilder stringifiedConditions = new StringBuilder();
 
-            int i;
-            int size = columnCondition.size()-1;
-            for(i = 0; i < size;i++){
-                stringifiedConditions.append(columnCondition.get(i));
-                stringifiedConditions.append(" = ");
-                stringifiedConditions.append(mergeBranches(values.get(i)));
-                stringifiedConditions.append( " and ");
-            }
 
-            stringifiedConditions.append(columnCondition.get(i));
-            stringifiedConditions.append(" = ");
-            stringifiedConditions.append(mergeBranches(values.get(i)));
 
-            return stringifiedConditions.toString();
-        }
 
-        private String stringifyValues(ArrayList<String> values){
-            StringBuilder stringyfiedColumns = new StringBuilder();
-
-            int i;
-            int size = values.size()-1;
-            for(i = 0;i < size; i++){
-                stringyfiedColumns.append(mergeBranches(values.get(i)));
-                stringyfiedColumns.append(",");
-            }
-
-            stringyfiedColumns.append(mergeBranches(values.get(i)));
-
-            return stringyfiedColumns.toString();
-        }
-
-        private String stringifyColumns(ArrayList<String> columns){
-            ArrayList<String> convertedColumns = columns;
-            int i;
-            StringBuilder stringyfiedColumns = new StringBuilder();
-            int size = convertedColumns.size()-1;
-
-            for(i = 0; i < size ;i++){
-                stringyfiedColumns.append(convertedColumns.get(i));
-                stringyfiedColumns.append(",");
-            }
-
-            stringyfiedColumns.append(convertedColumns.get(i));
-
-            return stringyfiedColumns.toString();
-        }
-
-        private String mergeBranches(String val){
-            if(val == null)
-                val = "NULL";
-            if (!val.equals("NULL"))
-                val  ="'"+val+ "'";
-
-            return val;
-        }
 
     }
 

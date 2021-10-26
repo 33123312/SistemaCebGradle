@@ -2,8 +2,6 @@ package SpecificViews;
 
 import JDBCController.Table;
 import JDBCController.TableRegister;
-import JDBCController.ViewSpecs;
-import RegisterDetailViewProps.RegisterDetail;
 
 import java.util.ArrayList;
 

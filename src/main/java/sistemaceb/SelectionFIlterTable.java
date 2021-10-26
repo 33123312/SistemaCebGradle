@@ -1,15 +1,13 @@
 package sistemaceb;
 
-import JDBCController.DBU;
 import JDBCController.Table;
 import JDBCController.ViewSpecs;
 import SpecificViews.GrupoOperator;
 import Tables.AdapTableFE;
 import Tables.RowsFactory;
 import Tables.StyleRowModel;
-import com.sun.jdi.IntegerType;
+import Tables.TableRow;
 
-import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.util.ArrayList;
 
@@ -26,19 +24,18 @@ public class SelectionFIlterTable extends AdapTableFE {
 
     public void setDefaltSelections(ArrayList<String> selections){
         if(!selections.isEmpty()){
-
             ArrayList<Integer> selected = getNewSelectedIndex(selections);
-
             setSelectedIndex(selected);
         }
-
     }
 
     private void updateTable(){
         Table alumnos = getAlumnos();
+
         possibleSelections = alumnos.getRgistersCopy();
         setTitles(alumnos.getColumnTitles());
-        addNShow(alumnos.getRegisters());
+        setRows(possibleSelections);
+        showAll();
     }
 
     private ArrayList<Integer> getNewSelectedIndex(ArrayList<String> newAlumnos) {
@@ -63,18 +60,8 @@ public class SelectionFIlterTable extends AdapTableFE {
         return indexes;
     }
 
-    private void setSyles(){
-        addRowStyle(new StyleRowModel() {
-            @Override
-            public RowsFactory.row setStyleModel(RowsFactory.row row) {
-                row.setBackground(Color.white);
-                return row;
-            }
-        });
-    }
 
     private void deployTable(){
-        setSyles();
         addRememberSelectedRows(new Color(129, 236, 236));
         updateTable();
 
@@ -101,13 +88,16 @@ public class SelectionFIlterTable extends AdapTableFE {
     public ArrayList<String> getSelectedAlumnos(){
         ArrayList<String> alumnos = new ArrayList<>();
 
-        ArrayList<Integer> indexes = getSelectedIndex();
+        ArrayList<TableRow> selectedRows = getSelectedRow();
+        ArrayList<Integer> indexes = new ArrayList<>();
+
+        for (TableRow selectedRow:selectedRows)
+            indexes.add(selectedRow.getKey());
 
         for (int index:indexes)
             alumnos.add(possibleSelections.get(index).get(0));
 
         return alumnos;
-
     }
 
 

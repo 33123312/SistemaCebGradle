@@ -5,17 +5,12 @@
  */
 package sistemaceb.form;
 
-import java.awt.BorderLayout;
-import java.awt.GridLayout;
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
-import javax.swing.JPanel;
-import javax.swing.JTextField;
-import javax.swing.text.AttributeSet;
-import javax.swing.text.BadLocationException;
-import javax.swing.text.Document;
-import javax.swing.text.PlainDocument;
 
 /**
  *
@@ -28,9 +23,10 @@ public class DateInput extends FormElement{
     limitedImput año;
     
     public DateInput(String title){
-        super(title);
+        super(title,"");
         addWrongTypeError();
         add(buildInputsSec(),BorderLayout.CENTER);
+        currentElement = this;
     }
 
     @Override
@@ -88,7 +84,12 @@ public class DateInput extends FormElement{
         
         return parentCont;
     }
-    
+
+    @Override
+    public void useDefval() {
+
+    }
+
     @Override
     protected String getResponseConfig(){
         if (año.getText().equals("AA") &&

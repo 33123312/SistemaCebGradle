@@ -1,8 +1,6 @@
 package sistemaceb;
 
 import JDBCController.DataBaseConsulter;
-import JDBCController.DataBaseResManager;
-import JDBCController.Table;
 import SpecificViews.TableOperator;
 
 import java.util.ArrayList;

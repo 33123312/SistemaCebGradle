@@ -1,7 +1,6 @@
 package SpecificViews;
 
 import JDBCController.DataBaseConsulter;
-import JDBCController.Table;
 
 import java.util.ArrayList;
 

@@ -5,9 +5,8 @@
  */
 package sistemaceb.form;
 
-import java.awt.Component;
-import java.awt.GridLayout;
-import javax.swing.JPanel;
+import javax.swing.*;
+import java.awt.*;
 
 /**
  *

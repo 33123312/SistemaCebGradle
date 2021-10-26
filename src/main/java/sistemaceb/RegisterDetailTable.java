@@ -4,24 +4,15 @@
  * and open the template in the editor.
  */
 package sistemaceb;
+
 import Generals.BtnFE;
 import JDBCController.ViewSpecs;
-import SpecificViews.LinearHorizontalLayout;
 import SpecificViews.LinearVerticalLayout;
-import Tables.AdapTableFE;
-import Tables.RowsFactory;
-import Tables.RowsStyles;
-import Tables.StyleRowModel;
-import sistemaceb.form.MultipleAdderConsultBuild;
+import Tables.*;
 
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Font;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.GridLayout;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
+import java.awt.*;
 /**
  *
  * @author escal
@@ -55,7 +46,6 @@ public abstract class RegisterDetailTable extends JPanel{
     }
 
     protected void firstImplementation(){
-
         consultTable.updateSearch();
         deployGUI();
     };
@@ -108,9 +98,9 @@ public abstract class RegisterDetailTable extends JPanel{
     private JPanel deployTable(){
         outputTable = consultTable.getOutputTable();
         outputTable.setBorder(BorderFactory.createEmptyBorder(20,0,0,0));
-        outputTable.addTitleStyle(new StyleRowModel(){
+        outputTable.getFactory().addTitleStyle(new StyleRowModel(){
             @Override
-                public RowsFactory.row setStyleModel(RowsFactory.row title) {
+                public TableRow setStyleModel(TableRow title) {
                     title.setBackground(new Color(52, 174, 219));
                     title.setOpaque(false);
                     title.setBorder(BorderFactory.createEmptyBorder(0, 0, 5, 0));
@@ -118,17 +108,8 @@ public abstract class RegisterDetailTable extends JPanel{
                     return title;
                 }
             });
-        
-        outputTable.addRowStyle(new StyleRowModel(){
-            @Override
-            public RowsFactory.row setStyleModel(RowsFactory.row component) {
-                component.setBackground(Color.WHITE);
-               component.setBorder(BorderFactory.createMatteBorder(0, 0, 1, 0, new Color(253,253,253)));
-                return component;
-            }
 
-        });
-            outputTable.addRowStyle(RowsStyles.iluminateOnOver(new Color(245,245,245)));
+            outputTable.getFactory().addRowStyle(RowsStyles.iluminateOnOver(new Color(245,245,245)));
             outputTable.setBackground(Color.white);
             return outputTable;
     }

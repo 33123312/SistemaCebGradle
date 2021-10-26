@@ -3,17 +3,18 @@ package sistemaceb;
 
 import Generals.BtnFE;
 import Generals.DesplegableMenuFE;
-import JDBCController.*;
+import JDBCController.ViewSpecs;
+import JDBCController.dataType;
+import sistemaceb.form.ErrorChecker;
+import sistemaceb.form.FormWindow;
+import sistemaceb.form.RelationComprober;
 
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Map;
-
-import sistemaceb.form.*;
 
 /**
  *
@@ -66,7 +67,6 @@ public class ConditionedRefTableBuild extends NewRegisterGenTableBuild {
                             }
                         });
 
-                updateForm.showAll();
                 return updateForm;
             }
 

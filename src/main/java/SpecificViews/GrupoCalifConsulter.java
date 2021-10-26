@@ -1,8 +1,6 @@
 package SpecificViews;
 
 import JDBCController.Table;
-import JDBCController.ViewSpecs;
-import RegisterDetailViewProps.RegisterDetail;
 
 import javax.swing.*;
 import java.awt.*;

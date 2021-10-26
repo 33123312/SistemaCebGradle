@@ -1,8 +1,6 @@
 package SpecificViews;
 
-import JDBCController.DataBaseUpdater;
 import JDBCController.ViewSpecs;
-import RegisterDetailViewProps.RegisterDetail;
 import sistemaceb.form.FormDialogMessage;
 import sistemaceb.genericEvents;
 
@@ -24,6 +22,8 @@ public class AlumnoDeleteOp extends Operation{
     private void showConfMessage(){
         String confMessageTxt = getDialogMsg();
         FormDialogMessage message = new FormDialogMessage("Dar alumno de baja",confMessageTxt);
+        message.addAcceptButton();
+        message.addCloseButton();
         message.addOnAcceptEvent(new genericEvents() {
             @Override
             public void genericEvent() {

@@ -1,7 +1,6 @@
 package SpecificViews;
 
 import JDBCController.DataBaseConsulter;
-import JDBCController.DataBaseUpdater;
 import JDBCController.Table;
 import JDBCController.ViewSpecs;
 

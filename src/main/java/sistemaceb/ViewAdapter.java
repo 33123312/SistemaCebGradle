@@ -1,15 +1,11 @@
 package sistemaceb;
 
-import DInamicPanels.View;
-import com.itextpdf.io.image.ImageDataFactory;
-import com.itextpdf.layout.element.Image;
 import sistemaceb.form.Global;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.net.MalformedURLException;
 
 public class ViewAdapter extends  JPanel{
 
@@ -28,9 +24,20 @@ public class ViewAdapter extends  JPanel{
         view.addButtons(getButtons());
     }
     protected void changeView(ViewAdapter nextView){
-        addToContainer(nextView);
-        Global.view.currentWindow = nextView;
+        trytoClose(new genericEvents() {
+            @Override
+            public void genericEvent() {
+                addToContainer(nextView);
+                Global.view.currentWindow = nextView;
+            }
+        });
+    }
 
+    public void trytoClose(genericEvents e){
+        if (thisWindow == null)
+            e.genericEvent();
+        else
+            thisWindow.tryToClose(e);
     }
 
     public Window getWIndow(){
@@ -94,7 +101,6 @@ public class ViewAdapter extends  JPanel{
         return further != null;
     }
 
-
     private void setBack(ViewAdapter newView){
         back = newView;
         updateButtons();
@@ -106,7 +112,7 @@ public class ViewAdapter extends  JPanel{
     }
 
     private void addToContainer(ViewAdapter view){
-         Global.view.setView(view);
+         Global.view.setNewView(view);
     }
 
     public JPanel getButtons(){

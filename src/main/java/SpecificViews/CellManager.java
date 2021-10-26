@@ -1,6 +1,9 @@
 package SpecificViews;
 
-import JDBCController.*;
+import JDBCController.DataBaseConsulter;
+import JDBCController.Table;
+import JDBCController.TableRegister;
+import JDBCController.ViewSpecs;
 
 import java.sql.SQLException;
 import java.util.ArrayList;

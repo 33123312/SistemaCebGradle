@@ -2,7 +2,6 @@ package SpecificViews;
 
 import JDBCController.ViewSpecs;
 import sistemaceb.*;
-import sistemaceb.form.MultipleAdderConsultBuild;
 
 public class DefaultRegisterDetailTable extends RegisterDetailTable {
 

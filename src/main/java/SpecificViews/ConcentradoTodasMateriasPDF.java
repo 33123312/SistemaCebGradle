@@ -1,10 +1,6 @@
 package SpecificViews;
 
-import com.itextpdf.kernel.color.Color;
 import com.itextpdf.layout.element.Cell;
-import com.itextpdf.layout.element.Table;
-import com.itextpdf.layout.property.HorizontalAlignment;
-import com.itextpdf.layout.property.VerticalAlignment;
 
 import java.util.ArrayList;
 

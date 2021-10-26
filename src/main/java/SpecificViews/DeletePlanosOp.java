@@ -6,6 +6,7 @@ import JDBCController.ViewSpecs;
 import sistemaceb.form.FormDialogMessage;
 import sistemaceb.form.Global;
 import sistemaceb.genericEvents;
+
 import java.sql.SQLException;
 import java.util.ArrayList;
 
@@ -48,6 +49,7 @@ public class DeletePlanosOp extends Operation{
         FormDialogMessage formDialogMessage = new FormDialogMessage(
                 "No se puede eliminar el plan",
                 "Hay algunos grupos que están usando éste plan, favor de cambiar el plan de dichos grupos antes de borrar el plan");
+        formDialogMessage.addAcceptButton();
         formDialogMessage.addOnAcceptEvent(new genericEvents() {
             @Override
             public void genericEvent() {

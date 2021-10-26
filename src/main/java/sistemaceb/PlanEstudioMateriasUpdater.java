@@ -1,6 +1,5 @@
 package sistemaceb;
 
-import JDBCController.DataBaseUpdater;
 import JDBCController.ViewSpecs;
 import SpecificViews.GrupoOperator;
 

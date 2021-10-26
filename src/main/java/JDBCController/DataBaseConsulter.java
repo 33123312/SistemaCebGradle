@@ -11,6 +11,7 @@ import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -18,11 +19,11 @@ import java.util.logging.Logger;
  *
  * @author escalcgcg
  */
-public class DataBaseConsulter {
+public class DataBaseConsulter extends QueryParser{
 
     protected final String table;
-    
-   public  DataBaseConsulter(String table){
+
+    public DataBaseConsulter(String table) {
         this.table = table;
     }
 
@@ -30,79 +31,40 @@ public class DataBaseConsulter {
         return table;
     }
 
-    public Table bringTable(String query){
-       return buildRegisters(query);
-   }
-
-    public Table bringTable(){
-        return buildRegisters(buildSelect("*",""));
+    public Table bringTable(String query) {
+        return buildRegisters(query);
     }
-    
-    public Table bringTable(String[] columnsToSearch){
-        
-        return buildRegisters(buildSelect(buildCColumnQuery(columnsToSearch),""));
+
+    public Table bringTable() {
+        return buildRegisters(buildSelect("*", ""));
     }
-    
-    public Table bringTable(String[] columnsToSearch, String[] keyWords ){
-            return buildRegisters(buildSelect("*",buildConditionalQuery(columnsToSearch,keyWords )));
-          }
 
-    public Table bringTable(String[] columnsToBring,String[] columnsToSearch,String[] keyWords ){
-            return   buildRegisters(buildSelect(buildCColumnQuery(columnsToBring) ,buildConditionalQuery(columnsToSearch,keyWords)));
+    public Table bringTable(String[] columnsToSearch) {
+
+        return buildRegisters(buildSelect(buildCColumnQuery(columnsToSearch), ""));
     }
-    
-    
-    private String buildSelect(String columns,String conditions){
 
-        return "select " + columns + " from " + table  + " " + conditions;
+    public Table bringTable(String[] columnsToSearch, String[] keyWords) {
+        return buildRegisters(buildSelect("*", buildConditionalQuery(columnsToSearch, keyWords)));
     }
-    
-    private String buildCColumnQuery(String[] columnsToInsert){
-        int colNum = columnsToInsert.length;
-        if (colNum > 0) {
-            StringBuilder query = new StringBuilder();
 
-            int iteratons = colNum - 1;
+    public Table bringTable(String[] columnsToBring, String[] columnsToSearch, String[] keyWords) {
+        return buildRegisters(buildSelect(buildCColumnQuery(columnsToBring), buildConditionalQuery(columnsToSearch, keyWords)));
+    }
 
-            for (int i = 0; i < iteratons; i++){
-                query.append(columnsToInsert[i]);
-                query.append(",");
-            }
 
-            query.append(columnsToInsert[iteratons]);
+    private String buildSelect(String columns, String conditions) {
 
-            return query.toString();
-        }
+        return "select " + columns + " from " + table + " " + conditions;
+    }
+
+    protected String buildCColumnQuery(String[] columnsToInsert) {
+        ArrayList<String> col= new ArrayList<>(Arrays.asList(columnsToInsert));
+
+        if (columnsToInsert.length > 0)
+            return stringifyColumns(col);
+
         return "*";
-    }
-
-    private String buildConditionalQuery(String[] columnsToSearch,String[] keyWords){
-
-        int colsNum = columnsToSearch.length;
-
-        if (colsNum > 0){
-            StringBuilder query = new StringBuilder("where BINARY ");
-            int iteratons = colsNum-1;
-            for (int i = 0; i < iteratons; i++){
-                query.append(getEqualString(columnsToSearch[i],keyWords[i]));
-                query.append(" and ");
-            }
-
-            query.append(getEqualString(columnsToSearch[iteratons],keyWords[iteratons]));
-
-            return query.toString();
-        }
-
-        return "";
-    }
-
-    private String getEqualString(String cond,String val){
-       StringBuilder res = new StringBuilder();
-            res.append(cond);
-            res.append(" = '");
-            res.append(val);
-            res.append("'");
-        return res.toString();
     }
    
     private Table  buildRegisters( String query){
@@ -175,27 +137,13 @@ public class DataBaseConsulter {
         return relatedTableInfo.getColumn(0);
     }
 
-    public String getPrametrizd(String[] params){
-       int arraySize = params.length -1;
-       if (arraySize < 0){
-           StringBuilder builder = new StringBuilder();
-           for (int i = 0; i < arraySize;i++){
-               builder.append("'");
-               builder.append(params[i]);
-               builder.append("',");
-           }
-
-           builder.append("'");
-           builder.append(params[arraySize]);
-           builder.append("'");
-
-           return builder.toString();
-       }
-       return "";
+    public Table getFProcedure(String function,String[] params){
+        String query = "call " + function + "(" + getPrametrized(params) + ")";
+        return buildRegisters(query);
     }
 
     public Table getFunction(String function,String[] params){
-       String query = "select " + function + "(" + getPrametrizd(params) + ")";
+       String query = "select " + function + "(" + getPrametrized(params) + ")";
        return buildRegisters(query);
     }
 

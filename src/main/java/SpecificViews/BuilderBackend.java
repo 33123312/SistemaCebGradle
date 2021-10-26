@@ -1,6 +1,6 @@
 package SpecificViews;
 
-import JDBCController.*;
+import JDBCController.ViewSpecs;
 import sistemaceb.FormResponseManager;
 import sistemaceb.form.Formulario;
 

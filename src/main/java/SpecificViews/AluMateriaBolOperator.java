@@ -16,7 +16,7 @@ public class AluMateriaBolOperator extends  AluMateriaOperator{
 
         int prom = 1;
         for (String calif:parcialesCal){
-            if(calif != null){
+            if(calif != null && !calif.isEmpty()){
                 int currenaCalifa = Integer.parseInt(calif);
                 prom*= currenaCalifa;
             }

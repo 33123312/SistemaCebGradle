@@ -1,9 +1,7 @@
 package sistemaceb.form;
 
-import DInamicPanels.DinamicPanel;
 import JDBCController.DBSTate;
 import JDBCController.DataBaseConector;
-import JDBCController.DataBaseResManager;
 import sistemaceb.DInamicWindow;
 import sistemaceb.MainWindow;
 import sistemaceb.RespaldosManager;

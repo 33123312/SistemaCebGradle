@@ -1,8 +1,5 @@
 package SpecificViews;
 
-import JDBCController.ViewSpecs;
-import RegisterDetailViewProps.RegisterDetail;
-
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;

@@ -5,11 +5,12 @@
  */
 package sistemaceb;
 
-import JDBCController.*;
+import JDBCController.ViewSpecs;
+import Tables.AdapTableFE;
+import Tables.RowsFactory;
+import Tables.TableRow;
 import sistemaceb.form.Global;
 
-import javax.swing.*;
-import java.awt.*;
 import java.util.ArrayList;
 
 /**
@@ -59,14 +60,19 @@ public class LinkedTable extends KeyedTableBehavior {
     }
 
     protected void setReferences(primaryKeyedTable table) {
-        table.addRowEvents(new primaryKeyedTable.clickedRowEvent(){
+        table.getFactory().addLeftClickEvnt(new AdapTableFE.rowSelectionEvnt() {
             @Override
-            public void onClick(int key) {
+            public void whenSelect(TableRow row) {
                 Global.view.currentWindow.newView(
                     new RegisterDetailView(
-                            viewSpecs.getTable(),getPrimaryKey(key)));
+                        viewSpecs.getTable(),
+                        getPrimaryKey(row.getKey())
+                    )
+                );
             }
         });
+        table.showAll();
+
     }
 
 }
