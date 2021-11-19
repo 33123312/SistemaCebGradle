@@ -10,7 +10,6 @@ import java.util.Map;
 public class ConcentradoTodasMateriasOp extends TableViewerPDFOp{
 
     GrupoOperator operator;
-    ArrayList<String> materiasKeys;
     ArrayList<String> materuiasNom;
     String eva;
     HorizontalFormPanel form;
@@ -32,7 +31,7 @@ public class ConcentradoTodasMateriasOp extends TableViewerPDFOp{
     @Override
     protected void buildPDF() {
         eva = form.getData().get("Evaluacion");
-        deployPdf(operator.getAlumnos());
+        deployPdf();
     }
 
     private HorizontalFormPanel getFormPanel(){
@@ -62,16 +61,19 @@ public class ConcentradoTodasMateriasOp extends TableViewerPDFOp{
     }
 
     private void defineMaterias(){
-        Table materias = operator.getMaterias();
-        materiasKeys = materias.getColumn(0);
-        materuiasNom = materias.getColumn(1);
+        materuiasNom = operator.getMaterias("Numérica").getColumn(0);
+            materuiasNom.addAll(operator.getMaterias("A/NA").getColumn(0));
+
     }
 
-    private void deployPdf(Table alumnos){
+    private void deployPdf(){
         ConcentradoTodasMateriasPDF doc = getDoc();
-        ArrayList<ArrayList<String>> alumnosRe = alumnos.getRgistersCopy();
-        for (ArrayList<String> aluInfo:alumnosRe){
-            doc.addRegister(getAlumnoRow(aluInfo));
+
+        ArrayList<ALumnoOperator> alumnosNum = operator.getAlumnosOpUsNum();
+        ArrayList<ALumnoOperator> alumnosBol = operator.getAlumnosOpUsBol();
+
+        for (int i = 0; i < alumnosBol.size();i++){
+            doc.addRegister(getAlumnoRow(alumnosNum.get(i),alumnosBol.get(i)));
         }
 
         doc.addTable();
@@ -79,17 +81,22 @@ public class ConcentradoTodasMateriasOp extends TableViewerPDFOp{
 
     }
 
-    private ArrayList<String> getAlumnoRow(ArrayList<String> alumnoInfo){
-        String aluMatricula = alumnoInfo.get(0);
-        ALumnoOperator operator = new ALumnoOperator(aluMatricula);
+    private ArrayList<String> getAlumnoRow(ALumnoOperator alumnoNumInfo,ALumnoOperator alumnoBolInfo){
 
-        for (String materia:materiasKeys){
-            AluMateriaOperator materiaOperator = operator.getMateriaState(materia);
-            alumnoInfo.add(materiaOperator.getEvaluacionCalif(eva));
-            alumnoInfo.add(materiaOperator.getEvaluacionFaltas(eva));
+        ArrayList materiaOperators = alumnoNumInfo.getNumBoleta();
+            materiaOperators.addAll(alumnoBolInfo.getBolBoleta());
+
+        ArrayList<String> row = new ArrayList<>();
+            //row.add(alumnoNumInfo.getRegisterValue("numero_control"));
+            row.add(alumnoBolInfo.getRegisterValue("nombre_completo"));
+
+        for (int i = 0; i < materiaOperators.size();i++){
+            AluMateriaOperator materiaOperator = (AluMateriaOperator)materiaOperators.get(i);
+            row.add(materiaOperator.getEvaluacionCalif(eva));
+            row.add(materiaOperator.getEvaluacionFaltas(eva));
         }
 
-        return alumnoInfo;
+        return row;
     }
 
 

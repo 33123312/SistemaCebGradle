@@ -8,6 +8,7 @@ package sistemaceb;
 import Tables.AdapTableFE;
 import Tables.RowsFactory;
 import Tables.StyleRowModel;
+import sistemaceb.form.FormDialogMessage;
 
 import javax.swing.*;
 import java.awt.*;
@@ -17,42 +18,14 @@ import java.util.ArrayList;
  *
  * @author escal
  */
-public class rowUpdateConfirmationFrame extends SubmitFrame {
+public class rowUpdateConfirmationFrame extends FormDialogMessage {
     
-    private ArrayList<String> titles;
-    private ArrayList<String> data;
-    
-    public rowUpdateConfirmationFrame (String title,ArrayList<String> titles,ArrayList<String> data){
-        super(title);
 
-        this.titles = titles;
-        this.data = data;
-        addBody(deployTable());
-        setSize(new Dimension(800,300));
+    
+    public rowUpdateConfirmationFrame (){
+        super("¿Está completamente seguro de eliminar el siguiente registro?","");
         addAcceptButton();
-        
     }
 
-    private JPanel deployTable() {
-        JPanel tableContainer = new JPanel(new GridBagLayout());
-        AdapTableFE rowTable = new AdapTableFE();
-            
-            rowTable.setTitles(titles);
-            ArrayList<ArrayList<String>> dataA =new ArrayList<>();
-                dataA.add(data);
-
-            rowTable.setBorder(BorderFactory.createEmptyBorder(10,10,10,10));
-           
-            GridBagConstraints tableConstraints = new GridBagConstraints();
-            tableConstraints.weightx  = 1;
-            tableConstraints.fill = GridBagConstraints.HORIZONTAL;
-            
-            rowTable.showAll();
-            
-            tableContainer.add(rowTable,tableConstraints);
-        
-        return tableContainer;
-    }
-    
     
 }

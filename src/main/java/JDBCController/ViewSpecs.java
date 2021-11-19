@@ -8,6 +8,7 @@ import sistemaceb.form.Global;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Map;
 
 public class ViewSpecs {
@@ -141,7 +142,8 @@ public class ViewSpecs {
         return Global.conectionData.getMainTables().getColumn("table_name").contains(getTable());
     }
 
-    public static dataType determinateDataType(String typeIndex) {
+    public static dataType
+    determinateDataType(String typeIndex) {
         int typeInt = Integer.parseInt(typeIndex);
         switch (typeInt) {
             case 4:
@@ -150,6 +152,8 @@ public class ViewSpecs {
                 return dataType.FLOAT;
             case 91:
                 return dataType.DATE;
+            case 92:
+                return dataType.TIME;
             default:
                 return dataType.VARCHAR;
         }
@@ -258,7 +262,7 @@ public class ViewSpecs {
     public boolean hasOptions() {
         int size = info.getCount();
 
-        return size < 20;
+        return size < 100;
     }
 
     public ArrayList<String> getAutoIncrTag(){
@@ -307,7 +311,7 @@ public class ViewSpecs {
         public void insert(ArrayList<String> columns,ArrayList<String> values) throws SQLException {
 
             String query = "insert into " + table + "(" + stringifyColumns(columns) + ") values (" + getPrametrized(values.toArray(new String[values.size()])) + ")";
-            System.out.println(query);
+            //System.out.println(query);
             info.flushCount();
             Global.SQLConector.getMyStatment().executeUpdate(query);
 
@@ -320,6 +324,7 @@ public class ViewSpecs {
                 ArrayList<String> conditionValue
 
         ) throws SQLException {
+
             String primaryCol = getCol(getPrimarykey());
 
             if(colToMod.contains(primaryCol) && getPrimaryskey().size() == 1){
@@ -381,9 +386,7 @@ public class ViewSpecs {
                 } catch (SQLException throwables) {
                     throwables.printStackTrace();
                 }
-
             }
-
         }
 
         private void updteRelatedTables(String newPrimaryValue,String oldValue) throws SQLException {
@@ -418,7 +421,7 @@ public class ViewSpecs {
             stringifiedNewValues +=  " " + colToMod.get(i)  + " = " + mergeBranches(newValues.get(i));
 
             String query = "update " + table + " set "  + stringifiedNewValues + " where " + stringifyConditions(colCondition,conditionValue);
-            System.out.println(query);
+            //System.out.println(query);
             Global.SQLConector.getMyStatment().executeUpdate(query);
 
         }

@@ -59,7 +59,7 @@ public abstract class SubmitOperation extends OperationWindow{
     @Override
     public void buildOperation(){
         super.buildOperation();
-        thisWindow.addBody(getBody());
+        thisWindow.setBody(getBody());
     }
 
     protected abstract void submit();

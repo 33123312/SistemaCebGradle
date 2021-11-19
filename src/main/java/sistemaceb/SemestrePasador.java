@@ -38,7 +38,6 @@ public class SemestrePasador extends Window{
     }
 
     private void deployLayout(){
-        JScrollPane scroll = new JScrollPane();
         body = new LinearVerticalLayout();
             body.setBorder(new EmptyBorder(20,70,0,70));
             body.addElement(getDescLabel());
@@ -46,8 +45,7 @@ public class SemestrePasador extends Window{
             body.addElement(getAvanzarDeSemetreBtn());
             addControlsPanel();
 
-        scroll.setViewportView(body);
-        addBody(scroll);
+        setBody(body);
 
     }
 
@@ -143,7 +141,18 @@ public class SemestrePasador extends Window{
     }
 
     public void update(){
-        addGrupos();
+        String objClassName = "class sistemaceb.GrupoPasserWindow";
+        String className;
+        ViewAdapter win = Global.view.currentWindow;
+        if (win == null)
+            className = "";
+        else
+            className = win.thisWindow.getClass().toString();
+
+        System.out.println(className + " class sistemaceb.GrupoPasserWindow " + className.equals(objClassName));
+
+        if (!className.equals(objClassName))
+            addGrupos();
     }
 
     private void addGrupos(){
@@ -169,7 +178,7 @@ public class SemestrePasador extends Window{
 
     private JPanel getErrorGrupoMessage(){
         JPanel container = new JPanel(new GridLayout());
-        errorGrupoMessage = new JLabel("Uno de los grupos no tiene un grupo al que pasar los alumnos seleccionados asigndo");
+        errorGrupoMessage = new JLabel("Uno de los grupos no tiene un grupo al que pasar los alumnos asigndo");
             errorGrupoMessage.setAlignmentX(SwingConstants.CENTER);
             errorGrupoMessage.setForeground(Color.red);
             errorGrupoMessage.setBorder(new EmptyBorder(10,0,10,0));
@@ -288,7 +297,7 @@ public class SemestrePasador extends Window{
 
     private void submitPasers(){
         if(!newPeriodoGetter.hasErrors())
-        submit();
+            submit();
 
     }
 
@@ -339,13 +348,12 @@ public class SemestrePasador extends Window{
             periodoOldValue.add(oldPeriodo);
 
         try {
-            new ViewSpecs("currentperiodo").getUpdater().
-                update(
+            ViewSpecs specs = new ViewSpecs("currentperiodo");
+            specs.getUpdater().
+                insert(
                     periodoStringToMod,
-                    newPeriodoArray,
-                    periodoString,
-                    periodoOldValue
-                );
+                    newPeriodoArray);
+            specs.getUpdater().delete(periodoString,periodoOldValue);
 
         } catch (SQLException throwables) {
             throwables.printStackTrace();

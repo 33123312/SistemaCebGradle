@@ -31,7 +31,7 @@ public class CrudWindow extends Window {
         viewSpecs = new ViewSpecs(view);
         setTitle(viewSpecs.getInfo().getHumanName());
         consulterTable = new SimpleInsertTableBuild(view);
-        consulterTable.updateSearch();
+        //consulterTable.updateSearch();
         deployAll();
         
     }
@@ -46,7 +46,7 @@ public class CrudWindow extends Window {
             layout.addElement(getResetButon());
             layout.addElement(getSearchBar());
         addToHeader(layout);
-        addBody(deployBodyContainer());
+        setBody(deployBodyContainer());
     }
 
     private BtnFE getResetButon(){
@@ -141,10 +141,10 @@ public class CrudWindow extends Window {
                         Formulario tagForm = new FormWindow("Nuevo Tag");
                         ArrayList<String> columnsTofilter = viewSpecs.getTableTags();
                         ArrayList<String> keys = viewSpecs.getPrimaryskey();
-                        if (keys.size() < 2){
-                            String key = keys.get(0);
-                            columnsTofilter.remove(key);
-                        }
+
+                        if (keys.size() < 2)
+                            columnsTofilter.remove(keys.get(0));
+
 
                         new TagFormBuilder(viewSpecs,columnsTofilter,tagForm,false);
                         tagForm.addDataManager(
@@ -171,16 +171,14 @@ public class CrudWindow extends Window {
 
     
         
-    private editedScrollPanel deployTableAndControls(){
-        editedScrollPanel scroll = new editedScrollPanel();
+    private JPanel deployTableAndControls(){
         JPanel container = new  JPanel( new BorderLayout());
             container.add(deployTableOptionsContainer(),BorderLayout.NORTH);
             container.add(deployTableContainer(),BorderLayout.CENTER);
             container.setBackground(new Color(20,240,240));
-        scroll.setViewportView(container);
         container.setBackground(this.getBackground());
         container.setBorder(BorderFactory.createEmptyBorder(0,30,0,20));
-        return scroll;
+        return container;
     }
 
     public JPanel deployTableOptionsContainer(){

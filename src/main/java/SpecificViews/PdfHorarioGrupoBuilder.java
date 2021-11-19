@@ -9,6 +9,7 @@ import java.util.ArrayList;
 public class PdfHorarioGrupoBuilder extends PDFPlantillaTable{
     public PdfHorarioGrupoBuilder() {
         super("Horario de Grupo");
+        addMembreteLargo();
         initTable();
     }
 

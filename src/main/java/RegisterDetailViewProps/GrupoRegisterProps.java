@@ -2,7 +2,6 @@ package RegisterDetailViewProps;
 
 import SpecificViews.*;
 
-
 public class GrupoRegisterProps extends RegisterDetail{
 
     public GrupoRegisterProps(OperationInfoPanel infoPanel) {
@@ -21,7 +20,8 @@ public class GrupoRegisterProps extends RegisterDetail{
     private void addOps(){
         addOperation(new GrupoCalifChoserOp(infoPanel));
         addOperation(new HorarioBuilder(infoPanel));
-        addOperation(new HorarioConsulter(infoPanel));
+        addOperation(new ProfesorHorario(infoPanel));
+        //addOperation(new HorarioConsulter(infoPanel));
         addOperation(new GrupoCalifConsulter(infoPanel));
         addOperation(new ListadoAlumnosOp(infoPanel));
         addOperation(new ConcentradoTodasMateriasOp(infoPanel));

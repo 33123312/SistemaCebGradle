@@ -111,6 +111,9 @@ public class ViewAdapter extends  JPanel{
         updateButtons();
     }
 
+    public boolean hasfurther(){
+        return further != null;
+    }
     private void addToContainer(ViewAdapter view){
          Global.view.setNewView(view);
     }

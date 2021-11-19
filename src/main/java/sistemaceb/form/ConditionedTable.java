@@ -217,23 +217,19 @@ ConditionedTable {
     }
 
     public void determinateViewRelations(ArrayList<ConditionedTable> getters){
-        String table = specs.getTable();
 
         ArrayList<String> thisForeignViewsNameCol = specs.getInfo().getForeignRawCols();
         ArrayList<String> thisForeignViewsName = specs.getTag(thisForeignViewsNameCol);
+
 
         for(ConditionedTable viewToEvaluate:getters){
             int arraySize = thisForeignViewsName.size();
             for(int i = 0; i < arraySize; i++) {
                 String columnToCompare = thisForeignViewsName.get(i);
-
-                String nativeViewToCompare = determinateObjective(
-                        table,
-                        thisForeignViewsNameCol.get(i)
-                );
+                String nativeViewToCompare = determinateObjective(table, thisForeignViewsNameCol.get(i));
 
                 if (!nativeViewToCompare.equals(objectiveTable) &&
-                        viewToEvaluate.getObjectiveTable().equals(nativeViewToCompare)) {
+                    viewToEvaluate.getObjectiveTable().equals(nativeViewToCompare)) {
 
                     conditions.add(viewToEvaluate);
                     conditionsTranslations.put(columnToCompare, nativeViewToCompare);
@@ -246,16 +242,8 @@ ConditionedTable {
             }
             }
     }
-
     
     public ArrayList<ConditionedTable> getConditionals(){
-        
         return new ArrayList(conditions);
     }
-
-
-
-
-            
-    
 }

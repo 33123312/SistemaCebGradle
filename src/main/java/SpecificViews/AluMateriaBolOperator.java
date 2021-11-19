@@ -1,11 +1,18 @@
 package SpecificViews;
 
+import JDBCController.Table;
+import JDBCController.TableRegister;
+
 import java.util.ArrayList;
 
 public class AluMateriaBolOperator extends  AluMateriaOperator{
 
-    AluMateriaBolOperator(String materia,String type,String periodo,ALumnoOperator aLumnoOperator) {
-        super(materia,type,periodo,aLumnoOperator);
+    AluMateriaBolOperator(String materia, String periodo, TableRegister aluInfo, Table regi) {
+        super(materia,"A/NA",periodo,aluInfo,regi);
+    }
+
+    AluMateriaBolOperator(String materia, String periodo, TableRegister aluInfo) {
+        super(materia,"A/NA",periodo,aluInfo);
     }
 
     public String getPromFinal(){

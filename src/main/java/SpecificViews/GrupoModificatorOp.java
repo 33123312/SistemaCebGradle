@@ -24,7 +24,7 @@ public class GrupoModificatorOp extends DefaultModifyRegisterOp{
             @Override
             public void manageData(Formulario form) {
                 Map<String,String> data = form.getData();
-                listener.checkValues(data.get("Semestre"),data.get("Turno"));
+                listener.checkValues(data);
             }
         });
     }
@@ -61,9 +61,9 @@ public class GrupoModificatorOp extends DefaultModifyRegisterOp{
             return register;
         }
 
-        public void checkValues(String newSemestre,String newTurno){
+        public void checkValues(Map<String,String> data){
 
-            if(!newSemestre.equals(oldSemestre) || !newTurno.equals(oldTurno))
+            if(data.containsKey("Turno") || data.containsKey("Semestre"))
                 deleteHorarios();
 
         }

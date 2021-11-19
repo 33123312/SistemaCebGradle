@@ -23,6 +23,7 @@ public class BitacoraMateriaGrupoPDF extends PDFPlantillaTable{
         fillerCols = 25;
         this.alumnos = alumnos;
         rowCont = 1;
+        addMembreteLargo();
 
     }
 

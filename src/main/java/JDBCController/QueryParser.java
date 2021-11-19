@@ -8,7 +8,6 @@ public class QueryParser {
     protected String getPrametrized(String[] params){
 
         int arraySize = params.length -1;
-        if (arraySize > 0){
             StringBuilder builder = new StringBuilder();
             for (int i = 0; i < arraySize;i++){
                 builder.append(mergeBranches(params[i]));
@@ -18,8 +17,6 @@ public class QueryParser {
             builder.append(mergeBranches(params[arraySize]));
 
             return builder.toString();
-        }
-        return "";
     }
 
     protected String getEqualString(String cond,String val){
@@ -55,9 +52,20 @@ public class QueryParser {
         return stringyfiedColumns.toString();
     }
 
+    private void removeNulls(ArrayList<String> columnCondition,ArrayList<String> values){
+        int size = columnCondition.size();
+        for (int i = 0;i < size;i++)
+            if (values.get(i) == null){
+                columnCondition.remove(i);
+                values.remove(i);
+                i--;
+                size--;
+            }
 
+    }
 
     protected String stringifyConditions(ArrayList<String> columnCondition,ArrayList<String> values){
+        removeNulls(columnCondition,values);
         StringBuilder stringifiedConditions = new StringBuilder();
 
         int i;

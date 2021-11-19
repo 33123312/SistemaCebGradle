@@ -3,8 +3,11 @@ package SpecificViews;
 import JDBCController.DataBaseConsulter;
 import JDBCController.Table;
 import JDBCController.TableRegister;
+import sistemaceb.form.Global;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public class GrupoOperator extends TableOperator{
 
@@ -12,6 +15,7 @@ public class GrupoOperator extends TableOperator{
     public GrupoOperator(String grupo){
         super(grupo,"grupos");
         plan = getPlan();
+        materias = new HashMap();
     }
 
     public Table getMateriasList(String materias){
@@ -43,32 +47,69 @@ public class GrupoOperator extends TableOperator{
             return new Table(new ArrayList<>(),new ArrayList<>());
     }
 
+    Map<String,Table> materias;
+
     public Table getMaterias(String tipo){
         if(plan != null) {
-            DataBaseConsulter consulter = new DataBaseConsulter("planes_estudio_materias_view");
+            if (!materias.containsKey(tipo)) {
+                DataBaseConsulter consulter = new DataBaseConsulter("planes_estudio_materias_view");
 
-            String[] columnsToBring = new String[]{"materia","nombre_abr"};
+                String[] columnsToBring = new String[]{"materia", "nombre_abr"};
 
-            String[] cond = new String[]{"clave_plan","tipo_calificacion"};
+                String[] cond = new String[]{"clave_plan", "tipo_calificacion"};
 
-            String[] value = new String[]{plan,tipo};
+                String[] value = new String[]{plan, tipo};
 
-            Table materias = consulter.bringTable(columnsToBring, cond, value);
+                Table materias = consulter.bringTable(columnsToBring, cond, value);
 
-            return materias;
+                this.materias.put(tipo, materias);
+
+                return materias;
+            }  else return materias.get(tipo);
 
         } else
             return new Table(new ArrayList<>(),new ArrayList<>());
     }
 
-    private TableRegister getRegisterInfo(){
-        DataBaseConsulter consulter = new DataBaseConsulter("grupos");
+    public ArrayList<ALumnoOperator> getAlumnosOpUsBol(){
+        ArrayList<ALumnoOperator> op = new ArrayList<>();
+        Table alumnos = getFullAlumnos();
+        Table boleta = getboleta("alumno_bol_califa_charge_view");
 
-        String[] cond = new String[]{"grupo"};
+        for (int i = 0; i < alumnos.rowCount();i++){
+            TableRegister aluReg = alumnos.getRegisterObject(i);
+            op.add(new ALumnoOperator(aluReg,boleta,this));
+        }
 
-        String[] value = new String[]{tableRegister};
+        return op;
+    }
 
-        return consulter.bringTable(cond,value).getRegister(0);
+    public ArrayList<ALumnoOperator> getAlumnosOpUsNum(){
+        ArrayList<ALumnoOperator> op = new ArrayList<>();
+        Table alumnos = getFullAlumnos();
+        Table boleta = getboleta("alumno_num_califa_charge_view");
+
+        for (int i = 0; i < alumnos.rowCount();i++){
+            TableRegister aluReg = alumnos.getRegisterObject(i);
+            op.add(new ALumnoOperator(aluReg,boleta,this));
+        }
+
+        return op;
+
+    }
+
+
+    private Table getboleta(String view){
+
+        DataBaseConsulter consulter = new DataBaseConsulter(view);
+
+        String[] colsToBring = new String[]{"numero_control","materia","nombre_abr","calificacion","faltas","evaluacion"};
+
+        String[] cond = new String[]{"grupo","periodo"};
+
+        String[] val = new String[]{getTableRegister(), Global.conectionData.loadedPeriodo};
+
+        return consulter.bringTable(colsToBring,cond,val);
 
     }
 
@@ -87,25 +128,31 @@ public class GrupoOperator extends TableOperator{
     }
 
 
-    Table alumnos;
+
     public Table getAlumnos(){
-        if (alumnos == null) {
             DataBaseConsulter consulter = new DataBaseConsulter("alumnos_visible_view");
 
-            String[] colsToBring = new String[]{"numero_control", "nombre_completo"};
+            String[] colsB = new String[]{"numero_control","nombre_completo"};
 
             String[] cond = new String[]{"grupo"};
 
             String[] values = new String[]{tableRegister};
 
-            Table materias = consulter.bringTable(colsToBring, cond, values);
-
-            alumnos = materias;
+            Table materias = consulter.bringTable(colsB,cond, values);
 
             return materias;
-        }
 
-        return alumnos;
+    }
+
+    public Table getFullAlumnos(){
+            DataBaseConsulter consulter = new DataBaseConsulter("alumnos_visible_view");
+            String[] cond = new String[]{"grupo"};
+
+            String[] values = new String[]{tableRegister};
+
+            Table materias = consulter.bringTable(cond, values);
+
+            return materias;
 
     }
 
@@ -124,16 +171,25 @@ public class GrupoOperator extends TableOperator{
 
 
         public GrupoMateriaOperator(String materia){
-            operators = new ArrayList<>();
+            operators = getOperators(materia);
             defineOperators(materia);
 
+        }
+
+        private ArrayList<AluMateriaNumOperator> getOperators(String materiaKey){
+            ArrayList<ALumnoOperator> aluOp = getAlumnosOpUsNum();
+            ArrayList<AluMateriaNumOperator> numOP = new ArrayList<>();
+            for (ALumnoOperator op : aluOp)
+                numOP.add(op.getNumMatState(materiaKey));
+
+            return numOP;
         }
 
         private void defineOperators(String materia){
             ArrayList<String> alumnos = getAlumnos().getColumn(0);
             for (String alumno: alumnos){
                 ALumnoOperator operator = new ALumnoOperator(alumno);
-                operators.add((AluMateriaNumOperator)operator.getMateriaState(materia));
+                operators.add(operator.getNumMatState(materia));
             }
         }
 

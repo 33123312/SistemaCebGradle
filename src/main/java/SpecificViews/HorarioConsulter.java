@@ -78,24 +78,24 @@ public class HorarioConsulter extends Operation {
     }
 
     private ArrayList<ArrayList<String>> getCellDataList(String hora){
-        ArrayList<ArrayList<String>> cellData = new ArrayList<>();
         ArrayList<String> horaCell = new ArrayList<>();
-        horaCell.add(hora);
-        cellData.add(horaCell);
+            horaCell.add(hora);
+
+        ArrayList<ArrayList<String>> cellData = new ArrayList<>();
+            cellData.add(horaCell);
 
         return cellData;
     }
 
-    private ArrayList<ArrayList<String>> consultMaterias(String hora) {
+    private ArrayList<ArrayList<String>> consultMaterias(String horaOrder, String horaString) {
         DataBaseConsulter con = new DataBaseConsulter("asignaturas_horario_view");
-        ArrayList<String> materias = new ArrayList<>();
-        ArrayList<ArrayList<String>> cellData = getCellDataList(hora);
+        ArrayList<ArrayList<String>> cellData = getCellDataList(horaString);
 
         ArrayList<String> dias = getDias();
 
         for (String dia : dias) {
             ArrayList<String> dayConditionsValues = new ArrayList(conditionsValues);
-                dayConditionsValues.add(hora);
+                dayConditionsValues.add(horaOrder);
                 dayConditionsValues.add(dia);
 
             Table res = con.bringTable(
@@ -130,7 +130,7 @@ public class HorarioConsulter extends Operation {
         return consulter.bringTable(colsBring, cond, values).getUniqueValue();
     }
 
-    private ArrayList<String> getHoras(){
+    private Table getHoras(){
 
         return CalifasOperator.getHorasClase(getTurno());
     }
@@ -148,12 +148,15 @@ public class HorarioConsulter extends Operation {
 
     private ArrayList<ArrayList<String>> defineRegisters(){
         ArrayList<ArrayList<String>> register = new ArrayList<>();
-        ArrayList<String> horas = getHoras();
+        Table horas = getHoras();
+        ArrayList<ArrayList<String>> registers = horas.getRegisters();
 
         PdfHorarioGrupoBuilder pdf = new PdfHorarioGrupoBuilder();
-        for(String hora: horas)
-            pdf.addRowHora(consultMaterias(hora));
+        for(ArrayList<String> hora: registers){
+            pdf.addRowHora(
+                    consultMaterias(hora.get(0),hora.get(1)));
             //register.add(consultMaterias(hora));
+        }
         pdf.addTable();
         pdf.close();
 
@@ -161,7 +164,7 @@ public class HorarioConsulter extends Operation {
     }
 
     private void buildHorarioTable() {
-        ArrayList<String> horas = getHoras();
+        //ArrayList<String> horas = getHoras();
         ArrayList<String> dias = getDias();
 
         ArrayList<ArrayList<String>> materias = defineRegisters();

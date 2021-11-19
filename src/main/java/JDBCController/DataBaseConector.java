@@ -79,7 +79,7 @@ public class DataBaseConector {
 
         String connSpecs = "?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC";
         String URL = "jdbc:mysql://147.182.129.199:3306/";
-
+        myCon = null;
         try {
              myCon =
                      DriverManager.getConnection(

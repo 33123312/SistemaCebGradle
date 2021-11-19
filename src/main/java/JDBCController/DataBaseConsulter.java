@@ -68,7 +68,7 @@ public class DataBaseConsulter extends QueryParser{
     }
    
     private Table  buildRegisters( String query){
-        //System.out.println(query);
+        System.out.println(query);
         ResultSet response;
 
         ArrayList<ArrayList<String>> newTable = new ArrayList<>();

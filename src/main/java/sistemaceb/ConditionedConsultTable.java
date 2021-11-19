@@ -16,7 +16,7 @@ public class ConditionedConsultTable extends  NewRegisterGenTableBuild {
     public ConditionedConsultTable(String view, String critKey, ViewSpecs dadSpecs) {
         super(view, critKey, dadSpecs);
         setBehavior(new CrudTable(this));
-
+        getOutputTable().showAll();
     }
 
     @Override

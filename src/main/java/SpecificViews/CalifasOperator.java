@@ -1,6 +1,7 @@
 package SpecificViews;
 
 import JDBCController.DataBaseConsulter;
+import JDBCController.Table;
 
 import java.util.ArrayList;
 
@@ -19,13 +20,13 @@ public class CalifasOperator {
                 .bringTable().getColumn(0);
     }
 
-    public static ArrayList<String> getHorasClase(String turno){
+    public static Table getHorasClase(String turno){
 
-        return new DataBaseConsulter("horas_clase")
+        return new DataBaseConsulter("horas_clase_view")
                 .bringTable(
+                        new String[]{"orden","hora"},
                         new String[]{"turno"},
-                        new String[]{turno}).
-                        getColumn(0);
+                        new String[]{turno});
     }
 
     public static ArrayList<String> getDiasClase(){

@@ -21,7 +21,6 @@ public class MultipleFormsOperation extends SubmitOperation{
             if(form.checkErrors())
                 error = true;
 
-
         return error;
     }
 

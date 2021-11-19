@@ -48,12 +48,12 @@ public class SemestralCalifasChoser extends  HorizontalFormPanel{
 
     private void addValues(Map<String,String> response){
 
-        for(String title:materiasNombres){
-            String maeriaKey = materiasKeys.get(materiasNombres.indexOf(title));
+        for(Map.Entry<String,String> entry:response.entrySet()){
 
-            if(response.containsKey(title)) {
-                String califa = response.get(title);
-                addValue(maeriaKey, califa);
+            String maeriaKey = materiasKeys.get(materiasNombres.indexOf(entry.getKey()));
+
+            if(!entry.getValue().isEmpty()) {
+                addValue(maeriaKey, entry.getValue());
             }
             else
                 setEmpty(maeriaKey);
@@ -127,7 +127,7 @@ public class SemestralCalifasChoser extends  HorizontalFormPanel{
                     setRequired(false);
             Table currentCalifa = registerExists(materiasKeys.get(i));
             if (!currentCalifa.isEmpty())
-                in.setResponse(currentCalifa.getColumn("calificacion").get(0));
+                in.setDefaultValue(currentCalifa.getColumn("calificacion").get(0));
         }
     }
 

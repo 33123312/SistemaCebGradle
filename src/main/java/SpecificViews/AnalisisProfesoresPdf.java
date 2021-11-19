@@ -9,6 +9,7 @@ public class AnalisisProfesoresPdf extends PDFPlantillaTable{
     public AnalisisProfesoresPdf() {
         super("Análisis Numérico");
         etapas = getEtapas();
+        addMembreteLargo();
         deploy();
     }
 
@@ -61,13 +62,8 @@ public class AnalisisProfesoresPdf extends PDFPlantillaTable{
     private ArrayList<String> etapas;
 
     private ArrayList<String> getEtapas(){
-        ArrayList<String> etapas = new ArrayList<>();
-            etapas.add("1ra");
-            etapas.add("2da");
-            etapas.add("3ra");
-            etapas.add("4ta");
 
-        return etapas;
+        return CalifasOperator.getEvaluaciones();
     }
 
 }

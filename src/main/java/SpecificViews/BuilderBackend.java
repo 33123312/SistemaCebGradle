@@ -48,19 +48,22 @@ public class BuilderBackend extends opBackend{
         return new FormResponseManager() {
             @Override
             public void manageData(Formulario form) {
-                String rowValue = ((MultipleFormsPanel.keyedHForm)form).getHora();
-                Map<String,String> data = form.getData();
+                if(form.hasBeenModified()){
+                    String rowValue = ((MultipleFormsPanel.keyedHForm)form).getHora();
+                    Map<String,String> data = form.getData();
 
                     manageDatas(rowValue,data);
+                }
             }
         };
     }
 
     public void manageDatas(String rowValue, Map<String, String> calif){
-        for(String title:titles){
-            CellManager manager = getManager(title,rowValue);
-            if(calif.containsKey(title))
-                manager.insertValues(calif.get(title));
+        for(Map.Entry<String,String> entry: calif.entrySet()){
+
+            CellManager manager = getManager(entry.getKey(),rowValue);
+            if(!entry.getValue().isEmpty())
+                manager.insertValues(entry.getValue());
              else
                 manager.setEmpty();
 

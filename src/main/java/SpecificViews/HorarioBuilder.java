@@ -26,6 +26,7 @@ public class HorarioBuilder extends MultipleFormsOperation{
     @Override
     public void buildOperation() {
         super.buildOperation();
+        materias = getMaterias();
         thisWindow.setTitle("Modificar Horario");
         dias = getDias();
         if(hasPlan())
@@ -76,7 +77,7 @@ public class HorarioBuilder extends MultipleFormsOperation{
         return dias;
     }
 
-    private ArrayList getHorasClase(){
+    private Table getHorasClase(){
 
         return CalifasOperator.getHorasClase(getTurno());
     }
@@ -117,7 +118,10 @@ public class HorarioBuilder extends MultipleFormsOperation{
         missigLabel.setFont(new Font("Arial", Font.PLAIN, 30));
         missigLabel.setForeground(new Color(150,150,150));
 
-        thisWindow.addBody(missigLabel);
+        JPanel auxPan = new JPanel();
+            auxPan.add(missigLabel);
+
+        thisWindow.setBody(auxPan);
     }
 
     private boolean hasPlan(){
@@ -136,6 +140,7 @@ public class HorarioBuilder extends MultipleFormsOperation{
     }
 
     private Map<String,String> getCurrentMaterias(String hora){
+
         DataBaseConsulter con = new DataBaseConsulter("horarios_view");
 
         String[] columnsToBring = new String[]{"nombre_abr","dia"};
@@ -178,11 +183,37 @@ public class HorarioBuilder extends MultipleFormsOperation{
         back.insertTitle();
         back.insertRow();
 
-        MultipleFormsPanel panel = new MultipleFormsPanel(back, getRowTitlesTable());
+        initMaterias();
+
+        MultipleFormsPanel panel = new MultipleFormsPanel(back, getHorasClase(),getHorario());
             panel.addBuilder(getBuilder(panel));
 
 
         addForm("Horario", panel);
+    }
+
+    private Table getHorario(){
+        DataBaseConsulter consulter = new DataBaseConsulter("asignaturas_horario_view");
+
+        String[] colsToBring = new String[]{"materia","nombre_abr","profesor","nombre_completo","hora","dia"};
+
+        String[] cond = new String[]{"grupo"};
+
+        String[] val = new String[]{keyValue};
+
+        return consulter.bringTable(colsToBring,cond,val);
+
+    }
+
+    Map<String,Map<String,String>> materiasOP;
+
+    private void initMaterias(){
+        ArrayList<String> horas = getHorasClase().getColumn("orden");
+        materiasOP = new HashMap<>();
+        for (String hora:horas){
+            materiasOP.put(hora,getCurrentMaterias(hora));
+        }
+
     }
 
     private MultipleFormsPanel.FormElementBuilder getBuilder(MultipleFormsPanel panel){
@@ -190,7 +221,7 @@ public class HorarioBuilder extends MultipleFormsOperation{
             @Override
             public FormElement buildElement(Formulario form, String title, String row) {
 
-                Map<String,String> currentValues = getCurrentMaterias(row);
+                Map<String,String> currentValues = materiasOP.get(row);
 
                 formElementWithOptions newElement = (formElementWithOptions)form.addDesplegableMenu(title).
                         setRequired(false).
@@ -279,22 +310,9 @@ public class HorarioBuilder extends MultipleFormsOperation{
 
     }
 
-    private Table getRowTitlesTable(){
-        ArrayList<ArrayList<String>> registers = new ArrayList<>();
-        ArrayList<String> horasClase = getHorasClase();
-
-            for (String columnCell: horasClase){
-                ArrayList<String> newRegister = new ArrayList<>();
-                    newRegister.add(columnCell);
-                    newRegister.add(columnCell);
-                registers.add(newRegister);
-            }
-
-        return new Table(new ArrayList<>(),registers);
-    }
+    Table materias;
 
     private Table getNewMaterias(String dia){
-        Table materias = getMaterias();
         Table newMaterias = new Table(materias);
         ArrayList<String> titles = newMaterias.getColumnTitles();
         titles.set(1,dia);

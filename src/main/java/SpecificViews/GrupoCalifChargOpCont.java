@@ -15,7 +15,6 @@ public class GrupoCalifChargOpCont {
     private ArrayList<String> colsToSet;
     private ArrayList<String> colsToSetHuman;
     private Map<String,String> extraSearchCond;
-    private ArrayList<String> cols;
     private ViewSpecs specs;
     private ArrayList<AlumnoManager> managers;
     private String procedure;
@@ -55,8 +54,11 @@ public class GrupoCalifChargOpCont {
     }
 
     public void init(){
-        initCols();
         initManagers();
+    }
+
+    public ArrayList<String> getColsToSet() {
+        return colsToSet;
     }
 
     public ArrayList<AlumnoManager> getManagers() {
@@ -65,6 +67,7 @@ public class GrupoCalifChargOpCont {
 
     public ArrayList<String> getHumanCols(){
         ArrayList<String> core = new ArrayList<>();
+        core.add("No. Li.");
         core.add("Matrícula");
         core.add("Nombre Completo");
         core.addAll(colsToSetHuman);
@@ -86,15 +89,6 @@ public class GrupoCalifChargOpCont {
         return false;
     }
 
-    private void initCols(){
-        ArrayList<String> initialRegiter = new ArrayList<>();
-            initialRegiter.add("numero_control");
-            initialRegiter.add("nombre_completo");
-            initialRegiter.add("calificacion_clave");
-            initialRegiter.addAll(colsToSet);
-
-        cols = initialRegiter;
-    }
 
     private Table consultCalifas() {
         DataBaseConsulter consulter = new DataBaseConsulter(view);
@@ -179,6 +173,7 @@ public class GrupoCalifChargOpCont {
 
         public ArrayList<String> getCoreInfo(){
          ArrayList<String> coreInfo= new ArrayList<>();
+            coreInfo.add(alumnoInfo.get("numero_lista"));
             coreInfo.add(alumnoInfo.get("numero_control"));
             coreInfo.add(alumnoInfo.get("nombre_completo"));
             for (String colToSet:colsToSet)
@@ -196,11 +191,12 @@ public class GrupoCalifChargOpCont {
         }
 
         private Boolean califasAreNull(){
-            boolean califasWereSettedToNull = false;
-            for (String col:colsToSet)
-                califasWereSettedToNull = valueIsNull(col);
 
-            return califasWereSettedToNull;
+            for (String col:colsToSet)
+                if (!valueIsNull(col))
+                    return false;
+
+            return true;
         }
 
         private Boolean hasCalifKey(){
@@ -212,8 +208,9 @@ public class GrupoCalifChargOpCont {
         }
 
         public void submit(){
-            changeEmptyToNULL();
+
             if (hasBeenModified){
+                changeEmptyToNULL();
                 if(hasCalifKey())
                     if (califasAreNull())
                         deleteCalifa();

@@ -1,6 +1,8 @@
 package SpecificViews;
 
 import JDBCController.DataBaseConsulter;
+import JDBCController.Table;
+import JDBCController.TableRegister;
 
 import java.util.ArrayList;
 
@@ -10,23 +12,44 @@ AluMateriaOperator{
     ArrayList<String> parcialesCal;
     String materiaType;
     String origin;
-    ALumnoOperator aLumnoOperator;
+    TableRegister aluInfo;
     ArrayList<String> evuacionesPar;
-    ArrayList<String> evas;
     String periodo;
+    Table defData;
 
-    AluMateriaOperator(String materia,String type,String periodo,ALumnoOperator aLumnoOperator){
+    AluMateriaOperator(String materia,String tipo,String periodo,TableRegister alumno,Table generalRes){
+
         this.periodo = periodo;
-        evas = getEvaluaciones();
-        this.aLumnoOperator = aLumnoOperator;
+        this.aluInfo = alumno;
         this.materia = materia;
+        getDefData(generalRes);
         evuacionesPar = getEvaluaciones();
-        materiaType =  type;
+        materiaType =  tipo;
         origin = getOrigin();
         parcialesCal = buildAlumnoParRow();
 
     };
 
+    AluMateriaOperator(String materia,String tipo,String periodo,TableRegister alumno){
+        this.periodo = periodo;
+        this.aluInfo = alumno;
+        this.materia = materia;
+        evuacionesPar = getEvaluaciones();
+        materiaType =  tipo;
+        origin = getOrigin();
+        parcialesCal = buildAlumnoParRow();
+
+    };
+
+    private void getDefData(Table generalRes){
+        Table sub = generalRes.getSubTable(new String[]{"numero_control","materia"},new String[]{aluInfo.get("numero_control"),materia});
+
+        if (sub.isEmpty())
+            defData =  new Table(new ArrayList(), new ArrayList());
+        else
+            defData = sub;
+
+    }
 
 
     public boolean isBoolean(){
@@ -43,7 +66,7 @@ AluMateriaOperator{
 
     public String getValueFromEva(String eva,ArrayList<String> values){
 
-        int evaIndex = evas.indexOf(eva);
+        int evaIndex = evuacionesPar.indexOf(eva);
         String value  = values.get(evaIndex);
 
         if(value == null)
@@ -63,64 +86,53 @@ AluMateriaOperator{
 
     private String getOrigin(){
         if(materiaType.equals("A/NA"))
-            return "calificaciones_booleanas_view";
+            return "alumno_bol_califa_charge_view";
         else
-            return  "calificaciones_numericas_view";
+            return  "alumno_num_califa_charge_view";
 
     }
 
 
     private ArrayList<String> buildAlumnoParRow(){
-        return getParValue("calificacion");
+        return getParValue(getCalifas(),"calificacion");
     }
 
     public ArrayList<String> getFaltas(){
-        return getParValue("faltas");
+        return getParValue(getCalifas(),"faltas");
     }
 
-    public ArrayList<String> getParValue(String dataToBring){
+
+    private Table getCalifas(){
+        if (defData == null) {
+
+            DataBaseConsulter consulter = new DataBaseConsulter(origin);
+
+            Table califas = consulter.bringTable(new String[]{
+                    "periodo",
+                    "materia",
+                    "numero_control",
+            }, new String[]{
+                    periodo,
+                    materia,
+                    aluInfo.get("numero_control")
+            });
+
+            return califas;
+        } else return defData;
+    }
+
+    private ArrayList<String> getParValue(Table respon,String dataType){
         ArrayList<String>  register = new ArrayList<>();
         for (String eva:evuacionesPar){
-            String calificacionString = getCalificacionCell(eva,origin,dataToBring);
-            register.add(calificacionString);
+            Table reg = respon.getSubTable(new String[]{"evaluacion"},new String[]{eva});
+            if (reg.isEmpty())
+                register.add("");
+            else
+                register.add(reg.getRegisterObject(0).get(dataType));
         }
 
         return register;
     }
-
-
-    private String getCalificacionCell(String evaluacion,String table,String dataToBring){
-        DataBaseConsulter consulter = new DataBaseConsulter(table);
-
-        String[] colsToBring = new String[]{dataToBring};
-
-        String[] cond = new String[]{
-                "periodo",
-                "semestre",
-                "materia",
-                "evaluacion",
-                "clave_alumno"
-        };
-
-        String[] values = new String[]{
-                periodo,
-                aLumnoOperator.getRegisterValue("semestre"),
-                materia,
-                evaluacion,
-                aLumnoOperator.getTableRegister()
-
-
-        };
-
-        String calif = consulter.bringTable(colsToBring,cond,values).getUniqueValue();
-
-        if (calif == null)
-            calif = "";
-
-
-        return calif;
-    }
-
 
 
     public abstract String getPromFinal();

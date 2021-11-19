@@ -99,8 +99,9 @@ public class PlanosMateriasPills extends RegisterDetailTable {
                 form.addOnAcceptEvent(new genericEvents() {
                     @Override
                     public void genericEvent() {
-                        rem(selectdKey);
                         form.closeForm();
+                        rem(selectdKey);
+
                     }
                 });
             }

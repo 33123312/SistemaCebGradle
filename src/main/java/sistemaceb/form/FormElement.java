@@ -27,10 +27,10 @@ FormElement extends JPanel{
     protected ArrayList<TrigerElemetGetter> trigerElementEvents;
     private String defaultValue;
 
-    public FormElement(String title,String defaultValue){
+    public FormElement(String title){
+        defaultValue = "";
         trigerElementEvents = new ArrayList();
         errorChecker = new ArrayList();
-        this.defaultValue = defaultValue;
         setBackground(Color.white);
         this.title = title;
         trueTitle = title;
@@ -44,10 +44,6 @@ FormElement extends JPanel{
         
     }
 
-    public ArrayList<TrigerElemetGetter> getTrigerElementEvents() {
-        return trigerElementEvents;
-    }
-
     public FormElement setTrueTitle(String trueTitle) {
         this.trueTitle = trueTitle;
         return this;
@@ -55,9 +51,7 @@ FormElement extends JPanel{
 
     public abstract void useDefval();
 
-    public void setDefaultValue(String defaultValue) {
-        this.defaultValue = defaultValue;
-    }
+
 
     public String getDefaultValue() {
         return defaultValue;
@@ -152,81 +146,66 @@ FormElement extends JPanel{
     public String getResponse(){
         desactivateErrorMesage();
         String response = getResponseConfig();
+
         response.trim();
-        return response;
+
+        if (response.equals(defaultValue))
+            return null;
+        else
+            return response;
     }
-    
+
     protected String getResponseConfig(){
-        
+
         return "";
     }
     
 public boolean hasErrors(){
-    String error = searchForError();
-    boolean hasError = !"".equals(error);
+    String error = checkErrors();
+    boolean hasError = !error.isEmpty();
     if(hasError)
         activateErrorMesage(error);
     
     return hasError;
 }
 
-public boolean isEmpty(){
-    
-    return getResponse().equals("");
-}
 
-private void addEmptyError(){
+    private void addEmptyError(){
     addErrorChecker(new ErrorChecker(){
         @Override
         public String checkForError(String response) {
-            if(response.equals(""))
-                if(isRequired())
-                    return "Campo Obligatorio";
-                 else
-                    return "";
-            else
-                return "";
+            if(!hasBeenModified() && isRequired())
+                 return "Campo Obligatorio";
+
+            return "";
         }
     });
 }
+    public void setResponse(String response){
 
-private String originalValue;
-public boolean hasBeenModfied(){
+    };
 
-    System.out.println(originalValue + "-" + getResponse());
-    return !originalValue.equals(getResponse());
-}
-
-public void setResponse(String txt){
-    if (originalValue == null)
-        originalValue= txt;
-};
-
-public boolean isSetted(){ return !getResponse().equals("");
-}
-
-
-protected String searchForError(){
-
-    if(getResponse().equals(""))
-        if(isRequired())
-            return "Campo Obligatorio";
-        else
-            return "";
-    else
-        return  checkErrors();
-
-}
-
-private String checkErrors(){
-    for(ErrorChecker checker:errorChecker){
-        String error = checker.checkForError(getResponse());
-        if(!error.equals(""))
-            return error;
+    public void setDefaultValue(String defaultValue) {
+        this.defaultValue = defaultValue;
+        setResponse(defaultValue);
     }
 
-    return "";
-}
+    public boolean hasBeenModified(){
+        return getResponse() != null;
+    }
+
+    private String checkErrors(){
+        if (hasBeenModified())
+        for(ErrorChecker checker:errorChecker){
+            String error = checker.checkForError(getResponse());
+            if(!error.isEmpty()){
+                System.out.println("Error: " + error);
+                return error;
+            }
+        }
+
+        return "";
+    }
 
 public FormElement addErrorChecker(ErrorChecker checker){
     errorChecker.add(checker);

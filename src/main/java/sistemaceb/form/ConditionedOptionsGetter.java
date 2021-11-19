@@ -15,6 +15,7 @@ import java.util.ArrayList;
  * @author escal
  */
 public class ConditionedOptionsGetter extends CommonRegistersGetter{
+
     public ConditionedOptionsGetter(ViewSpecs specs){
         super(specs);
             setOptionsGetter(getColumnsOptionsGetters());
@@ -29,7 +30,6 @@ public class ConditionedOptionsGetter extends CommonRegistersGetter{
         int size = tables.size();
         for(int i = 0;i < size;i++)
             conditionedTables.add(new ConditionedTable(cols.get(i),tables.get(i),specs.getTable()));
-
 
         return conditionedTables;
     }

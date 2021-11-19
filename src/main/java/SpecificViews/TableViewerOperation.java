@@ -17,17 +17,15 @@ public abstract class TableViewerOperation extends OperationWindow {
     @Override
     public void buildOperation(){
         super.buildOperation();
-        thisWindow.addBody(getBody());
+        thisWindow.setBody(getBody());
         tables = new ArrayList<>();
 
     }
 
-    private JScrollPane getBody(){
-        JScrollPane scroll = new JScrollPane();
+    private JPanel getBody(){
             body = new LinearVerticalLayout();
-            scroll.setViewportView(body);
 
-        return scroll;
+        return body;
     }
 
     protected  void removeAllTables(){

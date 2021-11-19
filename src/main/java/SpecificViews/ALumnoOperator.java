@@ -1,8 +1,11 @@
 package SpecificViews;
 
 import JDBCController.DataBaseConsulter;
+import JDBCController.Table;
+import JDBCController.TableRegister;
 import sistemaceb.form.Global;
 
+import java.awt.desktop.PreferencesEvent;
 import java.util.ArrayList;
 
 public class  ALumnoOperator extends TableOperator{
@@ -12,6 +15,60 @@ public class  ALumnoOperator extends TableOperator{
         super(aluMatr,"alumnos");
         grupoOperator =
                 new GrupoOperator(getTableInfo().get("grupo"));
+    }
+
+    public ALumnoOperator(TableRegister aluInfo,Table boleta,GrupoOperator op){
+        super(aluInfo.get("numero_control"),"alumnos",aluInfo);
+        this.boleta = boleta;
+        grupoOperator = op;
+
+    }
+    public ArrayList<AluMateriaBolOperator> getBolBoleta(){
+        ArrayList<AluMateriaBolOperator> op = new ArrayList<>();
+        ArrayList<String> materiasBol = grupoOperator.getMaterias("A/NA").getColumn("materia");
+
+
+        for (String key: materiasBol)
+            if(boleta == null){
+                Table fullResB = getboleta("alumno_bol_califa_charge_view");
+                op.add(new AluMateriaBolOperator(key,Global.conectionData.loadedPeriodo,getTableInfo(),fullResB));
+            } else
+                op.add(new AluMateriaBolOperator(key, Global.conectionData.loadedPeriodo,getTableInfo(),boleta));
+
+        return op;
+    }
+
+    public ArrayList<AluMateriaNumOperator> getNumBoleta(){
+        ArrayList<AluMateriaNumOperator> op = new ArrayList<>();
+        ArrayList<String> materiasNum = grupoOperator.getMaterias("Numérica").getColumn("materia");
+
+
+        for (String key: materiasNum)
+            if(boleta == null){
+                Table fullResN = getboleta("alumno_num_califa_charge_view");
+                op.add(new AluMateriaNumOperator(key,Global.conectionData.loadedPeriodo,getTableInfo(),fullResN));
+            } else
+                op.add(new AluMateriaNumOperator(key, Global.conectionData.loadedPeriodo,getTableInfo(),boleta));
+
+        return op;
+    }
+
+    public Table boleta;
+
+    private Table getboleta(String view){
+
+        if (boleta == null){
+            DataBaseConsulter consulter = new DataBaseConsulter(view);
+
+            String[] colsToBring = new String[]{"numero_control","materia","nombre_abr","calificacion","faltas","evaluacion"};
+
+            String[] cond = new String[]{"numero_control","periodo"};
+
+            String[] val = new String[]{getTableRegister(),Global.conectionData.loadedPeriodo};
+
+            return consulter.bringTable(colsToBring,cond,val);
+        } else return boleta;
+
     }
 
     public static String getMateriaType(String materia){
@@ -26,16 +83,29 @@ public class  ALumnoOperator extends TableOperator{
         return consulter.bringTable(colsToBring,cond,val).getUniqueValue();
     }
 
-    public AluMateriaOperator getMateriaState(String materia){
-        return getMateriaState(materia, Global.conectionData.loadedPeriodo);
+    public AluMateriaBolOperator getBolMatState(String materia){
+        String periodo = Global.conectionData.loadedPeriodo;
+        if (boleta == null)
+            return new AluMateriaBolOperator(materia, periodo,getTableInfo());
+        else
+            return new AluMateriaBolOperator(materia,periodo,getTableInfo(),boleta);
     }
 
-    public AluMateriaOperator getMateriaState(String materia,String periodo){
+    public AluMateriaNumOperator getNumMatState(String materia){
+        String periodo = Global.conectionData.loadedPeriodo;
+        if (boleta == null)
+            return new AluMateriaNumOperator(materia, periodo,getTableInfo());
+        else
+            return new AluMateriaNumOperator(materia,periodo,getTableInfo(),boleta);
+    }
+
+    public AluMateriaOperator getMateriaState(String materia){
+
         String materiaType = getMateriaType(materia);
         if (materiaType.equals("A/NA"))
-            return new AluMateriaBolOperator(materia,materiaType, periodo,this);
+            return getNumMatState(materia);
         else
-            return new AluMateriaNumOperator(materia,materiaType, periodo,this);
+            return getBolMatState(materia);
     }
 
     public TodasMateriasOps getMateriaOperators(){

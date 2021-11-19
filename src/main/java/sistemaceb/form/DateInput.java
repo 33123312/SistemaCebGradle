@@ -23,7 +23,7 @@ public class DateInput extends FormElement{
     limitedImput año;
     
     public DateInput(String title){
-        super(title,"");
+        super(title);
         addWrongTypeError();
         add(buildInputsSec(),BorderLayout.CENTER);
         currentElement = this;
@@ -64,9 +64,9 @@ public class DateInput extends FormElement{
     private JPanel buildInputsSec(){
         JPanel parentCont = new JPanel(new GridLayout(1,3));
         
-        dia = new limitedImput(2);
-        mes = new limitedImput(2);
-        año = new limitedImput(2);
+        dia = new limitedImput().setLimit(2);
+        mes = new limitedImput().setLimit(2);
+        año = new limitedImput().setLimit(2);
         
         dia.setText("DD");
         mes.setText("MM");
@@ -98,7 +98,7 @@ public class DateInput extends FormElement{
         )
             return "";
 
-        return "20" + addZero(año.getText()) + "-" + addZero(mes.getText()) + "-" + addZero(dia.getText());
+        return "20" + año.getText() + "-" + mes.getText() + "-" + dia.getText();
 
     }
     
@@ -107,8 +107,6 @@ public class DateInput extends FormElement{
             
             @Override
             public String checkForError(String response) {
-
-                
                 try{
                     Integer.parseInt(año.getText());
                     Integer.parseInt(mes.getText());
@@ -127,13 +125,7 @@ public class DateInput extends FormElement{
             }
         });
     }
-    
-    protected String addZero(String value){
-        if(value.length() == 1)
-            return "0" + value;
-        else
-            return value;
-    }
+
 
 
 

@@ -14,6 +14,7 @@ public class BoletaPDFBuilder extends PDFPlantillaTable{
     public BoletaPDFBuilder(ArrayList<String> evaluaciones) {
         super("Boleta de Calificaciones");
         this.evaluaciones = evaluaciones;
+        addMembreteLargo();
     }
 
 

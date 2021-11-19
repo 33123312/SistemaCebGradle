@@ -50,12 +50,14 @@ public class AsignturasPillChoser extends RegisterDetailTable {
             public void manageData(Formulario form) {
                 Map<String,String> formResponse = form.getData();
                 ArrayList<String> cond = new ArrayList<>(formResponse.keySet());
-                cond.add("grupo");
+                    cond.add("grupo");
                 ArrayList<String> values = new ArrayList<>(formResponse.values());
-                values.add(critValue);
+                    values.add(critValue);
 
                 try {
+
                     new ViewSpecs("asignaturas").getUpdater().insert(cond,values);
+
                 } catch (SQLException throwables) {
                     throwables.printStackTrace();
                     FormDialogMessage mess = new FormDialogMessage("Error","El registro que se ha intentado insertar ya éxiste en la base de datos, no se puede insertar nuevamente");
@@ -155,8 +157,6 @@ public class AsignturasPillChoser extends RegisterDetailTable {
             }
         });
     }
-
-
 
     private FormWindow getFormBuild() {
 

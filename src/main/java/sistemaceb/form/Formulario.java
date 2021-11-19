@@ -67,7 +67,7 @@ public abstract class Formulario extends JPanel {
 
     private void setValue(String title,ArrayList<String> titles,ArrayList<String> values) {
         FormElement element = getElement(title);
-        if (element.isSetted())
+        if (element.hasBeenModified())
             return;
         else{
             ArrayList<String> parents = getParents(title);
@@ -75,7 +75,7 @@ public abstract class Formulario extends JPanel {
                 setValue(parent,titles,values);
 
             String value = values.get(titles.indexOf(title));
-            element.setResponse(value);
+            element.setDefaultValue(value);
 
         }
     }
@@ -83,7 +83,7 @@ public abstract class Formulario extends JPanel {
     private boolean parentsAreSetted(String tag){
         ArrayList<String> parents = getParents(tag);
         for (String parent: parents){
-            boolean parentIsSetted = getElement(parent).isSetted();
+            boolean parentIsSetted = getElement(parent).hasBeenModified();
             if(!parentIsSetted)
                 return false;
         }
@@ -111,7 +111,6 @@ public abstract class Formulario extends JPanel {
     }
 
     public FormElement getElement(String element){
-
         return elements.get(elementTitles.indexOf(element));
     }
 
@@ -135,6 +134,13 @@ public abstract class Formulario extends JPanel {
             
         return newInput;
     }
+
+    public HourInput addHourInput(String title){
+        HourInput input = new HourInput(title);
+        addElement(title,input);
+
+        return input;
+    }
     
     public DesplegableMenu addDesplegableMenu(String title){
         
@@ -147,7 +153,7 @@ public abstract class Formulario extends JPanel {
 
     public boolean hasBeenModified(){
         for (FormElement element:elements)
-            if (element.hasBeenModfied())
+            if (element.hasBeenModified())
                 return true;
 
         return false;
@@ -189,7 +195,7 @@ public abstract class Formulario extends JPanel {
 
             if(virtualParents.containsKey(parentElementName)){
                 Input auxCtrl = new Input("",dataType.VARCHAR);
-                    auxCtrl.setResponse(virtualParents.get(parentElementName));
+                    auxCtrl.setDefaultValue(virtualParents.get(parentElementName));
 
                 triggerEvent.onTrigger(auxCtrl);
             }
@@ -230,6 +236,7 @@ public abstract class Formulario extends JPanel {
     };
 
     protected void addElement(FormElement element){
+
         element.getCurrentElement().
             addFocusListener(new FocusAdapter() {
                 @Override
@@ -238,6 +245,7 @@ public abstract class Formulario extends JPanel {
                 focusedElementIndex = elements.indexOf(element);
                 }
             });
+
         element.addTrigerGetterEvent(new TrigerElemetGetter() {
             @Override
             public void onTrigger(FormElement element) {
@@ -247,14 +255,27 @@ public abstract class Formulario extends JPanel {
     };
 
     public void changeFocusTo(int i){
-        elements.get(i).currentElement.requestFocus();
+        changeFocusTo(elements.get(i).currentElement);
+    }
+    public void changeFocusTo(JComponent comp){
+        comp.requestFocus();
+    }
+
+    private JComponent lastElementToFocus;
+
+    public void setLastElementToFocus(JComponent lastElementToFocus) {
+        this.lastElementToFocus = lastElementToFocus;
     }
 
     private void changeFocusToNext(){
         int nextIndex = focusedElementIndex+1;
-        if (nextIndex < elements.size())
-            changeFocusTo(nextIndex);
-
+        if (nextIndex < elements.size()) {
+            if (elements.get(nextIndex).getCurrentElement().isEnabled())
+                changeFocusTo(nextIndex);
+        }
+        else if(lastElementToFocus != null){
+            changeFocusTo(lastElementToFocus);
+        }
     }
 
     public boolean hasErrors(){
@@ -264,24 +285,6 @@ public abstract class Formulario extends JPanel {
                 error =  true;
 
         return error;
-    }
-
-    public Map<String,String> getAllData(){
-        Map<String,String> data = new HashMap();
-        for(FormElement element: elements)
-            if(validateElementErrors(element))
-                data.put(element.getTrueTitle(),element.getResponse());
-
-        return data;
-    }
-
-    public Map<String,String> getAllGuiData(){
-        Map<String,String> data = new HashMap();
-        for(FormElement element: elements)
-            if(validateElementErrors(element))
-                data.put(element.getTitle(),element.getResponse());
-
-        return data;
     }
     
     public Map<String,String> getData(){
@@ -313,7 +316,7 @@ public abstract class Formulario extends JPanel {
 
     private boolean validateElement(FormElement element){
         if(validateElementErrors(element)) {
-            if (element.isEmpty())
+            if (!element.hasBeenModified())
                 return false;
         } else return false;
 

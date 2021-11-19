@@ -21,8 +21,17 @@ public class Table {
         this.registers = getNewRegisters(registers);
     }
     public Table(Table model){
-        this.columnTitles = new ArrayList<>(model.getColumnTitles());
-        this.registers = new ArrayList<>(model.getRegisters());
+        this.columnTitles = new ArrayList(model.getColumnTitles());
+        this.registers = model.getRegisterCopy();
+    }
+
+    public ArrayList<ArrayList<String>> getRegisterCopy(){
+        ArrayList<ArrayList<String>> registersA = new ArrayList<>();
+        for (ArrayList<String> register: registers)
+            registersA.add(new ArrayList(register));
+
+
+        return registersA;
     }
 
     private ArrayList<ArrayList<String>> getNewRegisters(ArrayList<ArrayList<String>> registers){
@@ -113,19 +122,39 @@ public class Table {
         
         return new TableRegister(columnTitles,registers.get(index));
     }
-    
-    
-        public TableRegister getRegister(int index){
+
+    public TableRegister getRegister(int index){
         
         return new TableRegister(columnTitles,registers.get(index));
     }
 
-    public String printContent() {
-        System.out.println("------------------------------------");
-        for (ArrayList<String> register: registers)
-            System.out.println(register);
+    public Table getSubTable(String[] cond,String[] val){
+        int condLength = cond.length;
+        int[] colIndex = getIndexes(condLength,cond);
+        ArrayList<ArrayList<String>> res = new ArrayList<>();
 
-        return "";
+        for (ArrayList<String> register: registers){
+            boolean hasCoincidence = true;
+            for (int i = 0;i < condLength;i++)
+                if (!val[i].equals(register.get(colIndex[i]))){
+                    hasCoincidence = false;
+                    break;
+                }
+
+            if (hasCoincidence)
+                res.add(register);
+        }
+
+        return new Table(getColumnTitles(),res);
+    }
+
+    private int[] getIndexes(int condLength,String[] cond){
+        int[] colIndex = new int[condLength];
+        for (int i= 0; i < condLength;i++){
+            int index = columnTitles.indexOf(cond[i]);
+            colIndex[i] = index;
+        }
+        return colIndex;
     }
 
     public int rowCount(){
@@ -142,6 +171,7 @@ public class Table {
 
         return 0;
     }
+
         
     public TableRegister getRegister(String tag,String value){
         TableRegister returnRegister;

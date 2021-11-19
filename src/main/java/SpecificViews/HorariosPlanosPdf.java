@@ -21,6 +21,7 @@ public class HorariosPlanosPdf extends PDFPlantillaTable{
         ArrayList<String> newTitles = new ArrayList<>(titles);
         newTitles.add(0,"");
         newTitles.add(0,"");
+        addMembreteLargo();
         setTable(getSizes());
         addTitles(newTitles);
     }

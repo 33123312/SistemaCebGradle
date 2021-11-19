@@ -1,19 +1,30 @@
 package SpecificViews;
 
 import JDBCController.DataBaseConsulter;
+import JDBCController.Table;
+import JDBCController.TableRegister;
 
 import java.util.ArrayList;
 
 public class AluMateriaNumOperator extends AluMateriaOperator{
 
-    String calificacionSemestral;
-    AluMateriaNumOperator(String materia,String type,String periodo,ALumnoOperator aLumnoOperator) {
-        super(materia,type,periodo, aLumnoOperator);
+    private String calificacionSemestral;
 
-        calificacionSemestral = detSemetrCalif();
+    AluMateriaNumOperator(String materia, String periodo, TableRegister aLumnoOperator, Table req) {
+        super(materia,"Numérica",periodo, aLumnoOperator,req);
+
+    }
+
+    AluMateriaNumOperator(String materia, String periodo, TableRegister aLumnoOperator) {
+        super(materia,"Numérica",periodo, aLumnoOperator);
+
+
     }
 
     public String getCalifSemestral(){
+        if(calificacionSemestral == null)
+            calificacionSemestral = detSemetrCalif();
+
         return calificacionSemestral;
     }
 
@@ -24,7 +35,7 @@ public class AluMateriaNumOperator extends AluMateriaOperator{
 
         String[] cond = new String[]{"periodo","clave_alumno","semestre","materia"};
 
-        String[] val = new String[]{periodo,aLumnoOperator.getTableRegister(),aLumnoOperator.getRegisterValue("semestre"),materia};
+        String[] val = new String[]{periodo,aluInfo.get("numero_control"),aluInfo.get("semestre"),materia};
 
         String semestral = consulter.bringTable(colsToBring,cond,val).getUniqueValue();
         if( semestral == null)
@@ -37,7 +48,7 @@ public class AluMateriaNumOperator extends AluMateriaOperator{
     @Override
     public String getPromFinal() {
         ArrayList valuesToProm = new ArrayList();
-            valuesToProm.add(calificacionSemestral);
+            valuesToProm.add(getCalifSemestral());
             valuesToProm.add(getParProm());
 
         return PromsOperations.getProm(valuesToProm);

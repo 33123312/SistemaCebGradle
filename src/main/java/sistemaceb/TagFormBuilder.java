@@ -33,6 +33,7 @@ public class TagFormBuilder {
         this.required = required;
         this.form = form;
         optionsGetter = new OptionsGetter(specs);
+        optionsGetter.getConditionedOptionsGetter();
         buildFormSections();
 
     }
@@ -51,7 +52,8 @@ public class TagFormBuilder {
     public enum elementTypes{
            INPUT,
            LIST,
-           DATE_INPUT
+           DATE_INPUT,
+            TIME
 
     }
 
@@ -78,8 +80,12 @@ public class TagFormBuilder {
             element.setType(elementTypes.LIST);
             
         } else  {
-            if(specs.getColumnType(tag) == dataType.DATE)
+            dataType type = specs.getColumnType(tag);
+            if(type == dataType.DATE)
                 element.setType(elementTypes.DATE_INPUT);
+            else
+            if(type == dataType.TIME)
+                element.setType(elementTypes.TIME);
             else{
                 element.setSize(specs.getTagSize(tag));
                 element.setType(elementTypes.INPUT);
@@ -90,7 +96,6 @@ public class TagFormBuilder {
     }
     
     private void addElementToForm(FormElementDetail element){
-        
         String tag = element.getTag();
         elementTypes type = element.getType();    
                 
@@ -108,6 +113,10 @@ public class TagFormBuilder {
                     .setRequired(required)
                     .setOptions(element.getOptions());
                 break;
+            case TIME:
+                form.addHourInput(tag)
+                        .setRequired(required);
+            break;
             default:
                 System.err.println("No se reconoce el tipo de tag " + type + " en el formulario");
         }

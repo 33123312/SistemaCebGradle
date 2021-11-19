@@ -1,5 +1,6 @@
 package SpecificViews;
 
+import JDBCController.DataBaseConsulter;
 import JDBCController.Table;
 import JDBCController.dataType;
 import sistemaceb.form.ErrorChecker;
@@ -102,13 +103,10 @@ public class BoletaBuilder extends MultipleFormsOperation{
                         setRequired(false).addErrorChecker(new ErrorChecker() {
                    @Override
                    public String checkForError(String response) {
-                       try {
+                       if(response != null && !response.isEmpty()) {
                            double califa = Double.parseDouble(response);
                            if (califa > 10)
-                               return "Error: La calificación ingresada es mayor a 10";
-
-                       } catch (Exception e){
-                           return "Error: La calificación no puede contener números";
+                               return "Calificación ingresada es mayor a 10";
                        }
                        return "";
                    }
@@ -119,6 +117,25 @@ public class BoletaBuilder extends MultipleFormsOperation{
         addCalForm("Numérica","calificaciones_numericas","Materias Numéricas",builder);
     }
 
+    private Table getboleta(String tipo){
+        String view;
+
+        if(tipo.equals("Numérica"))
+            view = "alumno_num_califa_charge_view";
+        else
+            view = "alumno_bol_califa_charge_view";
+
+        DataBaseConsulter consulter = new DataBaseConsulter(view);
+
+        String[] colsToBring = new String[]{"materia","nombre_abr","calificacion","faltas","evaluacion"};
+
+        String[] cond = new String[]{"numero_control","periodo"};
+
+        String[] val = new String[]{keyValue,Global.conectionData.loadedPeriodo};
+
+        return consulter.bringTable(colsToBring,cond,val);
+
+    }
 
     private void addCalForm(String tipo,String table,String title, MultipleFormsPanel.FormElementBuilder builder){
         BuilderBackend2 back = new BuilderBackend2(
@@ -128,7 +145,7 @@ public class BoletaBuilder extends MultipleFormsOperation{
         "calificacion_clave",
                 getEvaluaciones(),
         "calificaciones",
-            "calificacion"
+        "calificacion"
 
         );
         back.setConditions(getConditions());
@@ -139,7 +156,9 @@ public class BoletaBuilder extends MultipleFormsOperation{
         MultipleFormsPanel panel = new MultipleFormsPanel(
                 back,
                 operator.grupoOperator.getMateriasList(tipo),
-                builder);
+                builder,
+                getboleta(tipo)
+        );
 
         addForm(title,panel);
     }
@@ -167,11 +186,11 @@ public class BoletaBuilder extends MultipleFormsOperation{
                         setRequired(false);
             }
         };
-        System.out.println(operator.grupoOperator.getMateriasList(tipo).getRegisters());
         MultipleFormsPanel panel = new MultipleFormsPanel(
                 back,
                 operator.grupoOperator.getMateriasList(tipo),
-                builder);
+                builder,
+                getboleta(tipo));
 
         addForm("Faltas",panel);
     }

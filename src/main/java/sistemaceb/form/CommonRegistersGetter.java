@@ -100,9 +100,9 @@ public class CommonRegistersGetter implements optionsGetter {
 
         for(ConditionedTable table:optionsGetters){
             table.determinateViewRelations(tables);
-            if(table.specs.hasOptions()){
+            if(table.specs.hasOptions())
                 addConditions(table.getConditionals());
-            }
+
         }
     }
 

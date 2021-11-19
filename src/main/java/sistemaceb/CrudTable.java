@@ -59,17 +59,18 @@ public class CrudTable extends keyedBuildBehavior {
 
                 rowUpdateConfirmationFrame confirmationForm =
                     new rowUpdateConfirmationFrame(
-                    "¿Está completamente seguro de eliminar el siguiente registro?",updateConditions,updateValues);
+                    );
                     confirmationForm.addOnAcceptEvent(new genericEvents(){
                           @Override
                           public void genericEvent(){
+                              confirmationForm.closeForm();
                               try {
                                   viewSpecs.getUpdater().delete(updateConditions,updateValues);
                               } catch (SQLException throwables) {
                                   throwables.printStackTrace();
                               }
                               build.updateSearch();
-                              confirmationForm.closeForm();
+
                           }
                       }
                 );
@@ -113,12 +114,13 @@ public class CrudTable extends keyedBuildBehavior {
 
                         ArrayList<String> responseTitles = viewSpecs.getCol(responseTagTitles);
 
-                        rowUpdateConfirmationFrame confirmationForm = new rowUpdateConfirmationFrame("Se modificara en siguiente registro", responseTagTitles, responseValues);
+                        rowUpdateConfirmationFrame confirmationForm = new rowUpdateConfirmationFrame();
                         updateForm.getFrame().addChildForm(confirmationForm);
                         ArrayList<String> updateConditions2 = viewSpecs.getCol(updateConditions);
                         confirmationForm.addOnAcceptEvent(new genericEvents() {
                                   @Override
                                   public void genericEvent() {
+                                      ((FormWindow) form).getFrame().closeForm();
                                       try {
                                           viewSpecs.getUpdater().update(responseTitles, responseValues, updateConditions2, selectedRegister);
                                       } catch (SQLException throwables) {
@@ -127,7 +129,7 @@ public class CrudTable extends keyedBuildBehavior {
                                                   "El registro que se ha intentdo añadir ya existe");
                                       }
                                       build.updateSearch();
-                                      ((FormWindow) form).getFrame().closeForm();
+
                                   }
                               }
                         );

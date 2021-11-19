@@ -31,11 +31,6 @@ public class PDFPlantillaGetter extends Document{
     public PDFPlantillaGetter(String title) {
         super(getNewDocumnt());
         this.title = title;
-        try {
-            addTitle();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
     }
 
     private static PdfDocument getNewDocumnt(){
@@ -51,13 +46,11 @@ public class PDFPlantillaGetter extends Document{
 
     }
 
-    private void addTitle() throws IOException {
-        addMembrete();
-        add(new Paragraph(""));
-
+    public void adddMembreteCorto(){
+        add(new Paragraph("CENTRO DE ESTUDIOS DE BACHILLERATO 6/4").setTextAlignment(TextAlignment.CENTER));
     }
 
-    private void addMembrete(){
+    public void addMembreteLargo(){
         Table table = new Table(UnitValue.createPercentArray(new float[]{1,3,1}));
             table.setWidthPercent(100);
 
@@ -94,6 +87,7 @@ public class PDFPlantillaGetter extends Document{
                     .setFontSize(11));
 
         add(table);
+        add(new Paragraph(""));
     }
 
     private Cell getLogo(){

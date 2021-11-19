@@ -19,12 +19,14 @@ public class GrupoCalifChoserOp extends OperationWindow{
     public GrupoCalifChoserOp(OperationInfoPanel infoPanlel) {
         super(infoPanlel);
         operation = "Subir Calificaciones";
+
     }
 
     @Override
     public void buildOperation() {
         super.buildOperation();
         thisWindow.setTitle(keyValue);
+        thisWindow.getScrollPanel().setPreferredSize(new Dimension(10000,1000000));
         materias = getMaterias();
         if (materias.isEmpty())
             showMateriasErrorMessage();
@@ -108,7 +110,7 @@ public class GrupoCalifChoserOp extends OperationWindow{
     }
 
     private boolean hasUnsavedChanged(genericEvents ev){
-        if (currentWindow.hasUnsavedChanges()){
+        if ( currentWindow != null && currentWindow.hasUnsavedChanges() ){
             FormDialogMessage formDialogMessage =
                     new FormDialogMessage(
                             "Hay cambios sin guardar",
@@ -139,7 +141,7 @@ public class GrupoCalifChoserOp extends OperationWindow{
 
     private void chargeWindow(GrupoCalifChoserWindow newWindow){
         currentWindow = newWindow;
-        thisWindow.addBody(newWindow);
+        thisWindow.changeBody(newWindow);
     }
 
     private GrupoCalifChoserWindow currentWindow;

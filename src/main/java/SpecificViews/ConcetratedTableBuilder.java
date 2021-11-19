@@ -2,6 +2,7 @@ package SpecificViews;
 
 import JDBCController.DataBaseConsulter;
 import JDBCController.Table;
+import sistemaceb.form.Global;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -53,20 +54,51 @@ public class ConcetratedTableBuilder {
     }
 
     public void addBolTable(){
-        ArrayList<ArrayList<String>> alummnos = califasChoser.alumnos.getRgistersCopy();
+        ArrayList<ALumnoOperator> alumnos = califasChoser.groupoOerator.getAlumnosOpUsBol();
         ArrayList<ArrayList<String>> registers = new ArrayList<>();
-        for (ArrayList<String> alumno:alummnos)
+        for (ALumnoOperator alumno:alumnos)
             registers.add(buildAlumnoRowBol(alumno));
-        addTable(getBolTitles(),registers,new float[]{1,1,1,1,1,1,1});
+        addTable(getBolTitles(),registers,new float[]{1,1,1,1,1,1});
 
     }
 
+    private ArrayList<String> buildAlumnoRowBol(ALumnoOperator operator){
+
+        ArrayList<String>  register = new ArrayList<>();
+            register.add(operator.getTableInfo().get("numero_control"));
+            register.add(operator.getTableInfo().get("nombre_completo"));
+        AluMateriaBolOperator op = new AluMateriaBolOperator(materiaKey, Global.conectionData.loadedPeriodo,operator.getTableInfo(),operator.boleta);
+        ArrayList<String> evas = op.getParCalif();
+        evas.add(op.getPromFinal());
+
+        register.addAll(evas);
+
+        return register;
+    }
+
     public void addNumTable(){
-        ArrayList<ArrayList<String>> alummnos = califasChoser.alumnos.getRgistersCopy();
+        ArrayList<ALumnoOperator> alumnos = califasChoser.groupoOerator.getAlumnosOpUsNum();
         ArrayList<ArrayList<String>> registers = new ArrayList<>();
-        for (ArrayList<String> alumno:alummnos)
+        for (ALumnoOperator alumno:alumnos)
             registers.add(buildAlumnoRowNUm(alumno));
-        addTable(getNumTitles(),registers,new float[]{1,1,1,1,1,1,1,1,1});
+        addTable(getNumTitles(),registers,new float[]{1,1,1,1,1,1,1,1});
+
+    }
+
+    private ArrayList<String> buildAlumnoRowNUm(ALumnoOperator operator){
+        ArrayList<String> register = new ArrayList<>();
+            register.add(operator.getTableInfo().get("numero_control"));
+            register.add(operator.getTableInfo().get("nombre_completo"));
+        AluMateriaNumOperator op = new AluMateriaNumOperator(materiaKey, Global.conectionData.loadedPeriodo,operator.getTableInfo(),operator.boleta);
+        ArrayList<String> evas = op.getParCalif();
+        evas.add(op.getParProm());
+        evas.add(op.getCalifSemestral());
+        evas.add(op.getPromFinal());
+
+
+        register.addAll(evas);
+
+        return register;
     }
 
     public void generatePDF(){
@@ -81,19 +113,7 @@ public class ConcetratedTableBuilder {
         return params;
     }
 
-    private ArrayList<String> buildAlumnoRowBol(ArrayList<String> alumnoInfo){
 
-        ArrayList<String>  register = alumnoInfo;
-        String alumnoMatr = alumnoInfo.get(0);
-        ALumnoOperator operator = new ALumnoOperator(alumnoMatr);
-        AluMateriaBolOperator op = (AluMateriaBolOperator)operator.getMateriaState(materiaKey);
-        ArrayList<String> evas = op.getParCalif();
-            evas.add(op.getPromFinal());
-
-        register.addAll(evas);
-
-        return register;
-    }
 
     private AluMateriaOperator getDefMateriaManager(ArrayList<String> alumnoInfo){
         String alumnoMatr = alumnoInfo.get(0);
@@ -104,15 +124,7 @@ public class ConcetratedTableBuilder {
         return  materiaOperator;
     }
 
-    private ArrayList<String> buildAlumnoRowNUm(ArrayList<String> alumnoInfo){
-        AluMateriaNumOperator operator = (AluMateriaNumOperator)getDefMateriaManager(alumnoInfo);
 
-        alumnoInfo.add(operator.getParProm());
-        alumnoInfo.add(operator.getCalifSemestral());
-        alumnoInfo.add(operator.getPromFinal());
-
-        return alumnoInfo;
-    }
 
 
     private ArrayList<String> getNumTitles(){
@@ -138,11 +150,7 @@ public class ConcetratedTableBuilder {
         ArrayList<String> titles = new ArrayList<>();
         titles.add("Maatrícula");
         titles.add("Nombre");
-        titles.add("1ra.");
-        titles.add("2da.");
-        titles.add("3ra.");
-        titles.add("4ta");
-
+        titles.addAll(CalifasOperator.getEvaluaciones());
         return titles;
     }
 }

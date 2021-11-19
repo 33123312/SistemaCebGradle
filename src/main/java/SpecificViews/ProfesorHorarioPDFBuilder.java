@@ -10,6 +10,7 @@ public class ProfesorHorarioPDFBuilder extends PDFPlantillaTable{
 
     public ProfesorHorarioPDFBuilder() {
         super("Horario de Profesor");
+        addMembreteLargo();
         initTable();
     }
 
@@ -25,12 +26,16 @@ public class ProfesorHorarioPDFBuilder extends PDFPlantillaTable{
 
     }
 
-    public void addRowHora(ArrayList<ArrayList<String>> newRow){
-        table.addCell(addTitleStyle(getCell(newRow.get(0).get(0))));
-        newRow.remove(0);
+    public void addTitleRow(ArrayList<String> titles){
+
+    }
+
+    public void addRowHora(ProfesorHorario.HorarioRowInfo newRow){
+
+        table.addCell(addTitleStyle(getCell(newRow.hora)));
 
         for (int i = 0;i < 3;i++ )
-            for (ArrayList<String> cell : newRow ){
+            for (ArrayList<String> cell : newRow.row ){
                 Cell newCell;
                 if(cell.isEmpty())
                     newCell = getCellA("");

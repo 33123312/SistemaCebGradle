@@ -63,15 +63,13 @@ public class RegisterDetailView extends Window {
     }
 
     private void deploy() {
-        editedScrollPanel ScrollView = new editedScrollPanel();
-        addBody(ScrollView);
 
         JPanel body = new JPanel(new BorderLayout());
         body.setBorder(BorderFactory.createEmptyBorder(10, 30, 0, 30));
         body.add(deployRegisterInfoContainer(), BorderLayout.NORTH);
         body.add(deployTablesPanel(), BorderLayout.CENTER);
 
-        ScrollView.setViewportView(body);
+        setBody(body);
 
         setTitle(buildWindowTitle());
     }
@@ -183,6 +181,7 @@ public class RegisterDetailView extends Window {
     }
 
     public void updateCurrentPill(){
+        if(currentPillTable != null)
         currentPillTable.getConsultTable().updateSearch();
     }
 

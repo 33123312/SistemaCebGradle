@@ -162,15 +162,19 @@ public class DBTableMetadata{
     private DatabaseMetaData getMetadata(){
         if (!Global.SQLConector.checkConection())
             makeMetadataConection();
-        return metadata;
 
+        return metadata;
     }
     
     private void makeMetadataConection(){
         try {
-            metadata = Global.SQLConector.getMyCon().getMetaData();
-        } catch (SQLException ex) {
-            Logger.getLogger(DBTableMetadata.class.getName()).log(Level.SEVERE, null, ex);
+            if (Global.SQLConector.getMyCon().isClosed())
+                makeMetadataConection();
+            else
+                metadata = Global.SQLConector.getMyCon().getMetaData();
+
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
         }
     }
       

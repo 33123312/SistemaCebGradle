@@ -28,6 +28,7 @@ public class DefaultModifyRegisterOp extends Operation{
 
     protected void setDefaultValues(Formulario form){
         TableRegister viewRegiter = registerInfo;
+
         form.setDefaultValues(viewRegiter.getColumnTitles(),viewRegiter.getValues());
 
     }
@@ -58,11 +59,14 @@ public class DefaultModifyRegisterOp extends Operation{
                 updateValues.add(keyValue);
 
                 rowUpdateConfirmationFrame confirmationForm =
-                        new rowUpdateConfirmationFrame("Se modificara en siguiente registro",responseTitles,responseValues);
+                        new rowUpdateConfirmationFrame();
+
                 formWindow.getFrame().addChildForm(confirmationForm);
                 confirmationForm.addOnAcceptEvent(new genericEvents(){
+
                     @Override
                     public void genericEvent(){
+                        formWindow.getFrame().closeForm();
                         try {
 
                             viewSpecs.getUpdater().update(responseTitles,responseValues,updateConditions,updateValues);
@@ -71,7 +75,6 @@ public class DefaultModifyRegisterOp extends Operation{
                         }
                         Global.view.currentWindow.cut();
                         confirmationForm.closeForm();
-                        formWindow.getFrame().closeForm();
                     }
                 });
             }
@@ -79,7 +82,7 @@ public class DefaultModifyRegisterOp extends Operation{
     }
 
     protected void addToTagFormBuilder(ArrayList<String> columnsToUpdate){
-        new TagFormBuilder(viewSpecs, columnsToUpdate,updateForm,true);
+        new TagFormBuilder(viewSpecs, columnsToUpdate,updateForm,false);
     }
 
     protected void deployModifyForm(){

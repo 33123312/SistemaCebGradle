@@ -21,6 +21,7 @@ public class Window extends JPanel{
     private JLabel titleLabel;
     protected LinearHorizontalLayout header;
     private JPanel buttonsPlace;
+    private editedScrollPanel scrollPanel;
     
     public Window(){
         closePermisions = new ArrayList<>();
@@ -28,7 +29,33 @@ public class Window extends JPanel{
         header = new LinearHorizontalLayout();
             header.setOpaque(false);
         add(deployHeader(),BorderLayout.NORTH);
+        add(getScroll(),BorderLayout.CENTER);
         
+    }
+
+    JComponent body;
+
+    public void changeBody(JComponent component){
+        setVisible(false);
+        if (body == null)
+            remove(scrollPanel);
+        else
+            remove(body);
+
+        body = component;
+        add(component,BorderLayout.CENTER);
+        setVisible(true);
+
+    }
+
+    public editedScrollPanel getScrollPanel() {
+        return scrollPanel;
+    }
+
+    private editedScrollPanel getScroll(){
+        scrollPanel = new editedScrollPanel();
+            scrollPanel.setPreferredSize(new Dimension(100,100));
+        return scrollPanel;
     }
 
     public interface ClosePermision{
@@ -60,13 +87,9 @@ public class Window extends JPanel{
         header.add(componet);
     }
 
-    JComponent body;
-    public void addBody(JComponent componet){
+    public void setBody(JPanel componet) {
         setVisible(false);
-        if(body != null)
-        remove(body);
-        body = componet;
-        add(componet,BorderLayout.CENTER);
+        scrollPanel.setViewportView(componet);
         setVisible(true);
     }
     

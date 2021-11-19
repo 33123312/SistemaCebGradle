@@ -69,10 +69,7 @@ public class CuadroDeHonorOperation extends OperationWindow{
 
     private ArrayList<String> getEvaluaciones(){
         ArrayList<String> evas = new ArrayList<>();
-            evas.add("1ra");
-            evas.add("2da");
-            evas.add("3ra");
-            evas.add("4ta");
+            evas.addAll(CalifasOperator.getEvaluaciones());
             evas.add("Semestral");
             evas.add("Final");
 

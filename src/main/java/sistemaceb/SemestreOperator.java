@@ -13,11 +13,13 @@ public class SemestreOperator extends TableOperator {
     public ArrayList<String> getGrupos() {
         DataBaseConsulter consulter = new DataBaseConsulter("grupos");
 
+        String[] coltToB = new String[]{"grupo"};
+
         String[] cond = new String[]{"semestre"};
 
         String[] values = new String[]{tableRegister};
 
-        return consulter.bringTable(cond,values).getColumn(0);
+        return consulter.bringTable(coltToB,cond,values).getColumn(0);
 
 
     }

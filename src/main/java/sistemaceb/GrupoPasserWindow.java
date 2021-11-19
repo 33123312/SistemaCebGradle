@@ -55,7 +55,6 @@ public class GrupoPasserWindow extends Window{
     }
 
     private void addBody(){
-        JScrollPane scroll = new JScrollPane();
         LinearVerticalLayout panel = new LinearVerticalLayout();
             panel.addElement(getDescLabel());
             panel.addElement(getGroupDesplegableMenu());
@@ -63,8 +62,7 @@ public class GrupoPasserWindow extends Window{
             panel.addElement(getPie());
             panel.setBorder(new EmptyBorder(20,70,20,70));
 
-        scroll.setViewportView(panel);
-        addBody(scroll);
+        setBody(panel);
 
     }
 

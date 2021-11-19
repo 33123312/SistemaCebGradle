@@ -19,6 +19,15 @@ public class TableOperator {
 
     }
 
+
+    public TableOperator(String tableRegister,String table,TableRegister tableInfo){
+        specs = new ViewSpecs(table);
+        consulter = new DataBaseConsulter(specs.getInfo().getVisibleView());
+        this.tableRegister = tableRegister;
+        this.tableInfo = tableInfo;
+
+    }
+
     public String getTableRegister() {
         return tableRegister;
     }

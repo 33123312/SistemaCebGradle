@@ -39,6 +39,7 @@ public abstract class opBackend {
     }
 
     public abstract FormResponseManager getResponseManager();
+
     public ArrayList<String> getTitles(){
         return titles;
     };

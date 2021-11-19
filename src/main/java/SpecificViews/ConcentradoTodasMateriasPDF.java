@@ -6,20 +6,19 @@ import java.util.ArrayList;
 
 public class ConcentradoTodasMateriasPDF extends PDFPlantillaTable{
 
-    ArrayList<String> topTitles;
     ArrayList<String> materias;
 
     public ConcentradoTodasMateriasPDF(ArrayList maerias) {
         super("Concentrado de Calificaciones por Etapa");
-        topTitles = getTopTitles();
         this.materias = new ArrayList<>(maerias);
+        adddMembreteCorto();
 
 
     }
 
     private ArrayList<String> getTopTitles(){
         ArrayList<String> titles = new ArrayList<>();
-            titles.add("Matricula");
+            //titles.add("Matricula");
             titles.add("Nombre");
 
         return titles;
@@ -34,7 +33,7 @@ public class ConcentradoTodasMateriasPDF extends PDFPlantillaTable{
     }
 
     private  void addFirstTitles(){
-        for (String title: topTitles){
+        for (String title: getTopTitles()){
             Cell currentCell = addTitleStyle(getCellDeftyle(title, new Cell(2,0)));
             table.addCell(currentCell);
         }
@@ -54,8 +53,8 @@ public class ConcentradoTodasMateriasPDF extends PDFPlantillaTable{
 
     private  void addSecondTitles(){
         for (String materia:materias){
-            Cell title1Cell  = addTitleStyle(getDefCell("Cal."));
-            Cell title2Cell  = addTitleStyle(getDefCell("Falt."));
+            Cell title1Cell  = addTitleStyle(getDefCell("C"));
+            Cell title2Cell  = addTitleStyle(getDefCell("F"));
             table.addCell(title1Cell);
             table.addCell(title2Cell);
         }
@@ -64,7 +63,7 @@ public class ConcentradoTodasMateriasPDF extends PDFPlantillaTable{
 
 
     private float[] getSizes(){
-        int sizesLngth = 2 + materias.size()*2;
+        int sizesLngth = 1 + materias.size()*2;
         float[] sizes = new float[sizesLngth];
             sizes[0] = 1;
             sizes[0] = 11;

@@ -39,7 +39,7 @@ public class MultipleFormWindow extends Window {
 
         forms = new ArrayList<>();
         setTitle(title);
-        addBody(getBody());
+        setBody(getBody());
         defineAdderButton();
         buildNewForm();
         Global.view.currentWindow.newView(this);

@@ -24,7 +24,7 @@ public class Input extends FormElement{
     private final dataType type;
 
     public Input(String title,dataType type,JTextField txt){
-        super(title,"");
+        super(title);
         addWrongTypeError();
         this.type = type;
         setTextField(txt);
@@ -36,7 +36,7 @@ public class Input extends FormElement{
     }
 
     public Input(String title, dataType type, int size){
-        this(title,type, new limitedImput(size));
+        this(title,type, new limitedImput());
     }
 
     private void setTextField(JTextField textField){
@@ -52,11 +52,11 @@ public class Input extends FormElement{
     }
     
     private void addWrongTypeError(){
-        this.addErrorChecker(new ErrorChecker(){
+        addErrorChecker(new ErrorChecker(){
             @Override
             public String checkForError(String response) {
                 String currentValue = getResponse();
-                    if(isRightType(currentValue))
+                    if(isRightType(currentValue) || currentValue == null || currentValue.isEmpty())
                         return "";
                     else
                         return "Tipo de Dato incorrecto";
@@ -95,7 +95,7 @@ public class Input extends FormElement{
     }
 
     private boolean isRightType(String response){
-        if(!response.isEmpty())
+        if(hasBeenModified())
             switch(type){
                 case INT:
                     try{

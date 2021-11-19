@@ -19,10 +19,10 @@ import java.util.ArrayList;
  * @author escal
  */
 public class DesplegableMenu extends formElementWithOptions{
-    private JComboBox menu;
+    private perCombo menu;
 
     public DesplegableMenu(String title){
-        super(title,"");
+        super(title);
         buildMenu();
     }
 
@@ -44,27 +44,24 @@ public class DesplegableMenu extends formElementWithOptions{
     }
 
     private void buildMenu(){
-        menu = new JComboBox();
-        menu.addPopupMenuListener(new PopupMenuListener() {
+        menu = new perCombo(){
             @Override
-            public void popupMenuWillBecomeVisible(PopupMenuEvent e) {
-            }
+            public void setSelectedItem(Object anObject) {
+                super.setSelectedItem(anObject);
+                if(hasBeenSelected())
+                    executeTrigerEvents();
 
-            @Override
-            public void popupMenuWillBecomeInvisible(PopupMenuEvent e) {
-                executeTrigerEvents();
             }
+        };
 
-            @Override
-            public void popupMenuCanceled(PopupMenuEvent e) {
-            }
-        });
+        menu.putClientProperty("JComboBox.isTableCellEditor", Boolean.TRUE);
         menu.addFocusListener(new FocusAdapter() {
             @Override
             public void focusGained(FocusEvent e) {
                 super.focusGained(e);
                 if(isVisible())
-                menu.showPopup();
+                    menu.showPopup();
+
             }
 
         });
@@ -72,12 +69,16 @@ public class DesplegableMenu extends formElementWithOptions{
         menu.setForeground(new Color(100,100,100));
         currentElement = menu;
         addElement(menu);
-        
     }
 
     @Override
     public void useDefval() {
         menu.setSelectedIndex(menu.getItemCount());
+    }
+
+    @Override
+    public void setDefaultValue(String defaultValue){
+        super.setDefaultValue(defaultValue);
     }
 
     @Override
@@ -87,12 +88,6 @@ public class DesplegableMenu extends formElementWithOptions{
            setSelection(GUIOptions.get(trueOptions.indexOf(txt)));
        else if(GUIOptions.contains(txt))
            setSelection(txt);
-    }
-
-    @Override
-    protected boolean somethingIsSelected() {
-
-        return menu.getSelectedIndex()!= GUIOptions.size()  ;
     }
 
     @Override
@@ -126,6 +121,25 @@ public class DesplegableMenu extends formElementWithOptions{
     public void setSelection(String selection) {
         menu.setEnabled(true);
         menu.setSelectedIndex(GUIOptions.indexOf(selection));
+    }
+
+    public class perCombo extends JComboBox{
+        private int selectionCount = 0;
+
+        public perCombo(){
+            super();
+        }
+
+        public boolean hasBeenSelected() {
+            return selectionCount > 1;
+        }
+
+        @Override
+        public void setSelectedItem(Object anObject) {
+            super.setSelectedItem(anObject);
+            if (!hasBeenSelected())
+            selectionCount++;
+        }
     }
     
 }

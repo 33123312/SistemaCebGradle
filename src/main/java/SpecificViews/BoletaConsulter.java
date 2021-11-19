@@ -163,13 +163,18 @@ public class BoletaConsulter extends TableViewerPDFOp{
 
     private ArrayList<ArrayList<String>> getFaltasRegisters(String type) {
         ArrayList<ArrayList<String>> registers = new ArrayList<>();
-        ArrayList<String> materias = aluOperator.grupoOperator.getMateriasList(type).getColumn(0);
 
-        for (String materia : materias) {
-            AluMateriaOperator operator = aluOperator.getMateriaState(materia);
+        ArrayList op;
+
+        if (!isBol(type))
+            op = aluOperator.getNumBoleta();
+        else
+            op = aluOperator.getBolBoleta();
+
+        for (int i = 0; i < op.size();i++){
+            AluMateriaOperator operator = (AluMateriaOperator)op.get(i);
             ArrayList<String> currentRow = operator.getFaltas();
             registers.add(currentRow);
-
         }
 
         return registers;
@@ -177,24 +182,25 @@ public class BoletaConsulter extends TableViewerPDFOp{
 
     private ArrayList<ArrayList<String>> getRegisters(String type) {
         ArrayList<ArrayList<String>> registers = new ArrayList<>();
-        ArrayList<String> materias = aluOperator.grupoOperator.getMateriasList(type).getColumn(0);
 
-        if (isBol(type))
-            for (String materia : materias) {
-                AluMateriaOperator operator = aluOperator.getMateriaState(materia);
+        if (isBol(type)){
+            ArrayList<AluMateriaBolOperator> op = aluOperator.getBolBoleta();
+            for (AluMateriaBolOperator operator : op) {
                 ArrayList<String> currentRow = operator.getParCalif();
                 getBolCols(operator, currentRow);
                 registers.add(currentRow);
 
             }
-        else
-            for (String materia : materias) {
-                AluMateriaOperator operator = aluOperator.getMateriaState(materia);
+        } else{
+            ArrayList<AluMateriaNumOperator> op = aluOperator.getNumBoleta();
+            for (AluMateriaNumOperator operator : op) {
                 ArrayList<String> currentRow = operator.getParCalif();
                 getNumCols(operator, currentRow);
                 registers.add(currentRow);
 
             }
+        }
+
 
         return registers;
     }

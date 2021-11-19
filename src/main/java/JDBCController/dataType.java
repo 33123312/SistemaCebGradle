@@ -13,6 +13,7 @@ public enum dataType {
     INT,
     FLOAT,
     VARCHAR,
-    DATE
+    DATE,
+    TIME
     
 }

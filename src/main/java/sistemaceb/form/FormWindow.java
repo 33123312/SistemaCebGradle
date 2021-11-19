@@ -22,6 +22,7 @@ public class FormWindow extends Formulario{
 
         addSection();
         addEvents();
+
         frame.addCloseButton();
         frame.addAcceptButton();
         frame.setVisible(true);

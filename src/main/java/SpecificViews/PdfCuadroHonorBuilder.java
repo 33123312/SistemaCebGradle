@@ -7,6 +7,7 @@ public class PdfCuadroHonorBuilder extends PDFPlantillaTable{
 
     public PdfCuadroHonorBuilder(String smestre,String eva) {
         super("Cuadro de Honor");
+        addMembreteLargo();
         setTable(new float[]{1,1,1});
         addParams(smestre,eva);
         deployTable();

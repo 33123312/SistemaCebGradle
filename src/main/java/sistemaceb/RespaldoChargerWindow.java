@@ -26,7 +26,7 @@ public class RespaldoChargerWindow extends Window {
         resManager = new RespaldosManager();
         periodo = Global.conectionData.loadedPeriodo;
         setTitle("Respaldos");
-        addBody(getBody());
+        setBody(getBody());
     }
 
     private JPanel getBody(){

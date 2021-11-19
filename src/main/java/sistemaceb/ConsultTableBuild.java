@@ -84,10 +84,12 @@ public abstract class ConsultTableBuild {
     }
     public void updateSearch(){
         infoPackage currentSearch = dataBaseConsulter.getSearch(tagsToShow);
+
         outputTable.setRows(
                 currentSearch.getVisibleRegisters().getRegisters(),
                 currentSearch.getViewRegisters()
         );
+
     }
 
     public abstract BtnFE getInsertButton();

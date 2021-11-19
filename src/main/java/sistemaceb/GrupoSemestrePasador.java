@@ -13,7 +13,6 @@ public class GrupoSemestrePasador {
     private boolean isLastSemestre;
     private TableRegister grupoInfo;
 
-
     public GrupoSemestrePasador(GrupoOperator grupo){
         grupoInfo = grupo.getTableInfo();
         nextSemestre = getNextSemestre();
@@ -49,6 +48,7 @@ public class GrupoSemestrePasador {
     }
 
     private String getNextSemestre(){
+
         String currentSemestre = grupoInfo.get("semestre");
         int currentSemestreInt = Integer.parseInt(currentSemestre);
         int nextSemestre = currentSemestreInt + 1;

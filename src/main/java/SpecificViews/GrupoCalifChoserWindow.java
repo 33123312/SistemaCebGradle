@@ -1,8 +1,10 @@
 package SpecificViews;
 
 import Generals.BtnFE;
+import JDBCController.Table;
 import Tables.AdapTableFE;
 import Tables.TableRow;
+import sistemaceb.editedScrollPanel;
 import sistemaceb.form.*;
 import sistemaceb.genericEvents;
 
@@ -38,7 +40,10 @@ public abstract class GrupoCalifChoserWindow extends LinearVerticalLayout {
 
     private Formulario getForm(){
         Formulario formulario = createForm();
+        FormElement firstElement = formulario.getElement(0);
+        formulario.setLastElementToFocus(firstElement.getCurrentElement());
         FormElement lastElement = formulario.getElement(formulario.getElementCount()-1);
+
         lastElement.addTrigerGetterEvent(new TrigerElemetGetter() {
             @Override
             public void onTrigger(FormElement element) {
@@ -48,9 +53,10 @@ public abstract class GrupoCalifChoserWindow extends LinearVerticalLayout {
                  else
                     table.getRow(0).select();
 
-                califForm.changeFocusTo(0);
             }
         });
+
+        formulario.setBorder(new EmptyBorder(0,0,40,0));
 
         return formulario;
     }
@@ -67,11 +73,15 @@ public abstract class GrupoCalifChoserWindow extends LinearVerticalLayout {
         return new ErrorChecker() {
             @Override
             public String checkForError(String response) {
-                double res = Double.parseDouble(response);
-                if (res > 10.0)
-                    return "Sólo se puede calificar de 0 a 10";
+                try{
+                    double res = Double.parseDouble(response);
+                    if (res > 10.0)
+                        return "Sólo se puede calificar de 0 a 10";
+
+                } catch (Exception e){}
 
                 return "";
+
             }
         };
     }
@@ -108,17 +118,20 @@ public abstract class GrupoCalifChoserWindow extends LinearVerticalLayout {
     private void updatePasser(){
         GrupoCalifChargOpCont.AlumnoManager auxM = currentManeger;
         if(califForm.hasBeenModified()) {
-            Map<String, String> data = califForm.getAllData();
+            Map<String, String> data = califForm.getData();
 
             new Thread() {
                 @Override
                 public void run() {
                     super.run();
-                    int i = 2;
-                    for (Map.Entry<String, String> entry : data.entrySet()) {
-                        auxM.set(entry.getKey(), entry.getValue());
-                        TableRow row = table.getRow(auxM.getIndex());
-                        row.setCellValue(i, entry.getValue());
+                    int i = 3;
+                    for (String title: manager.getColsToSet()) {
+                        if (data.containsKey(title)){
+                            String value = data.get(title);
+                            auxM.set(title, value);
+                            TableRow row = table.getRow(auxM.getIndex());
+                            row.setCellValue(i, value);
+                        }
                         i++;
                     }
 
@@ -159,28 +172,42 @@ public abstract class GrupoCalifChoserWindow extends LinearVerticalLayout {
 
         for (int i = 0; i < values.size();i++){
             String currentValue = values.get(i);
-            califForm.getElement(i).setResponse(currentValue);
+            califForm.getElement(i).setDefaultValue(currentValue);
         }
+    }
+
+    private void moveScrollBar(int index){
+        int newPosition = 30*index;
+        scrollPanel.getVerticalScrollBar().setValue(newPosition);
+
     }
 
     protected void deployTable(){
         table = new AdapTableFE();
-        table.setBorder(new EmptyBorder(0,0,0,20));
+
+        scrollPanel = new editedScrollPanel();
+        scrollPanel.setBorder(new EmptyBorder(0,0,0,20));
+
+        scrollPanel.setViewportView(table);
+
         table.setTitles(manager.getHumanCols());
         table.setRows(manager.getRegisters());
         table.getFactory().addGralClickSelectionEvnt(new AdapTableFE.rowSelectionEvnt() {
             @Override
             public void whenSelect(TableRow tableRow){
                 if(!califForm.hasErrors()){
-                    if(currentManeger !=  null){
+                    int currentIndex;
+                    int newIndex = tableRow.getKey();
+
+                    if(currentManeger ==  null)
+                        currentIndex = -1;
+                    else{
                         updatePasser();
-                        if(currentManeger.getIndex() != tableRow.getKey()){
-                            changeManager(tableRow.getKey());
-                            tableRow.setBackground(new Color(116, 185, 255));
-                        }
+                        currentIndex = currentManeger.getIndex();
                     }
 
-                    else {
+                    if(currentIndex != newIndex){
+                        moveScrollBar(newIndex);
                         changeManager(tableRow.getKey());
                         tableRow.setBackground(new Color(116, 185, 255));
                     }
@@ -196,7 +223,12 @@ public abstract class GrupoCalifChoserWindow extends LinearVerticalLayout {
         });
         table.showAll();
         table.getRow(0).select();
+
+
+
     }
+
+    private editedScrollPanel scrollPanel;
 
     public void submit(){
         manager.submit();
@@ -220,18 +252,24 @@ public abstract class GrupoCalifChoserWindow extends LinearVerticalLayout {
 
         GridBagConstraints gc = new GridBagConstraints();
             gc.gridx = 0;
-
             gc.weightx = 1;
-            gc.fill = GridBagConstraints.HORIZONTAL;
 
-            cont.add(table,gc);
+            gc.fill = GridBagConstraints.BOTH;
+
+
+            cont.add(scrollPanel,gc);
 
             gc.gridx = 1;
             gc.weightx = 0;
+            gc.weighty = 1;
 
-            cont.add(califForm,gc);
+            JPanel califForCont = new JPanel(new BorderLayout());
+                califForCont.add(califForm,BorderLayout.NORTH);
+            cont.add(califForCont,gc);
 
-            addElement(cont);
+
+                addElement(cont);
+
             addSubmitBtn();
 
     }

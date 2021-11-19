@@ -23,23 +23,26 @@ public class MultipleFormsPanel extends LinearVerticalLayout {
     private FormElementBuilder builder;
     int maxtitleSize;
     public boolean isSeted;
+    private Table data;
 
-    public MultipleFormsPanel(opBackend back, Table rowsTitles, FormElementBuilder builder){
-        commonCons(back,rowsTitles);
+    public MultipleFormsPanel(opBackend back, Table rowsTitles, FormElementBuilder builder,Table data){
+        this(back,rowsTitles,data);
         addBuilder(builder);
     }
 
-    public MultipleFormsPanel(opBackend back, Table rowsTitles){
-        commonCons(back,rowsTitles);
-    }
-
-    private void commonCons(opBackend back, Table rowsTitles){
+    public MultipleFormsPanel(opBackend back, Table rowsTitles,Table data){
         forms = new ArrayList<>();
         this.back = back;
         this.titles = back.getTitles();
         this.rowsTitles = rowsTitles;
         visibleRowTitles = rowsTitles.getColumn(1);
         setBorder(BorderFactory.createEmptyBorder(0,0,40,0));
+        this.data = data;
+
+    }
+
+    private void commonCons(opBackend back, Table rowsTitles){
+
     }
 
     public void addBuilder(FormElementBuilder builder){
@@ -57,15 +60,10 @@ public class MultipleFormsPanel extends LinearVerticalLayout {
         return false;
     }
 
-    public boolean isSeted(){
-        return isSeted;
-    }
-
     private void deploy(){
         ArrayList<String> lateralTitles = getLateraltrueTiles();
         for(String lateralTitle:lateralTitles)
             addForm(getNewForm(lateralTitle));
-        isSeted = true;
     }
 
     public String getElementRowValue(FormElement element){
@@ -105,7 +103,7 @@ public class MultipleFormsPanel extends LinearVerticalLayout {
            FormElement ele =  builder.buildElement(newForm,title,rowKey);
            String curentValue = trytoGetCurrentValue(title,rowKey);
            if(curentValue != null)
-                ele.setResponse(curentValue);
+                ele.setDefaultValue(curentValue);
         }
 
         newForm.addDataManager(back.getResponseManager());
@@ -115,20 +113,24 @@ public class MultipleFormsPanel extends LinearVerticalLayout {
     }
 
     private String trytoGetCurrentValue(String title, String row){
-        DataBaseConsulter consulter = new DataBaseConsulter(new ViewSpecs(back.objTable).getInfo().getView());
-
-        String[] colsToBring = new  String[]{back.keyCol};
-
         List<String> cond = new ArrayList<>();
             cond.add(back.titleCol);
             cond.add(back.rowCol);
-            cond.addAll(back.getConditions());
+            //cond.addAll(back.getConditions());
 
         List<String> values = new ArrayList<>();
             values.add(title);
             values.add(row);
-            values.addAll(back.getValues());
-        return  consulter.bringTable(colsToBring,cond.toArray(new String[cond.size()]),values.toArray(new String[values.size()])).getUniqueValue();
+            //values.addAll(back.getValues());
+
+        Table reduTab = data.getSubTable(cond.toArray(new String[cond.size()]),values.toArray(new String[values.size()]));
+        
+        if (reduTab.isEmpty())
+            return null;
+        else
+            return reduTab.getRegisterObject(0).get(back.keyCol);
+
+
 
     };
 
@@ -146,10 +148,8 @@ public class MultipleFormsPanel extends LinearVerticalLayout {
     }
 
     public void submit(){
-
         for (keyedHForm form:forms)
             form.manageData();
-
     };
 
     protected void addForm(keyedHForm newForm){

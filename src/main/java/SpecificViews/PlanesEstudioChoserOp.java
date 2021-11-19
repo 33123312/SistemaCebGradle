@@ -59,7 +59,7 @@ public class PlanesEstudioChoserOp extends Operation{
 
         String semestre = new GrupoOperator(keyValue).getRegisterValue("semestre");
 
-        String[] colsToBring = new String[]{"nombre_plan","clave_plan"};
+        String[] colsToBring = new String[]{"clave_plan","descripcion"};
 
         String[] cond = new String[]{"semestre"};
 

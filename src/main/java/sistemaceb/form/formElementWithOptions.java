@@ -15,8 +15,8 @@ public abstract class formElementWithOptions extends FormElement {
 
     private Map<String,Table> incomeOptions;
     
-    public formElementWithOptions(String title,String deV){
-        super(title,deV);
+    public formElementWithOptions(String title){
+        super(title);
         incomeOptions = new HashMap<>();
     }
     
@@ -33,14 +33,12 @@ public abstract class formElementWithOptions extends FormElement {
     public abstract void selectEmptyResponse();
 
     @Override
-    public String getResponse(){
-        if(hasOptions()){
+    public String getResponseConfig(){
             if(hasTrueOptions())
                 return getTrueResponse();
             else
                 return getGUIResponse();
-        } else
-            return "";
+
     }
 
     private String getTrueResponse(){
@@ -53,10 +51,13 @@ public abstract class formElementWithOptions extends FormElement {
     }
 
     private String getResponse(ArrayList<String> options){
-        if (somethingIsSelected())
-            return options.get(getSelectedElementIndex());
-        else
+        int selectedIndex = getSelectedElementIndex();
+
+        if(selectedIndex >= options.size())
             return "";
+        else
+            return options.get(selectedIndex);
+
     }
 
     public Boolean hasOptions(){
@@ -140,24 +141,7 @@ public abstract class formElementWithOptions extends FormElement {
 
     }
 
-    private void addGuiOptionsToMerged(ArrayList<String> newTrueOptions,ArrayList<ArrayList<String>> registers){
-        if(GUIOptions != trueOptions){
-            ArrayList<String> newGuiOptions;
-                newGuiOptions = getNewGuiData(newTrueOptions);
-        int size = registers.size();
-            for (int i = 0;i < size ;i++)
-                registers.get(i).add(1,newGuiOptions.get(i));
-        }
-    }
 
-    private ArrayList<String> getNewGuiData(ArrayList<String> newTrue){
-        ArrayList<String> newGui = new ArrayList<>();
-        for(String newOptions: newTrue)
-            newGui.add(GUIOptions.get(trueOptions.indexOf(newOptions)));
-
-        return newGui;
-
-    }
 
     public void setGUIOptions(ArrayList<String> GUIO){
         setEnabled(true);
@@ -215,15 +199,10 @@ public abstract class formElementWithOptions extends FormElement {
     return this;
     }
 
-
-
-        
     public void removeOptions(){
         resetOptions();
         removeGUIOptions();
     }
-
-    protected abstract boolean somethingIsSelected();
 
     public abstract void removeGUIOptions();
     

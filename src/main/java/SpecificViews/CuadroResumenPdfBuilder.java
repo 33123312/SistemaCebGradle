@@ -20,6 +20,7 @@ public class CuadroResumenPdfBuilder extends PDFPlantillaTable{
         this.evaluacion = getEvaNumberFromString(evaluacion);
         this.semestre = semestre;
         gruposInfoCollection = new HashMap<>();
+        addMembreteLargo();
         buildPdf();
     }
 
@@ -77,8 +78,6 @@ public class CuadroResumenPdfBuilder extends PDFPlantillaTable{
             return 1;
         if (eva.equals("3ra"))
             return 2;
-        if (eva.equals("4ra"))
-            return 3;
 
         return -21;
     }

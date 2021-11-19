@@ -7,6 +7,7 @@ public class PlanosEstudioRegisterProps extends RegisterDetail{
         super(infoPanel);
         overRideDefOp("eliminar", new DeletePlanosOp(infoPanel));
         overRideDefOp("modificar", new PlanosModificationOp(infoPanel));
+
         addPill(new PlanosMateriasPills());
         addPill(new PlanoGrupoViewerPill());
 
