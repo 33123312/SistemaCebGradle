@@ -9,5 +9,7 @@ public class AlumnosRegisterProps extends  RegisterDetail{
         addOperation(new BoletaConsulter(infoPanel));
         addOperation(new BoletaBuilder(infoPanel));
         addOperation(new DeleteAluOperation(infoPanel));
+        addOperation(new GrupoPassOp(infoPanel));
+
     }
 }

@@ -38,7 +38,7 @@ public class ConditionedRefTableBuild extends NewRegisterGenTableBuild {
         return viewSpecs.getPrimarykey();
     }
 
-    private void showwInsertDsplegableMenu() {
+    private void showInsertDsplegableMenu() {
         DesplegableMenuFE menu = new DesplegableMenuFE(){
             @Override
             public BtnFE buttonsEditor(BtnFE button) {
@@ -48,7 +48,7 @@ public class ConditionedRefTableBuild extends NewRegisterGenTableBuild {
             }
         };
         menu.addButton("Añadir Nuevo", getNewRegisterGenEvent());
-        menu.addButton("Añadir Existente", getAddExistentEvent());
+        //menu.addButton("Añadir Existente", getAddExistentEvent());
         menu.showMenu();
     }
 
@@ -105,7 +105,7 @@ public class ConditionedRefTableBuild extends NewRegisterGenTableBuild {
             @Override
             public void mousePressed(MouseEvent e) {
                 super.mousePressed(e);
-                showwInsertDsplegableMenu();
+                showInsertDsplegableMenu();
             }
         };
     }

@@ -85,41 +85,39 @@ public class DateInput extends FormElement{
         return parentCont;
     }
 
-    @Override
-    public void useDefval() {
-
-    }
 
     @Override
     protected String getResponseConfig(){
-        if (año.getText().equals("AA") &&
-                mes.getText().equals("MM") &&
-                dia.getText().equals("DD")
-        )
+        if (isEmpty())
             return "";
 
         return "20" + año.getText() + "-" + mes.getText() + "-" + dia.getText();
 
     }
-    
+
+    private boolean isEmpty(){
+        String ano = año.getText();
+        String me = mes.getText();
+        String di = dia.getText();
+
+        boolean isDef = ano.equals("AA") ||
+                me.equals("MM") ||
+                di.equals("DD");
+
+        boolean isEmpty = ano.isEmpty() || di.isEmpty() || me.isEmpty();
+
+        return  isEmpty || isDef;
+    }
+
     private void addWrongTypeError(){
         this.addErrorChecker(new ErrorChecker(){
             
             @Override
             public String checkForError(String response) {
-                try{
-                    Integer.parseInt(año.getText());
-                    Integer.parseInt(mes.getText());
-                    Integer.parseInt(dia.getText());
-            
-                }catch(NumberFormatException e){
+                if(Integer.parseInt(mes.getText()) > 12 ||
+                        Integer.parseInt(dia.getText()) >30)
                     return "Error en el Formato de la Fecha";
-                }
 
-                if(Integer.parseInt(mes.getText()) > 12 ||	
-                   Integer.parseInt(dia.getText()) >30)
-                    return "Error en el Formato de la Fecha";
-                
                 return "";
                 
             }

@@ -27,10 +27,14 @@ public abstract class ConsultTableBuild {
     protected DataBaseSearcher dataBaseConsulter;
     private final primaryKeyedTable outputTable;
     private ArrayList<String> tagsToShow;
+    private ConsulterReactiveSB searchBar;
     private KeyedTableBehavior behavior;
     private String name;
+    private boolean searchIsHidden;
 
     public ConsultTableBuild(String view) {
+        updateEvents = new ArrayList<>();
+        addSearchBarManager();
         dataBaseConsulter = new DataBaseSearcher(view);
         viewSpecs = dataBaseConsulter.getViewSpecs();
         name = viewSpecs.getInfo().getHumanName();
@@ -82,6 +86,9 @@ public abstract class ConsultTableBuild {
         resetSearch();
         updateSearch();
     }
+
+    private ArrayList<UpdateEvent> updateEvents;
+
     public void updateSearch(){
         infoPackage currentSearch = dataBaseConsulter.getSearch(tagsToShow);
 
@@ -90,6 +97,46 @@ public abstract class ConsultTableBuild {
                 currentSearch.getViewRegisters()
         );
 
+        for (UpdateEvent e: updateEvents)
+            e.OnUpdate(currentSearch);
+
+    }
+
+    private boolean maxRowsIsDeeterminated = false;
+
+    public void addSearchBarManager(){
+        addUpdateEvent(new ConsultTableBuild.UpdateEvent() {
+            @Override
+            public void OnUpdate(infoPackage currentSearch) {
+                int rows = currentSearch.getVisibleRegisters().rowCount();
+                if(!maxRowsIsDeeterminated){
+                    if (rows < 15){
+                        searchIsHidden = true;
+                        viewSearchBar(false);
+                    }
+                    else{
+                        searchIsHidden = false;
+                        viewSearchBar(true);
+                    }
+                    maxRowsIsDeeterminated = true;
+                }
+
+
+            }
+        });
+    }
+
+    private void viewSearchBar(boolean a){
+        if (searchBar != null)
+            searchBar.setVisible(a);
+    }
+
+    public void addUpdateEvent(UpdateEvent e){
+        updateEvents.add(e);
+    }
+
+    public interface UpdateEvent{
+        void OnUpdate(infoPackage currentSearch);
     }
 
     public abstract BtnFE getInsertButton();
@@ -104,20 +151,18 @@ public abstract class ConsultTableBuild {
     }
 
     public reactiveSearchBar getReactiveSearchBar(){
-        ConsulterReactiveSB searchBar = new ConsulterReactiveSB(viewSpecs);
-        ArrayList<String> searchTags = viewSpecs.getInfo().getTags();
+        searchBar = new ConsulterReactiveSB(viewSpecs);
+        searchBar.addInputManager(new stringInputManager(){
+            @Override
+            public void manageData(String tagName, String data) {
+                searchNReset(tagName,data);
+            }
+        });
+        searchBar.addItems(viewSpecs.getInfo().getTags());
 
-        if (searchTags.isEmpty())
+        if (searchIsHidden)
             searchBar.setVisible(false);
-        else {
-            searchBar.addInputManager(new stringInputManager(){
-                @Override
-                public void manageData(String tagName, String data) {
-                    searchNReset(tagName,data);
-                }
-            });
-            searchBar.addItems(searchTags);
-        }
+
         return searchBar;
     }
 

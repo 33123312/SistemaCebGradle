@@ -30,7 +30,7 @@ public class PlanesEstudioChoserOp extends Operation{
     }
     private void deployForm (){
         FormWindow formulario = new FormWindow("Cambiar Plan de Estudio");
-            formulario.addDesplegableMenu("Nuevo Plan").setOptions(getPlanes()).setDefaultValue("Ninguno");
+            formulario.addDesplegableMenu("Nuevo Plan").setOptions(getPlanes());
 
         formulario.addDataManager(new FormResponseManager() {
             @Override
@@ -43,11 +43,13 @@ public class PlanesEstudioChoserOp extends Operation{
                 dialog.addOnAcceptEvent(new genericEvents() {
                     @Override
                     public void genericEvent() {
+                        dialog.closeForm();
+                        formulario.getFrame().closeForm();
+
                         updatePlan(formulario.getData());
                         RegisterDetailView currentViewWindow = (RegisterDetailView)Global.view.currentWindow.thisWindow;
                             currentViewWindow.updateCurrentPill();
-                        dialog.closeForm();
-                        formulario.getFrame().closeForm();
+
                     }
                 });
             }
@@ -59,7 +61,7 @@ public class PlanesEstudioChoserOp extends Operation{
 
         String semestre = new GrupoOperator(keyValue).getRegisterValue("semestre");
 
-        String[] colsToBring = new String[]{"clave_plan","descripcion"};
+        String[] colsToBring = new String[]{"descripcion","clave_plan"};
 
         String[] cond = new String[]{"semestre"};
 
@@ -84,28 +86,28 @@ public class PlanesEstudioChoserOp extends Operation{
         ArrayList<String> originalValues = new ArrayList<>();
             originalValues.add(keyValue);
 
+        ViewSpecs.Updater regUpdater = new ViewSpecs("plan_grupo").getUpdater();
+
         try {
-            new ViewSpecs("plan_grupo").getUpdater().delete(origCond, originalValues);
+            regUpdater.delete(origCond, originalValues);
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        System.out.println(data);
+        String nuevoPlan = data.get("clave_plan");
+        ArrayList<String> keys = new ArrayList<>();
+            keys.add("plan");
+            keys.add("grupo");
+        ArrayList<String> values = new ArrayList<>();
+            values.add(nuevoPlan);
+            values.add(keyValue);
+
+        try {
+            regUpdater.insert(keys,values);
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
 
-        String nuevoPlan = data.get("clave_plan");
-        if(nuevoPlan != null){
-
-            ArrayList<String> keys = new ArrayList<>();
-                keys.add("plan");
-                keys.add("grupo");
-            ArrayList<String> values = new ArrayList<>();
-                values.add(nuevoPlan);
-                values.add(keyValue);
-
-            try {
-                new ViewSpecs("plan_grupo").getUpdater().insert(keys,values);
-            } catch (SQLException throwables) {
-                throwables.printStackTrace();
-            }
-        }
 
         updater.makeUpdate();
     }

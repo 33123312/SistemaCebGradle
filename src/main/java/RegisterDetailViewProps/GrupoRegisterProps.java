@@ -18,10 +18,10 @@ public class GrupoRegisterProps extends RegisterDetail{
     }
 
     private void addOps(){
+        addOperation(new GrupoBpletaOperation(infoPanel));
         addOperation(new GrupoCalifChoserOp(infoPanel));
         addOperation(new HorarioBuilder(infoPanel));
         addOperation(new ProfesorHorario(infoPanel));
-        //addOperation(new HorarioConsulter(infoPanel));
         addOperation(new GrupoCalifConsulter(infoPanel));
         addOperation(new ListadoAlumnosOp(infoPanel));
         addOperation(new ConcentradoTodasMateriasOp(infoPanel));

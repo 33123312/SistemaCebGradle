@@ -42,6 +42,7 @@ public class CuadroResumenPdfBuilder extends PDFPlantillaTable{
 
     private void addGrupoRow(String grupo){
         GrupoOperator operator = new GrupoOperator(grupo);
+        GrupoOperator.GrupoBoletaOperator boleta = operator.getGrupoBoletaOperator();
 
         Table materias = operator.getMaterias("Numérica");
 
@@ -53,7 +54,7 @@ public class CuadroResumenPdfBuilder extends PDFPlantillaTable{
                 String key = materiasKeys.get(i);
                 String materiaName = materiasNombres.get(i);
 
-                setGrupoMateriaInfo(operator,key,materiaName);
+                setGrupoMateriaInfo(boleta,key,materiaName);
             }
         }
     }
@@ -65,8 +66,8 @@ public class CuadroResumenPdfBuilder extends PDFPlantillaTable{
         gruposInfoCollection.get(name).add(infoPackage);
     }
 
-    private void setGrupoMateriaInfo(GrupoOperator operator,String materia,String name){
-        MateriaGrupoInfo info = new MateriaGrupoInfo(operator,materia);
+    private void setGrupoMateriaInfo(GrupoOperator.GrupoBoletaOperator boleta,String materia,String name){
+        MateriaGrupoInfo info = new MateriaGrupoInfo(boleta,materia);
         addRregister(name,info);
 
     }
@@ -92,6 +93,7 @@ public class CuadroResumenPdfBuilder extends PDFPlantillaTable{
     private void addTables(){
         for (Map.Entry<String,ArrayList<MateriaGrupoInfo>> entry: gruposInfoCollection.entrySet())
             addNewTable(entry.getKey(),entry.getValue());
+
         if (rowCount != 0)
         add(currentSiderTable);
     }
@@ -167,9 +169,11 @@ public class CuadroResumenPdfBuilder extends PDFPlantillaTable{
         String porcentajeRepro;
         String reprobados;
 
-        MateriaGrupoInfo(GrupoOperator operator,String materia) {
-            this.grupo = operator.getTableRegister();
+        MateriaGrupoInfo(GrupoOperator.GrupoBoletaOperator operator, String materia) {
+            this.grupo = operator.grupo;
+
             GrupoOperator.GrupoMateriaOperator operator1 = operator.getGrupoMateriaOp(materia);
+
             this.porcentajeRepro = operator1.getPorcentajeReprobadosEnUnidad(evaluacion);
             this.promedioTotal = operator1.getPromedioUnidad(evaluacion);
             this.reprobados = operator1.getReprobadosEnUnidad(evaluacion) + "";

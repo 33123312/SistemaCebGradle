@@ -8,7 +8,7 @@ import java.util.ArrayList;
 
 public abstract class
 AluMateriaOperator{
-    String materia;
+    public String materia;
     ArrayList<String> parcialesCal;
     String materiaType;
     String origin;
@@ -42,7 +42,9 @@ AluMateriaOperator{
     };
 
     private void getDefData(Table generalRes){
-        Table sub = generalRes.getSubTable(new String[]{"numero_control","materia"},new String[]{aluInfo.get("numero_control"),materia});
+        Table sub = generalRes.getSubTable(
+                new String[]{"numero_control","materia"},
+                new String[]{aluInfo.get("numero_control"),materia});
 
         if (sub.isEmpty())
             defData =  new Table(new ArrayList(), new ArrayList());

@@ -53,11 +53,18 @@ public abstract class formElementWithOptions extends FormElement {
     private String getResponse(ArrayList<String> options){
         int selectedIndex = getSelectedElementIndex();
 
-        if(selectedIndex >= options.size())
+        if(selectedIndex == -1)
+            return null;
+        
+        if(askingForEmpty(selectedIndex,options))
             return "";
         else
             return options.get(selectedIndex);
 
+    }
+
+    private boolean askingForEmpty(int index,ArrayList options){
+        return index == options.size();
     }
 
     public Boolean hasOptions(){
@@ -84,15 +91,6 @@ public abstract class formElementWithOptions extends FormElement {
         return GUIOptions != trueOptions;
     }
 
-    public ArrayList<String> getTrueOptions(){
-        return new ArrayList(trueOptions);
-    }
-    
-    protected String convertResponseToTrue(String response){
-
-        return trueOptions.get(GUIOptions.indexOf(response));
-
-    }
 
     public void mergeOptions(String key,Table options){
         if(incomeOptions.size() == 0)
@@ -141,15 +139,6 @@ public abstract class formElementWithOptions extends FormElement {
 
     }
 
-
-
-    public void setGUIOptions(ArrayList<String> GUIO){
-        setEnabled(true);
-        GUIOptions = GUIO;
-        buildGUIOptions();
-
-    }
-
     private boolean gotOptions(ArrayList<String> visibleOptions) {
         if (visibleOptions.isEmpty()) {
             removeOptions();
@@ -159,25 +148,31 @@ public abstract class formElementWithOptions extends FormElement {
             return true;
 
     }
-    
-    public formElementWithOptions setOptions(ArrayList<String> visibleOptions,ArrayList<String> trueOptions){
+
+    private void setGUIOptions(ArrayList<String> GUIO){
+        setEnabled(true);
+        GUIOptions = GUIO;
+        buildGUIOptions();
+
+    }
+
+    protected void setOptions(ArrayList<String> visibleOptions,ArrayList<String> trueOptions){
         if(gotOptions(visibleOptions)){
             setTrueOptions(trueOptions);
             setGUIOptions(visibleOptions);
         }
-
-        return this;
     }
 
     public formElementWithOptions setOptions(Table options){
-        ArrayList<String> GUIoptions = new ArrayList(options.getColumn(0)) ;
-            if(options.columnCount() == 2){
-                ArrayList<String> trueOptions = new ArrayList(options.getColumn(1)) ;
-                setOptions(GUIoptions,trueOptions);
-                setTrueTitle(options.getColumnTitles().get(1));
+        System.out.println(options.getColumnTitles());
+        System.out.println(options.getRegisters());
+        ArrayList<String> GUIoptions = new ArrayList(options.getColumn(0));
 
-            }else
-                setOptions(GUIoptions);
+        if(options.columnCount() == 2){
+            setOptions(GUIoptions,options.getColumn(1));
+            setTrueTitle(options.getColumnTitles().get(1));
+        }else
+            setOptions(GUIoptions);
 
         return this;
     }

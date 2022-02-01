@@ -27,12 +27,13 @@ public class DataBaseConector {
     private Timer timer;
 
     public boolean checkConection(){
+        boolean wasConn = isChecked;
         if(!isChecked){
             reConect();
             activateTimer();
         }
 
-        return isChecked;
+        return wasConn;
     }
 
     private void activateTimer(){
@@ -78,7 +79,7 @@ public class DataBaseConector {
     private void makeConection(){
 
         String connSpecs = "?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC";
-        String URL = "jdbc:mysql://147.182.129.199:3306/";
+        String URL = "jdbc:mysql:// " + DBSTate.serverDir + "/";
         myCon = null;
         try {
              myCon =

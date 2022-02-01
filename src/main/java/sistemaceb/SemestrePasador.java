@@ -1,9 +1,10 @@
 package sistemaceb;
 
 import Generals.BtnFE;
+import JDBCController.DataBaseConsulter;
+import JDBCController.Table;
 import JDBCController.ViewSpecs;
 import JDBCController.dataType;
-import SpecificViews.GrupoPasserInfoStorage;
 import SpecificViews.LinearHorizontalLayout;
 import SpecificViews.LinearVerticalLayout;
 import sistemaceb.form.ErrorChecker;
@@ -17,13 +18,15 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public class SemestrePasador extends Window{
 
     LinearVerticalLayout body;
     LinearVerticalLayout controlsPanel;
     ArrayList<String> semestres;
-    ArrayList<GrupoPasserInfoStorage> currentPasadoresInfoPackage;
+    Map<String,Map<String,ArrayList<String>>> currentPasadoresInfoPackage;
     private ArrayList<GrupoPasserWindow> grupoPassers;
 
     public SemestrePasador(){
@@ -131,16 +134,36 @@ public class SemestrePasador extends Window{
         controlsPanel.addElement(getControlsSection("Manejar Grupos",gruposPanel));
     }
 
-    private ArrayList<GrupoPasserInfoStorage> collectInfoFromPassers(){
-        ArrayList<GrupoPasserInfoStorage> infos = new ArrayList<>();
+    private Map<String,Map<String,ArrayList<String>>> collectInfoFromPassers(){
+        Map<String,Map<String,ArrayList<String>>> infos = new HashMap<>();
         for (GrupoPasserWindow window:grupoPassers)
-            if (window.hasDefInfo())
-                infos.add(window.getSelectionsInfo());
+            if (window.hasDefInfo()){
+                infos.put(window.grupo,window.getSelectionsInfo());
+            }
+
 
         return infos;
     }
 
     public void update(){
+        if (checkWindowThing())
+            addGrupos();
+    }
+
+
+    private void addGrupos(){
+        currentPasadoresInfoPackage = collectInfoFromPassers();
+        //la informacion de los passers nunca se pierde, pero reiniciamos loa passers por si se cambio un alumno o lago
+        grupoPassers = new ArrayList<>();
+        gruposPanel.removeAll();
+
+        for (String semestre:semestres)
+            gruposPanel.addElement(getGruposToPassPanel(semestre));
+
+
+    }
+
+    private boolean checkWindowThing(){
         String objClassName = "class sistemaceb.GrupoPasserWindow";
         String className;
         ViewAdapter win = Global.view.currentWindow;
@@ -149,31 +172,13 @@ public class SemestrePasador extends Window{
         else
             className = win.thisWindow.getClass().toString();
 
-        System.out.println(className + " class sistemaceb.GrupoPasserWindow " + className.equals(objClassName));
-
-        if (!className.equals(objClassName))
-            addGrupos();
-    }
-
-    private void addGrupos(){
-        currentPasadoresInfoPackage = collectInfoFromPassers();
-        grupoPassers = new ArrayList<>();
-        gruposPanel.removeAll();
-
-        for (String semestre:semestres)
-            gruposPanel.addElement(getGruposToPassPanel(semestre));
-        setDefInfo();
+        return !className.equals(objClassName);
 
     }
 
-    private GrupoPasserInfoStorage gotDefInfo(String grupo){
+    private Map<String,ArrayList<String>> gotDefInfo(String grupo){
 
-        for (GrupoPasserInfoStorage storage:currentPasadoresInfoPackage){
-            if(storage.getGrupo().equals(grupo))
-                return storage;
-        }
-
-        return null;
+        return  currentPasadoresInfoPackage.get(grupo);
     }
 
     private JPanel getErrorGrupoMessage(){
@@ -219,9 +224,10 @@ public class SemestrePasador extends Window{
             gruposPanel.setOpaque(false);
 
         ArrayList<String> grupos = getSemestreGrupos(semestre);
+        Table alumnos = getAlumnos(semestre);
 
         for (String grupo : grupos) {
-            BtnFE grupoBtn = getBtnGrupoPasser(grupo);
+            BtnFE grupoBtn = getBtnGrupoPasser(grupo,semestre,alumnos);
             gruposPanel.addElement(grupoBtn);
         }
 
@@ -234,6 +240,13 @@ public class SemestrePasador extends Window{
 
     }
 
+    private Table getAlumnos(String semestre){
+        DataBaseConsulter consulter = new DataBaseConsulter("alumnos_visible_view");
+
+        return consulter.bringTable();
+
+    }
+
     private JLabel getSemestreTitleLabel(String semestre){
         JLabel semetreTitle = new JLabel("Semestre: " + semestre);
             semetreTitle.setFont(new Font("arial", Font.PLAIN, 17));
@@ -242,15 +255,9 @@ public class SemestrePasador extends Window{
         return semetreTitle;
     }
 
-    private void setDefInfo(){
-        for(GrupoPasserWindow passer:grupoPassers){
-            GrupoPasserInfoStorage storage = gotDefInfo(passer.grupo);
-            if (storage != null)
-            passer.setDefValues(storage);
-        }
-    }
 
-    private BtnFE getBtnGrupoPasser(String grupo){
+
+    private BtnFE getBtnGrupoPasser(String grupo,String semestre,Table alumnos){
         BtnFE btn = new BtnFE(grupo);
             btn.setPadding(3,10,3,10);
             btn.setBackground(new Color(41, 128, 185));
@@ -258,9 +265,10 @@ public class SemestrePasador extends Window{
             btn.setMargins(5,0,5,10,Color.white);
             btn.setFuente(new Font("arial", Font.PLAIN, 15));
 
-            GrupoPasserWindow passer;
-
-            passer = new GrupoPasserWindow(grupo);
+            GrupoPasserWindow passer = new GrupoPasserWindow(grupo,semestre, alumnos);
+            Map<String,ArrayList<String>> storage = gotDefInfo(passer.grupo);
+            if (storage != null)
+                passer.setDefValues(storage);
 
             grupoPassers.add(passer);
             btn.addMouseListener(new MouseAdapter() {

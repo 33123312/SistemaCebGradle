@@ -17,7 +17,7 @@ public class TableRegister {
     ArrayList<String> columnTitles;
     ArrayList<String> values;
     
-    TableRegister(ArrayList<String> columnTitles,ArrayList<String> values){
+    public TableRegister(ArrayList<String> columnTitles,ArrayList<String> values){
         this.columnTitles = columnTitles;
         this.values = values;
     }
@@ -30,7 +30,7 @@ public class TableRegister {
         return values;
     }
     
-    public String  get(String columnTitle){
+    public String get(String columnTitle){
 
         if(columnTitles.contains(columnTitle))
             return values.get(columnTitles.indexOf(columnTitle));

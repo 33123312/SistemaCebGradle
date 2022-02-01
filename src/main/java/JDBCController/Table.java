@@ -129,23 +129,26 @@ public class Table {
     }
 
     public Table getSubTable(String[] cond,String[] val){
-        int condLength = cond.length;
-        int[] colIndex = getIndexes(condLength,cond);
-        ArrayList<ArrayList<String>> res = new ArrayList<>();
+        int searchSize = cond.length;
+        ArrayList<ArrayList<String>> filteredArray = registers;
+        for (int i = 0;i < searchSize;i++)
+            filteredArray = getSubTable(cond[i],val[i],filteredArray);
 
-        for (ArrayList<String> register: registers){
-            boolean hasCoincidence = true;
-            for (int i = 0;i < condLength;i++)
-                if (!val[i].equals(register.get(colIndex[i]))){
-                    hasCoincidence = false;
-                    break;
-                }
+        return new Table(getColumnTitles(),filteredArray);
+    }
 
-            if (hasCoincidence)
-                res.add(register);
+    private ArrayList<ArrayList<String>> getSubTable(String condition,String value,ArrayList<ArrayList<String>> registers){
+        int colIndex = getColumnTitles().indexOf(condition);
+        ArrayList<ArrayList<String>> sub = new ArrayList<>();
+
+        for (ArrayList<String> register:registers){
+            String val = register.get(colIndex);
+            if (val  != null && val.equals(value))
+                sub.add(register);
         }
 
-        return new Table(getColumnTitles(),res);
+
+        return sub;
     }
 
     private int[] getIndexes(int condLength,String[] cond){

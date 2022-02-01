@@ -40,7 +40,7 @@ public class SimpleInsertTableBuild extends ConsultTableBuild {
             public void mousePressed(MouseEvent e) {
                 super.mousePressed(e);
                 MultipleFormWindow win = new MultipleFormWindow(
-                        "Nuevo Registro",dataBaseConsulter.getViewSpecs(),tags,true);
+                        "Nuevo Registro",dataBaseConsulter.getViewSpecs(),tags);
 
                 win.addDataManager(new FormResponseManager() {
                     @Override

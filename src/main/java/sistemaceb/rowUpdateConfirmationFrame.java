@@ -19,11 +19,9 @@ import java.util.ArrayList;
  * @author escal
  */
 public class rowUpdateConfirmationFrame extends FormDialogMessage {
-    
 
-    
     public rowUpdateConfirmationFrame (){
-        super("¿Está completamente seguro de eliminar el siguiente registro?","");
+        super("Eliminar Registro","¿Está completamente seguro querer de eliminar el registro?");
         addAcceptButton();
     }
 

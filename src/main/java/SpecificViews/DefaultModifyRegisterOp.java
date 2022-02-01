@@ -6,8 +6,7 @@ import sistemaceb.TagFormBuilder;
 import sistemaceb.form.FormWindow;
 import sistemaceb.form.Formulario;
 import sistemaceb.form.Global;
-import sistemaceb.genericEvents;
-import sistemaceb.rowUpdateConfirmationFrame;
+
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -38,8 +37,6 @@ public class DefaultModifyRegisterOp extends Operation{
 
             @Override
             public void manageData(Formulario form) {
-                formWindow.getFrame();
-
                 Map<String, String> trueData = form.getData();
 
                 ArrayList<String> responseTagTitles = new ArrayList<>(trueData.keySet());
@@ -58,25 +55,14 @@ public class DefaultModifyRegisterOp extends Operation{
                 ArrayList<String> updateValues = new ArrayList();
                 updateValues.add(keyValue);
 
-                rowUpdateConfirmationFrame confirmationForm =
-                        new rowUpdateConfirmationFrame();
+                try {
+                    viewSpecs.getUpdater().update(responseTitles,responseValues,updateConditions,updateValues);
+                    formWindow.getFrame().closeForm();
+                    Global.view.currentWindow.cut();
+                } catch (SQLException throwables) {
+                    throwables.printStackTrace();
+                }
 
-                formWindow.getFrame().addChildForm(confirmationForm);
-                confirmationForm.addOnAcceptEvent(new genericEvents(){
-
-                    @Override
-                    public void genericEvent(){
-                        formWindow.getFrame().closeForm();
-                        try {
-
-                            viewSpecs.getUpdater().update(responseTitles,responseValues,updateConditions,updateValues);
-                        } catch (SQLException throwables) {
-                            throwables.printStackTrace();
-                        }
-                        Global.view.currentWindow.cut();
-                        confirmationForm.closeForm();
-                    }
-                });
             }
         });
     }

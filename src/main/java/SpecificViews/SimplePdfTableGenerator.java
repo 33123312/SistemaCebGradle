@@ -8,61 +8,47 @@ import com.itextpdf.layout.property.UnitValue;
 import java.util.ArrayList;
 import java.util.Map;
 
-public class SimplePdfTableGenerator {
-    PDFPlantillaGetter plantilla;
+public class SimplePdfTableGenerator extends PDFPlantillaTable{
 
     SimplePdfTableGenerator(Table table, float[] sizes, Map<String,String> params){
-        plantilla = new PDFPlantillaGetter("Concentrado de Calificaciones por Materia");
-        plantilla.addParams(params);
+        super("Concentrado de Calificaciones por Materia");
+        adddMembreteCorto();
+        addParams(params);
         addTable(table,sizes);
 
     }
 
      private void addTable(Table table,float[] sizes){
-         com.itextpdf.layout.element.Table table1 = new com.itextpdf.layout.element.Table(sizes);
-            table1.setWidth(new UnitValue(UnitValue.PERCENT, 100));
+        setTable(sizes);
          ArrayList<String> titles = table.getColumnTitles();
 
-         addTitleRow(titles,table1);
+         addTitleRow(titles);
 
          ArrayList<ArrayList<String>> registers = table.getRgistersCopy();
 
          for (ArrayList<String> register: registers)
-             addRow(register,table1);
+             addRow(register);
 
-         plantilla.add(table1);
-         plantilla.close();
+         addTable();
+         close();
 
      }
 
-    private void addTitleRow(ArrayList<String> vals,com.itextpdf.layout.element.Table table1){
+    private void addTitleRow(ArrayList<String> vals){
         for(String val:vals){
             if(val == null)
                 val = "";
-            Cell newCell = new Cell(1,1).
-                    add(val).
-                    setFontSize(10).
-                    setPadding(0).
-                    setPaddingLeft(1).
-                    setPaddingRight(1).setBackgroundColor(Color.LIGHT_GRAY);
-
-            table1.addCell(newCell);
+            addCell(getCellDeftyle(val,getDefCell("")));
         }
 
     }
 
-     private void addRow(ArrayList<String> vals,com.itextpdf.layout.element.Table table1){
+     private void addRow(ArrayList<String> vals){
         for(String val:vals){
             if(val == null)
                 val = "";
-            Cell newCell = new Cell(1,1).
-                    add(val).
-                    setFontSize(10).
-                    setPadding(0).
-                    setPaddingLeft(1).
-                    setPaddingRight(1);
 
-            table1.addCell(newCell);
+            addCell(getDefCell(val));
         }
 
      }

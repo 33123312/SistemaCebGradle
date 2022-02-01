@@ -71,14 +71,17 @@ public class DesplegableMenu extends formElementWithOptions{
         addElement(menu);
     }
 
-    @Override
-    public void useDefval() {
-        menu.setSelectedIndex(menu.getItemCount());
-    }
 
     @Override
     public void setDefaultValue(String defaultValue){
-        super.setDefaultValue(defaultValue);
+        this.defaultValue = defaultValue;
+        if(hasOptions())
+            setResponse(defaultValue);
+    }
+
+    protected void setOptions(ArrayList<String> visibleOptions,ArrayList<String> trueOptions){
+        super.setOptions(visibleOptions,trueOptions);
+        setResponse(defaultValue);
     }
 
     @Override
@@ -99,12 +102,6 @@ public class DesplegableMenu extends formElementWithOptions{
     public int getSelectedElementIndex(){
 
         return menu.getSelectedIndex();
-    }
-
-
-    @Override
-    public formElementWithOptions setOptions(Table options) {
-        return super.setOptions(options);
     }
 
     @Override

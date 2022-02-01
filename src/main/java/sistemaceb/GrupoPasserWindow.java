@@ -1,8 +1,10 @@
 package sistemaceb;
 
 import Generals.BtnFE;
+import JDBCController.Table;
 import SpecificViews.GrupoOperator;
 import SpecificViews.GrupoPasserInfoStorage;
+import SpecificViews.LinearHorizontalLayout;
 import SpecificViews.LinearVerticalLayout;
 import sistemaceb.form.Global;
 import sistemaceb.form.HorizontalFormPanel;
@@ -14,51 +16,74 @@ import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
+import java.util.Map;
 
 public class GrupoPasserWindow extends Window{
 
     public String grupo;
-    GrupoSemestrePasador pasador;
-    HorizontalFormPanel nextGrupoGetter;
-    formElementWithOptions gruposDesplegableMenu;
-    SelectionFIlterTable table;
-    GrupoOperator operator;
+    private GrupoSemestrePasador pasador;
+    private SelectionFIlterTable table;
+    private Table alumnos;
 
-    public GrupoPasserWindow(String grupo){
+
+    public GrupoPasserWindow(String grupo, String currentSemestre, Table alumnos){
         this.grupo = grupo;
-        operator = new GrupoOperator(grupo);
-        pasador = new GrupoSemestrePasador(operator);
+        this.alumnos = alumnos;
+        pasador = new GrupoSemestrePasador(currentSemestre);
         setTitle("Pasar Alumnos al Siguiente Semestre - " + grupo);
         addBody();
     }
 
     public boolean hasDefInfo(){
-        String nextGrupo = getNextGrupo();
-        return nextGrupo != null || !table.getSelectedAlumnos().isEmpty();
+        return  table.hasSelectedAlumnos();
     }
 
-    public GrupoPasserInfoStorage getSelectionsInfo(){
-        return new GrupoPasserInfoStorage(grupo,getNextGrupo(),table.getSelectedAlumnos());
+    private JPanel getTableContainer(){
+        JPanel container = new JPanel(new BorderLayout());
+            container.setOpaque(false);
+
+        LinearHorizontalLayout buttonContainer = new LinearHorizontalLayout();
+            buttonContainer.addElement(getSelectAllBtn());
+
+        container.add(buttonContainer,BorderLayout.NORTH);
+        container.add(table,BorderLayout.CENTER);
+
+        return container;
     }
 
+    private BtnFE getSelectAllBtn(){
+        BtnFE btnFE = new BtnFE("Seleccionar Todos");
+        btnFE.setPadding(10,10,10,10);
+        btnFE.setBackground(new Color(52, 152, 219));
+            btnFE.addMouseListener(new MouseAdapter() {
+                @Override
+                public void mousePressed(MouseEvent e) {
+                    super.mousePressed(e);
+                    table.selectAll();
+                }
+            });
 
-
-    public void setDefValues(GrupoPasserInfoStorage grupoDedInfo){
-        gruposDesplegableMenu.setResponse(grupoDedInfo.getSelectedNextGrupo());
-        table.setDefaltSelections(grupoDedInfo.getSelectedAluIndexes());
+        return btnFE;
     }
 
-    private void updateNextgrupos(){
-        ArrayList<String> newOptions = pasador.getNextSemestreGrupos();
-        gruposDesplegableMenu.setOptions(newOptions);
+    public Map<String,ArrayList<String>>  getSelectionsInfo(){
+        return table.getSelectedAlumnos();
+    }
+
+    public void setDefValues(Map<String,ArrayList<String>> defSelections){
+        table.setDefaultSelections(defSelections);
+    }
+
+    private void updateGrupos(){
+        table.updateEvr(pasador.getNextSemestreGrupos());
 
     }
 
     private void addBody(){
         LinearVerticalLayout panel = new LinearVerticalLayout();
             panel.addElement(getDescLabel());
-            panel.addElement(getGroupDesplegableMenu());
-            panel.addElement(getAlumnosTable());
+            panel.addElement(getGrupoChoser());
+            panel.addElement(getTableContainer());
             panel.addElement(getPie());
             panel.setBorder(new EmptyBorder(20,70,20,70));
 
@@ -80,26 +105,25 @@ public class GrupoPasserWindow extends Window{
         return descLabel;
     }
 
-    private JPanel getGroupDesplegableMenu(){
+    private JPanel getGrupoChoser(){
         JPanel container = new JPanel(new GridBagLayout());
         container.setBorder(new EmptyBorder(15,0,15,0));
 
-        if(pasador.isLastSemestre())
-            container.add(getUltimoSemestrePanel());
-        else
-            container.add(getGrupoGetter());
+        table = new SelectionFIlterTable(grupo,alumnos);
+
+        if(pasador.isLastSemestre()){
+          container.add(getUltimoSemestrePanel());
+          table.createGroup("004");
+        }
+        else{
+            container.add(table.getColorsSelectionBar());
+            updateGrupos();
+        }
 
         return container;
     }
 
-    private JPanel getGrupoGetter(){
-        nextGrupoGetter = new HorizontalFormPanel();
-        gruposDesplegableMenu = nextGrupoGetter.addDesplegableMenu("Nuevo Grupo");
-        updateNextgrupos();
 
-        return nextGrupoGetter;
-
-    }
 
     private JPanel getUltimoSemestrePanel(){
         JPanel cont = new JPanel(new GridBagLayout());
@@ -111,10 +135,7 @@ public class GrupoPasserWindow extends Window{
         return cont;
     }
 
-    private SelectionFIlterTable getAlumnosTable(){
-        table = new SelectionFIlterTable(operator);
-        return table;
-    }
+
 
     private JPanel getPie(){
         JPanel pie = new JPanel(new BorderLayout());
@@ -144,36 +165,15 @@ public class GrupoPasserWindow extends Window{
     }
 
     public boolean canSubmit(){
-        if (!pasador.isLastSemestre()){
-            ArrayList<String> keys = table.getSelectedAlumnos();
-            if(keys.isEmpty()){
-                return true;
-            } else {
-                if(nextGrupoGetter.hasErrors())
-                    return false;
-                else
-                    return true;
-            }
-        }
-        return true;
-    }
-
-    private String getNextGrupo(){
-        if(nextGrupoGetter == null)
-            return null;
-        else
-            return nextGrupoGetter.getData().get("Nuevo Grupo");
-
+        return !pasador.isLastSemestre() || table.hasSelectedAlumnos();
     }
 
     public void submit(){
-        ArrayList<String> keys = table.getSelectedAlumnos();
+        Map<String,ArrayList<String>> groups = table.getSelectedAlumnos();
         if (pasador.isLastSemestre())
-            pasador.graduarAlumnos(keys);
-        else {
-            String nextGrupo = getNextGrupo();
-            pasador.passAlumnos(nextGrupo,keys);
-        }
+            pasador.graduarAlumnos(groups.get("004"));
+        else
+            pasador.passAlumnos(groups);
 
     }
 }

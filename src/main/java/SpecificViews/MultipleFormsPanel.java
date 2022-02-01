@@ -22,7 +22,7 @@ public class MultipleFormsPanel extends LinearVerticalLayout {
     private ArrayList<String> visibleRowTitles;
     private FormElementBuilder builder;
     int maxtitleSize;
-    public boolean isSeted;
+    public boolean allElementsAreSetted;
     private Table data;
 
     public MultipleFormsPanel(opBackend back, Table rowsTitles, FormElementBuilder builder,Table data){
@@ -38,10 +38,6 @@ public class MultipleFormsPanel extends LinearVerticalLayout {
         visibleRowTitles = rowsTitles.getColumn(1);
         setBorder(BorderFactory.createEmptyBorder(0,0,40,0));
         this.data = data;
-
-    }
-
-    private void commonCons(opBackend back, Table rowsTitles){
 
     }
 
@@ -64,10 +60,13 @@ public class MultipleFormsPanel extends LinearVerticalLayout {
         ArrayList<String> lateralTitles = getLateraltrueTiles();
         for(String lateralTitle:lateralTitles)
             addForm(getNewForm(lateralTitle));
+
+        allElementsAreSetted = true;
     }
 
     public String getElementRowValue(FormElement element){
         int rowIndex = getRow(element);
+
         return rowsTitles.getColumn(0).get(rowIndex);
     }
 
@@ -84,7 +83,7 @@ public class MultipleFormsPanel extends LinearVerticalLayout {
                 return forms.indexOf(form);
         }
 
-        return -23;
+        return -1;
     }
 
     private int getColCount(){
@@ -96,18 +95,22 @@ public class MultipleFormsPanel extends LinearVerticalLayout {
                 getColumn(0);
     }
 
-    private keyedHForm getNewForm(String rowKey){
-       keyedHForm newForm = new keyedHForm(rowKey);
+    private keyedHForm getNewForm(String rowKey) {
+        keyedHForm newForm = new keyedHForm(rowKey);
 
-        for(String title:titles){
-           FormElement ele =  builder.buildElement(newForm,title,rowKey);
-           String curentValue = trytoGetCurrentValue(title,rowKey);
-           if(curentValue != null)
+        for (String title : titles) {
+            FormElement ele = builder.buildElement(newForm, title, rowKey);
+            String curentValue = trytoGetCurrentValue(title, rowKey);
+            if (curentValue != null)
                 ele.setDefaultValue(curentValue);
         }
 
+
+
         newForm.addDataManager(back.getResponseManager());
         newForm.addTitle(visibleRowTitles.get(getCount()));
+
+
 
         return newForm;
     }

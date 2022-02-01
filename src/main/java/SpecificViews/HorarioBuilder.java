@@ -66,15 +66,10 @@ public class HorarioBuilder extends MultipleFormsOperation{
         }
     }
 
-    public ArrayList<String> getDias() {
-        ArrayList<String> dias = new ArrayList<>();
-            dias.add("Lunes");
-            dias.add("Martes");
-            dias.add("Miércoles");
-            dias.add("Jueves");
-            dias.add("Viernes");
+    private ArrayList<String> getDias(){
+        DataBaseConsulter consulter = new DataBaseConsulter("dias_clase_view");
 
-        return dias;
+        return consulter.bringTable().getColumn(0);
     }
 
     private Table getHorasClase(){
@@ -189,6 +184,7 @@ public class HorarioBuilder extends MultipleFormsOperation{
             panel.addBuilder(getBuilder(panel));
 
 
+
         addForm("Horario", panel);
     }
 
@@ -221,6 +217,7 @@ public class HorarioBuilder extends MultipleFormsOperation{
             @Override
             public FormElement buildElement(Formulario form, String title, String row) {
 
+                form.setUsesfocus(false);
                 Map<String,String> currentValues = materiasOP.get(row);
 
                 formElementWithOptions newElement = (formElementWithOptions)form.addDesplegableMenu(title).
@@ -240,9 +237,8 @@ public class HorarioBuilder extends MultipleFormsOperation{
         return new TrigerElemetGetter() {
             @Override
             public void onTrigger(FormElement element) {
-                if(panel.isSeted)
-                alredyExists(element,panel);
-
+                if(element.hasBeenModified() && panel.allElementsAreSetted && !element.getResponse().isEmpty())
+                    alredyExists(element,panel);
             }
         };
     }
@@ -267,13 +263,12 @@ public class HorarioBuilder extends MultipleFormsOperation{
 
     private void alredyExists(FormElement element,MultipleFormsPanel panel) {
         formElementWithOptions elementoOp = (formElementWithOptions)element;
+
         String hora = panel.getElementRowValue(elementoOp);
         String dia = panel.getElementColValue(elementoOp);
-
         String prof = getProfesor(elementoOp);
 
         if (checkIfHoraIsOcupada(prof,hora,dia)) {
-
             FormDialogMessage errorMesagge = new FormDialogMessage("Error al asignar materia",
                     "No se puede asignar la materia, pues el profesor que imparte esta materia ya tine una clase a esa hora");
 
@@ -297,6 +292,8 @@ public class HorarioBuilder extends MultipleFormsOperation{
         String[] cond = new String[]{"dia","hora","profesor"};
 
         String[] value = new String[]{dia,hora,profesor};
+
+        System.out.println("----------------------------------");
 
         return !consulter.bringTable(cond,value).isEmpty();
 

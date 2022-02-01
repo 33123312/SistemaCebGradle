@@ -73,11 +73,6 @@ public class Input extends FormElement{
     }
 
     @Override
-    public void useDefval() {
-        textField.setText(getDefaultValue());
-    }
-
-    @Override
     protected String getResponseConfig(){
         
         return textField.getText().trim();

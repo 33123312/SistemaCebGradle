@@ -117,8 +117,7 @@ public class AsignturasPillChoser extends RegisterDetailTable {
     }
 
     private void deployModifyWindow(){
-        FormWindow formWindow = getFormBuild();
-
+        FormWindow formWindow = getFormBuildU();
         Table currentSearch= currentBehavior.build.getDataBaseConsulter().getSearch().getViewRegisters();
 
         ArrayList<String> defaultConditions = getTagValues(currentSearch);
@@ -134,10 +133,12 @@ public class AsignturasPillChoser extends RegisterDetailTable {
         formWindow.addDataManager(new FormResponseManager() {
             @Override
             public void manageData(Formulario form) {
+
                 Map<String,String> formResponse = form.getData();
 
                 ArrayList<String> cond = new ArrayList<>(formResponse.keySet());
                     cond.add("grupo");
+
                 ArrayList<String> values = new ArrayList<>(formResponse.values());
                     values.add(critValue);
 
@@ -156,6 +157,25 @@ public class AsignturasPillChoser extends RegisterDetailTable {
                 consultTable.updateSearch();
             }
         });
+    }
+
+    private FormWindow getFormBuildU(){
+        FormWindow form = new FormWindow("");
+
+        form.addVirtualParent("grupo", critValue);
+
+        form.addDesplegableMenu("Materia").setOptions(getMaterias());
+        form.addDesplegableMenu("Profesor");
+        form.addDesplegableMenu("Aula").setOptions(getAulas());
+
+        form.addElementRelation("Materia", "Profesor", new formRelationEvent() {
+            @Override
+            public void getNewOptions(String elementInput, formElementWithOptions conditionatedElement) {
+                Table profesoresOptions = getProfesoresFromMateria(elementInput);
+                conditionatedElement.setOptions(profesoresOptions);
+            }
+        });
+        return form;
     }
 
     private FormWindow getFormBuild() {

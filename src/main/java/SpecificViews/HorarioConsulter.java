@@ -136,14 +136,9 @@ public class HorarioConsulter extends Operation {
     }
 
     private ArrayList<String> getDias(){
-        ArrayList<String> dias = new ArrayList<>();
-            dias.add("Lunes");
-            dias.add("Martes");
-            dias.add("Miércoles");
-            dias.add("Jueves");
-            dias.add("Viernes");
+        DataBaseConsulter consulter = new DataBaseConsulter("dias_clase_view");
 
-        return dias;
+        return consulter.bringTable().getColumn(0);
     }
 
     private ArrayList<ArrayList<String>> defineRegisters(){

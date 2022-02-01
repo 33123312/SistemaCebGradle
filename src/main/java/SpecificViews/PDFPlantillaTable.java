@@ -27,6 +27,8 @@ public abstract class PDFPlantillaTable extends PDFPlantillaGetter{
 
 
     protected Cell getCellDeftyle(String txt,Cell currentCell ){
+        if(txt == null)
+            txt = "";
         currentCell.add(txt);
         currentCell.setPadding(0).
                 setPaddingLeft(1).

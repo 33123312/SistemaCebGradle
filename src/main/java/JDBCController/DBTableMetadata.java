@@ -163,6 +163,8 @@ public class DBTableMetadata{
         if (!Global.SQLConector.checkConection())
             makeMetadataConection();
 
+
+
         return metadata;
     }
     

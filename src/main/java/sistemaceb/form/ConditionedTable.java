@@ -18,8 +18,7 @@ import java.util.Map;
  *
  * @author escal
  */
-public class
-ConditionedTable {
+public class ConditionedTable {
     
     private  Map<String,String> conditionsTranslations;
     private  ArrayList<ConditionedTable> conditions;
@@ -96,7 +95,7 @@ ConditionedTable {
             return true;
         else {
             for (ConditionedTable condition : conditions) {
-                if (!condition.value.equals(""))
+                if (!condition.value.isEmpty())
                     return true;
             }
             return false;
@@ -117,7 +116,7 @@ ConditionedTable {
         for (Map.Entry<String,String> condition:conditionsTranslations.entrySet()){
             for(ConditionedTable table :conditions)
 
-                if(table.getTable().equals(condition.getValue()) && !table.value.equals("")){
+                if(table.getTable().equals(condition.getValue()) && !table.value.isEmpty()){
                     bringConditions.add(condition.getKey());
                     conditionsValues.add(table.value);
                 }

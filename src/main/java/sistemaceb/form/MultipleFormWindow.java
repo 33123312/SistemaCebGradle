@@ -2,6 +2,7 @@ package sistemaceb.form;
 
 import Generals.BtnFE;
 import JDBCController.ViewSpecs;
+import SpecificViews.LinearVerticalLayout;
 import sistemaceb.FormResponseManager;
 import sistemaceb.TagFormBuilder;
 import sistemaceb.Window;
@@ -16,32 +17,28 @@ import java.util.ArrayList;
 public class MultipleFormWindow extends Window {
 
     private ArrayList<HorizontalFormPanel> forms;
-    GridBagConstraints cons;
     private JPanel body;
-    private JPanel formsArea;
+    private LinearVerticalLayout formsArea;
     private JLabel adderForm;
     private ArrayList<FormResponseManager> dataManagers;
-    private JLabel filler;
 
     private final ViewSpecs specs;
     private final ArrayList<String> tags;
     boolean required;
 
 
-    public MultipleFormWindow(String title, ViewSpecs specs, ArrayList<String> tags, boolean required){
+    public MultipleFormWindow(String title, ViewSpecs specs, ArrayList<String> tags){
         super();
         this.specs = specs;
         this.tags = tags;
-        this.required = required;
+        this.required = true;
         dataManagers = new ArrayList<>();
-        filler = new JLabel();
-        add(filler);
 
         forms = new ArrayList<>();
         setTitle(title);
         setBody(getBody());
         defineAdderButton();
-        buildNewForm();
+        addForm();
         Global.view.currentWindow.newView(this);
     }
 
@@ -61,15 +58,6 @@ public class MultipleFormWindow extends Window {
 
     }
 
-    private void defineCons(){
-        cons = new GridBagConstraints();
-        cons.gridy = 0;
-        cons.weightx = 1;
-        cons.fill = GridBagConstraints.HORIZONTAL;
-        cons.anchor = GridBagConstraints.LINE_START;
-
-    }
-
     public void addDataManager(FormResponseManager e){
         dataManagers.add(e);
         for(HorizontalFormPanel form:forms)
@@ -77,7 +65,6 @@ public class MultipleFormWindow extends Window {
     }
 
     private JPanel getBody(){
-        defineCons();
         body = new JPanel(new BorderLayout());
             body.setBorder(BorderFactory.createEmptyBorder(30,30,30,30));
 
@@ -87,8 +74,7 @@ public class MultipleFormWindow extends Window {
     }
 
     private JPanel getFormsArea(){
-        defineCons();
-        formsArea = new JPanel(new GridBagLayout());
+        formsArea = new LinearVerticalLayout();
             formsArea.setBorder(BorderFactory.createEmptyBorder(0,0,40,0));
 
         return formsArea;
@@ -97,7 +83,7 @@ public class MultipleFormWindow extends Window {
     private JPanel getButtonsArea(){
         JPanel buttonsArea = new JPanel(new BorderLayout());
             buttonsArea.setBorder(BorderFactory.createEmptyBorder(0,0,0,15));
-        BtnFE btnAceptar  =new BtnFE("Aceptar");
+        BtnFE btnAceptar  =new BtnFE("Guardar");
             btnAceptar.setTextColor(Color.white);
             btnAceptar.setBackground(new Color(107, 117, 255));
             btnAceptar.setPadding(10,20,10,20);
@@ -114,16 +100,7 @@ public class MultipleFormWindow extends Window {
         return buttonsArea;
     }
 
-    public void addForm(){
-        formsArea.remove(adderForm);
-        buildNewForm();
-
-    }
-
-    private void buildNewForm(){
-        remove(filler);
-
-
+    private void addForm(){
         HorizontalFormPanel newForm = new HorizontalFormPanel();
             new TagFormBuilder(specs,tags,newForm,required);
             addManagers(newForm);
@@ -131,30 +108,18 @@ public class MultipleFormWindow extends Window {
         newForm.addLateral(getFormEliminationButton(newForm));
 
         formsArea.setVisible(false);
-        formsArea.add(newForm,cons);
-        cons.gridy++;
-        formsArea.add(adderForm,cons);
-        addFiller();
+        formsArea.remove(adderForm);
+        formsArea.addElement(newForm);
+        formsArea.addElement(adderForm);
         formsArea.setVisible(true);
         forms.add(newForm);
 
-
-    }
-
-    private void addFiller(){
-        cons.gridy++;
-        cons.weighty = 1;
-        formsArea.add(filler,cons);
-        cons.weighty = 0;
-        cons.gridy--;
     }
 
     private void addManagers(HorizontalFormPanel newForm){
         for(FormResponseManager manager: dataManagers)
             newForm.addDataManager(manager);
     }
-
-
     private JLabel getFormEliminationButton(HorizontalFormPanel form){
         JLabel eliminationButton = new JLabel("X");
             eliminationButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
@@ -168,15 +133,10 @@ public class MultipleFormWindow extends Window {
                 public void mousePressed(MouseEvent e) {
                     super.mousePressed(e);
                     setVisible(false);
-                    formsArea.remove(forms.indexOf(form));
-                    formsArea.remove(adderForm);
-                    formsArea.remove(filler);
+                    formsArea.removeElement(form);
 
                     forms.remove(form);
 
-                    cons.gridy--;
-                    formsArea.add(adderForm,cons);
-                    addFiller();
                     setVisible(true);
                 }
             });

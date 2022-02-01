@@ -69,6 +69,9 @@ public class HorariosPlanosPdf extends PDFPlantillaTable{
     }
 
     private Cell getMateriaCell(String txt){
+        if(txt==null)
+            txt = "No asignado";
+
         Cell currentCell = getInterCell(txt);
         try {
             currentCell.setFont(PdfFontFactory.createFont(FontConstants.HELVETICA_BOLD));

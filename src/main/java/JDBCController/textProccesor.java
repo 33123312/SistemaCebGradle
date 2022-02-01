@@ -13,8 +13,7 @@ import java.util.Arrays;
  * @author escal
  */
 public class textProccesor {
-    
-    
+
         public int sentenceCoincidence(String originalSentence,String sentenceToCompare){
 
             ArrayList<String> originalWords = separateSentence(originalSentence);
@@ -23,18 +22,19 @@ public class textProccesor {
             int thisSentenceCoincidence = 0;
 
             for (String originalWord : originalWords) {
-                int betterWordCoincidence = 1000;
+                int betterWordCoincidence = 0;
                 for(String wordToCompare : wordsToCompare){
                     int thiswordCoincidence = haveCoincidence(originalWord,wordToCompare);
-                    if(thiswordCoincidence < betterWordCoincidence)
+                    if(thiswordCoincidence > betterWordCoincidence)
                             betterWordCoincidence = thiswordCoincidence;
                 }
                 thisSentenceCoincidence+=betterWordCoincidence;
             }
 
-
         return thisSentenceCoincidence;
     }
+
+
 
     public int haveCoincidence(String keyWord,String testWord ){
         keyWord = keyWord.toLowerCase();
@@ -46,7 +46,7 @@ public class textProccesor {
         
         while(testWordPivot < testWord.length() && keyWordPivot < keyWord.length()){
             if (keyWord.charAt(keyWordPivot) == testWord.charAt(testWordPivot) )
-                matches++;
+                matches+=1;
             else
                 if (testWordPivot+1 != testWord.length() && keyWord.charAt(keyWordPivot) == testWord.charAt(testWordPivot+1))
                     //hay una letra que sobra,"pan" en "opan"  eliminacion,  colocamos el pivote de tes uno adelante, pues ahora sabemos que ahi continua la palabra
@@ -58,9 +58,9 @@ public class textProccesor {
             keyWordPivot++;
             testWordPivot++;
         }
+        //getErrorPercentage(testWord,keyWord,matches);
+        return matches;
 
-        return getErrorPercentage(testWord,keyWord,matches);
-        
     }
 
     private int getErrorPercentage(String wordA,String wordB,int matches){
@@ -71,6 +71,7 @@ public class textProccesor {
             return getPercentage(wordASize,matches);
         else
             return getPercentage(wordBSize,matches);
+
 
     }
 

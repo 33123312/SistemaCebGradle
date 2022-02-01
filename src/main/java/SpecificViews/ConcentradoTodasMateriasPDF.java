@@ -18,7 +18,6 @@ public class ConcentradoTodasMateriasPDF extends PDFPlantillaTable{
 
     private ArrayList<String> getTopTitles(){
         ArrayList<String> titles = new ArrayList<>();
-            //titles.add("Matricula");
             titles.add("Nombre");
 
         return titles;

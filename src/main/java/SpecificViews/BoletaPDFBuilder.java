@@ -2,10 +2,12 @@ package SpecificViews;
 
 import com.itextpdf.layout.border.Border;
 import com.itextpdf.layout.border.SolidBorder;
+import com.itextpdf.layout.element.AreaBreak;
 import com.itextpdf.layout.element.Cell;
 import com.itextpdf.layout.element.Paragraph;
 import com.itextpdf.layout.element.Table;
 import com.itextpdf.layout.property.HorizontalAlignment;
+import com.itextpdf.layout.property.VerticalAlignment;
 
 import java.util.ArrayList;
 
@@ -14,12 +16,12 @@ public class BoletaPDFBuilder extends PDFPlantillaTable{
     public BoletaPDFBuilder(ArrayList<String> evaluaciones) {
         super("Boleta de Calificaciones");
         this.evaluaciones = evaluaciones;
-        addMembreteLargo();
     }
 
 
-    protected void setTable() {
+    public void setTable() {
         super.setTable(getSizes());
+        addMembreteLargo();
         deployFirstTitles();
         deploySecondTitles();
 
@@ -30,7 +32,8 @@ public class BoletaPDFBuilder extends PDFPlantillaTable{
         addEtapasNames();
         table.addCell(addTitleStyle(getCellDeftyle("Promedio",new Cell(2,0))));
         table.addCell(addTitleStyle(getCellDeftyle("Semestral",new Cell(2,0))));
-        addDoubleTittle("Finales");
+        table.addCell(addTitleStyle(getCellDeftyle("Final",new Cell(2,0))));
+        table.addCell(addTitleStyle(getCellDeftyle("Faltas",new Cell(2,0))));
 
 
     }
@@ -49,6 +52,7 @@ public class BoletaPDFBuilder extends PDFPlantillaTable{
 
         Cell nombreCell = new Cell().
                 setHorizontalAlignment(HorizontalAlignment.CENTER).
+                setVerticalAlignment(VerticalAlignment.MIDDLE).
                 setBorder(Border.NO_BORDER).
                 setFontSize(10).add("Firma del Tutor");
 
@@ -57,11 +61,9 @@ public class BoletaPDFBuilder extends PDFPlantillaTable{
         add(new Paragraph(""));
         add(new Paragraph(""));
         add(new Paragraph(""));
-        add(new Paragraph(""));
-        add(new Paragraph(""));
-        add(new Paragraph(""));
         add(firma);
 
+        add(new AreaBreak());
 
     }
 
@@ -101,9 +103,6 @@ public class BoletaPDFBuilder extends PDFPlantillaTable{
             table.addCell(addTitleStyle(getDefCell("Faltas")));
         }
 
-        table.addCell(addTitleStyle(getDefCell("Cal")));
-        table.addCell(addTitleStyle(getDefCell("Faltas")));
-
     }
 
 
@@ -111,7 +110,7 @@ public class BoletaPDFBuilder extends PDFPlantillaTable{
         float[] sizes = new float[]{
                 1,
                 1,1,1,1,1,1,1,1,
-                1,1,1,1};
+                1,1};
         return sizes;
     }
 

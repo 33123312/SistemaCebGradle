@@ -32,7 +32,6 @@ public class GrupoOperator extends TableOperator{
 
     }
 
-
     public Table getMaterias(){
         if(plan != null) {
             DataBaseConsulter consulter = new DataBaseConsulter("planes_estudio_materias_view");
@@ -85,25 +84,38 @@ public class GrupoOperator extends TableOperator{
     }
 
     public ArrayList<ALumnoOperator> getAlumnosOpUsNum(){
+
         ArrayList<ALumnoOperator> op = new ArrayList<>();
         Table alumnos = getFullAlumnos();
         Table boleta = getboleta("alumno_num_califa_charge_view");
+        Table boletaSemestral = getSemestralesboleta();
 
         for (int i = 0; i < alumnos.rowCount();i++){
             TableRegister aluReg = alumnos.getRegisterObject(i);
-            op.add(new ALumnoOperator(aluReg,boleta,this));
+            op.add(new ALumnoOperator(aluReg,boleta,boletaSemestral,this));
         }
 
         return op;
-
     }
 
 
     private Table getboleta(String view){
-
         DataBaseConsulter consulter = new DataBaseConsulter(view);
 
         String[] colsToBring = new String[]{"numero_control","materia","nombre_abr","calificacion","faltas","evaluacion"};
+
+        String[] cond = new String[]{"grupo","periodo"};
+
+        String[] val = new String[]{getTableRegister(), Global.conectionData.loadedPeriodo};
+
+        return consulter.bringTable(colsToBring,cond,val);
+
+    }
+
+    private Table getSemestralesboleta(){
+        DataBaseConsulter consulter = new DataBaseConsulter("alumno_sem_califa_charge_view");
+
+        String[] colsToBring = new String[]{"numero_control","materia","nombre_abr","calificacion"};
 
         String[] cond = new String[]{"grupo","periodo"};
 
@@ -164,34 +176,131 @@ public class GrupoOperator extends TableOperator{
         return new AsignaturaOperator(tableRegister,materia);
     }
 
+    public GrupoBoletaOperator getGrupoBoletaOperator(){return new GrupoBoletaOperator();}
+
+    public class GrupoBoletaOperator{
+
+        private ArrayList<ALumnoOperator.TodasMateriasOps> alumnos;
+        private ArrayList<ALumnoOperator> operators;
+        public String grupo = getRegisterValue("grupo");
+
+        public GrupoBoletaOperator(){
+            alumnos = getAlumnos();
+        }
+
+        public GrupoMateriaOperator getGrupoMateriaOp(String materia){
+            return new GrupoMateriaOperator(materia,operators);
+        }
+
+        private ArrayList<ALumnoOperator.TodasMateriasOps> getAlumnos(){
+            operators = getAlumnosOpUsNum();
+
+            ArrayList<ALumnoOperator.TodasMateriasOps> alumnos = new ArrayList<>();
+
+            for(ALumnoOperator alumno:operators)
+                alumnos.add(alumno.getMateriaOperators());
+
+            return alumnos;
+        }
+
+        public String[] getTopAlumnoSemestral(){
+            double biggerProm = 0;
+            String nombreAlumno = "";
+
+            for (ALumnoOperator.TodasMateriasOps alumno: alumnos){
+                try{
+                    double prom = Double.parseDouble(alumno.getPromSemestrales());
+                    if (biggerProm < prom){
+                        biggerProm = prom;
+                        nombreAlumno = alumno.operator.getRegisterValue("nombre_completo");
+                    }
+                } catch (Exception e){
+
+                }
+
+
+            }
+
+            return new String[]{nombreAlumno,""+biggerProm};
+        }
+
+        public String[] getTopAlumnoFinal(){
+            double biggerProm = 0;
+            String nombreAlumno = "";
+
+            for (ALumnoOperator.TodasMateriasOps alumno: alumnos){
+                try{
+                    double prom = Double.parseDouble(alumno.getPromFinal());
+                    if (biggerProm < prom){
+                        biggerProm = prom;
+                        nombreAlumno = alumno.operator.getRegisterValue("nombre_completo");
+                    }
+                } catch (Exception e){
+
+                }
+
+            }
+
+            return new String[]{nombreAlumno,""+biggerProm};
+        }
+
+        public String[] getTopAlumno(int unidad){
+            double biggerProm = 0;
+            String nombreAlumno = "";
+
+            for (ALumnoOperator.TodasMateriasOps alumno: alumnos){
+                try{
+                    double prom = Double.parseDouble(alumno.getPromUnidad().get(unidad));
+                    if (biggerProm < prom){
+                        biggerProm = prom;
+                        nombreAlumno = alumno.operator.getRegisterValue("nombre_completo");
+                    }
+                } catch (Exception e){
+
+                }
+
+            }
+
+            return new String[]{nombreAlumno,""+biggerProm};
+        }
+
+    }
+
 
     public class GrupoMateriaOperator{
 
-        ArrayList<AluMateriaNumOperator> operators;
+        private ArrayList<AluMateriaNumOperator> operators;
 
+        public GrupoMateriaOperator(String materia,  ArrayList<ALumnoOperator> operators){
+            this.operators = getOperators(materia,operators);
+
+        }
 
         public GrupoMateriaOperator(String materia){
             operators = getOperators(materia);
-            defineOperators(materia);
 
         }
 
         private ArrayList<AluMateriaNumOperator> getOperators(String materiaKey){
             ArrayList<ALumnoOperator> aluOp = getAlumnosOpUsNum();
-            ArrayList<AluMateriaNumOperator> numOP = new ArrayList<>();
+
+            ArrayList<AluMateriaNumOperator> numOP = new ArrayList();
             for (ALumnoOperator op : aluOp)
                 numOP.add(op.getNumMatState(materiaKey));
 
             return numOP;
         }
 
-        private void defineOperators(String materia){
-            ArrayList<String> alumnos = getAlumnos().getColumn(0);
-            for (String alumno: alumnos){
-                ALumnoOperator operator = new ALumnoOperator(alumno);
-                operators.add(operator.getNumMatState(materia));
-            }
+        private ArrayList<AluMateriaNumOperator> getOperators(String materiaKey,ArrayList<ALumnoOperator> aluOp){
+
+            ArrayList<AluMateriaNumOperator> numOP = new ArrayList();
+            for (ALumnoOperator op : aluOp)
+                numOP.add(op.getNumMatState(materiaKey));
+
+            return numOP;
         }
+
+
 
         private ArrayList<ArrayList<String>> getEmptyProms(){
             ArrayList<ArrayList<String>> proms = new ArrayList<>();
@@ -236,7 +345,7 @@ public class GrupoOperator extends TableOperator{
 
             for (AluMateriaNumOperator op: operators){
                 ArrayList<String> parCalif = op.getParCalif();
-                for (int i = 0; i < 4;i++)
+                for (int i = 0; i < 3;i++)
                     proms.get(i).add(parCalif.get(i));
              }
 
@@ -296,11 +405,11 @@ public class GrupoOperator extends TableOperator{
         }
 
         public int[] getReprobadosXUnidad(){
-            int[] reprobados = new int[4];
+            int[] reprobados = new int[3];
 
             for (AluMateriaNumOperator op: operators){
                 ArrayList<String> parCalif = op.getParCalif();
-                for (int i = 0; i < 4;i++){
+                for (int i = 0; i < 3;i++){
                     String cal = parCalif.get(i);
                     if (!cal.isEmpty()){
                         double caliInt = Double.parseDouble(parCalif.get(i));

@@ -1,5 +1,6 @@
 package SpecificViews;
 
+import JDBCController.DataBaseConsulter;
 import com.itextpdf.layout.border.Border;
 import com.itextpdf.layout.border.SolidBorder;
 import com.itextpdf.layout.element.Cell;
@@ -58,13 +59,10 @@ public class PdfHorarioGrupoBuilder extends PDFPlantillaTable{
     }
 
     private ArrayList<String> getDias(){
-        ArrayList<String> dias = new ArrayList<>();
-        dias.add("");
-        dias.add("Lunes");
-        dias.add("Martes");
-        dias.add("Miercoles");
-        dias.add("Jueves");
-        dias.add("Viernes");
+        DataBaseConsulter consulter = new DataBaseConsulter("dias_clase_view");
+
+        ArrayList<String> dias = consulter.bringTable().getColumn(0);
+        dias.add(0,"");
 
         return dias;
     }

@@ -66,9 +66,9 @@ public class ProfesorHorario extends Operation {
 
             if (!reg.isEmpty()){
                 TableRegister regi = reg.getRegisterObject(0);
-                horaData.add(regi.get("nombre_abr"));
-                horaData.add(regi.get(proptoGet));
-                horaData.add(regi.get("aula"));
+                    horaData.add(regi.get("nombre_abr"));
+                    horaData.add(regi.get(proptoGet));
+                    horaData.add(regi.get("aula"));
 
                 if(row.hora == null)
                     row.hora = regi.get("hora_c");
@@ -125,14 +125,11 @@ public class ProfesorHorario extends Operation {
         return horasClase;
     }
 
-
     private ArrayList<String> getDiasClase(){
-        ArrayList<String> dias = new ArrayList<>();
-            dias.add("Lunes");
-            dias.add("Martes");
-            dias.add("Miércoles");
-            dias.add("Jueves");
-            dias.add("Viernes");
+        DataBaseConsulter consulter = new DataBaseConsulter("dias_clase_view");
+
+        ArrayList<String> dias = consulter.bringTable().getColumn(0);
+
 
         return dias;
     }

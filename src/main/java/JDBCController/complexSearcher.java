@@ -47,9 +47,7 @@ public class complexSearcher{
             int thisMissMatchRate;
             thisMissMatchRate = new textProccesor().sentenceCoincidence(sentenceToSearch, sentenceToCompare);
 
-
             registersRates[i]+= thisMissMatchRate;
-
 
             }
         }

@@ -91,8 +91,16 @@ public class ratesSorter {
         
       //hacemos la primer llamada
         sort (0,registersRates.length-1);
-        return registers;
+        return inv(registers);
         
+    }
+
+    private ArrayList<ArrayList<String>> inv(ArrayList<ArrayList<String>> orig){
+        ArrayList<ArrayList<String>> newA = new ArrayList<>();
+        for(int i = orig.size()-1; i >= 0; i--)
+            newA.add(orig.get(i));
+
+        return newA;
     }
     
 

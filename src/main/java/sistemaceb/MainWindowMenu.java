@@ -74,6 +74,14 @@ public class MainWindowMenu extends MenuListsContainer {
                         new RespaldosManager().orderRes();
                     }
                 } ));
+
+                list.addButton(new ListButton.Button("Generar Claves Web",new MouseAdapter() {
+                    @Override
+                    public void mousePressed(MouseEvent e) {
+                        super.mousePressed(e);
+                        new AluPassGenerator();
+                    }
+                } ));
             } else
                 list.addButton(new ListButton.Button("Salir del Respaldo",new MouseAdapter() {
                     @Override

@@ -3,102 +3,258 @@ package sistemaceb;
 import JDBCController.Table;
 import JDBCController.ViewSpecs;
 import SpecificViews.GrupoOperator;
+import SpecificViews.LinearHorizontalLayout;
 import Tables.AdapTableFE;
 import Tables.RowsFactory;
 import Tables.StyleRowModel;
 import Tables.TableRow;
 
+import javax.swing.*;
+import javax.swing.border.EmptyBorder;
+import javax.swing.border.MatteBorder;
 import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public class SelectionFIlterTable extends AdapTableFE {
     ArrayList<ArrayList<String>> possibleSelections;
-    GrupoOperator operator;
+    String grupo;
 
-    public SelectionFIlterTable(GrupoOperator operator) {
+
+    public SelectionFIlterTable(String grupo,Table alumnos) {
         super();
-        this.operator= operator;
-        deployTable();
+        this.grupo = grupo;
+        deployTable(alumnos);
+
 
     }
 
-    public void setDefaltSelections(ArrayList<String> selections){
-        if(!selections.isEmpty()){
-            ArrayList<Integer> selected = getNewSelectedIndex(selections);
-            setSelectedIndex(selected);
+    public void setDefaultSelections(Map<String,ArrayList<String>> selections){
+        for (Map.Entry<String,ArrayList<String>> group:selections.entrySet()){
+            ArrayList<Integer> selected = new ArrayList<>();
+            int groupIndex = groupsNames.indexOf(group.getKey());
+            if (groupIndex>-1){
+                setCurrentGroup(groupIndex);
+                for (String alu:group.getValue()){
+                    int aluIndex = getAluIndex(alu);
+                    if (aluIndex>-1){
+                        addToGroup(aluIndex);
+                        selected.add(aluIndex);
+                    }
+                }
+                setSelectedIndex(selected);
+            }
         }
+
+        System.out.println(groups);
     }
 
-    private void updateTable(){
-        Table alumnos = getAlumnos();
+    private int getAluIndex(String key){
+        for (int i = 0;i < possibleSelections.size();i++){
+            if (possibleSelections.get(i).get(0).equals(key))
+                return i;
+        }
 
-        possibleSelections = alumnos.getRgistersCopy();
+
+        return -1;
+    }
+
+    public void selectAll(){
+        ArrayList<TableRow> a = getRows();
+
+        for (TableRow row: a)
+            row.select();
+    }
+
+    private void addAlumnos(Table alumnos){
+        System.out.println(alumnos.getColumnTitles());
+        System.out.println(grupo);
+
+        possibleSelections = alumnos.getSubTable(new String[]{"grupo"},new String[]{grupo}).getRegisters();
+        groupsReveerseLink = new ArrayList[possibleSelections.size()];
+
         setTitles(alumnos.getColumnTitles());
         setRows(possibleSelections);
         showAll();
     }
 
-    private ArrayList<Integer> getNewSelectedIndex(ArrayList<String> newAlumnos) {
-        ArrayList<String> currentIndexes = getAluIndexes();
-        ArrayList<Integer> newSelectedIndex = new ArrayList<>();
-
-        for(String newIndex: newAlumnos){
-            int aluIndex = currentIndexes.indexOf(newIndex);
-            if(aluIndex != -1)
-                newSelectedIndex.add(aluIndex);
-        }
-
-        return newSelectedIndex;
-    }
-
-    private ArrayList<String> getAluIndexes(){
-        ArrayList<String> indexes = new ArrayList<>();
-        for (ArrayList<String> register: possibleSelections){
-            indexes.add(register.get(0));
-        }
-
-        return indexes;
-    }
-
-
-    private void deployTable(){
+    private void deployTable(Table alumnos){
         addRememberSelectedRows(new Color(129, 236, 236));
-        updateTable();
+        getFactory().addLeftClickSelectionEvnt(
+                new rowSelectionEvnt() {
+                    @Override
+                    public void whenSelect(TableRow tableRow) {
+                        addToGroup(tableRow.getKey());
+                    }
+                },
+                new rowSelectionEvnt() {
+                    @Override
+                    public void whenSelect(TableRow tableRow) {
+                        removeFromGroup(tableRow.getKey());
+                    }
+                }
+        );
+        addAlumnos(alumnos);
 
     }
 
-    private static ArrayList<String> alumnoTags;
+    private ArrayList<String> groupsNames;
+    private ArrayList<ArrayList<String>> groups;
+    private ArrayList<Color> colors;
+    private ArrayList<String>[] groupsReveerseLink;
+    private int currentGroup;
 
-    private ArrayList<String> consultAlumnoTags(Table alumnos){
-        if(alumnoTags == null)
-            alumnoTags = new ViewSpecs("alumnos").getTag(alumnos.getColumnTitles());
+    private void addToGroup(int index){
+        ArrayList<String> current = groups.get(currentGroup);
+        groupsReveerseLink[index] = current;
 
-        return alumnoTags;
+
+    }
+
+    private void removeFromGroup(int index){
+        groupsReveerseLink[index] = null;
+
+    }
+
+    public void createGroup(String newGroup){
+        groupsNames.add(newGroup);
+        groups.add(new ArrayList<>());
+        colors.add(detColor(newGroup));
+
+    }
+
+    private Color detColor(String name){
+        int red = 150;
+        int blue = 150;
+        int yellow = 150;
+       char[] chars =  name.toCharArray();
+       int num = Character.getNumericValue(chars[2]);
+
+       red += (num%3)*50;
+       blue += num*10;
+       yellow += (num%5)*13;
+
+       return new Color(red,blue,yellow);
+
+    }
+
+    public void setCurrentGroup(String currentGroup) {
+        setCurrentGroup(groupsNames.indexOf(currentGroup));
+
+    }
+
+    public void setCurrentGroup(int currentGroup) {
+        this.currentGroup = currentGroup;
+
+        setSelectionColor(getColor());
+
+    }
+
+    private Color getColor(){
+        return colors.get(currentGroup);
+    }
+
+
+    public void updateGrupos(ArrayList<String> groupsN){
+        groupsNames = new ArrayList<>();
+        colors = new ArrayList<>();
+        groups = new ArrayList<>();
+
+        for (String grupo:groupsN)
+            createGroup(grupo);
 
     }
 
 
-    private Table getAlumnos(){
-        Table alumnos = operator.getAlumnos();
-        ArrayList<String> trueTitles = consultAlumnoTags(alumnos);
-        alumnos.setColumnTitles(trueTitles);
-        return alumnos;
+    public void updateEvr(ArrayList<String> groupsNames) {
+        updateGrupos(groupsNames);
+        updateSelectionBar();
     }
 
-    public ArrayList<String> getSelectedAlumnos(){
-        ArrayList<String> alumnos = new ArrayList<>();
+    private LinearHorizontalLayout selectionBar;
 
-        ArrayList<TableRow> selectedRows = getSelectedRow();
-        ArrayList<Integer> indexes = new ArrayList<>();
+    public LinearHorizontalLayout getColorsSelectionBar(){
+         selectionBar = new LinearHorizontalLayout();
 
-        for (TableRow selectedRow:selectedRows)
-            indexes.add(selectedRow.getKey());
-
-        for (int index:indexes)
-            alumnos.add(possibleSelections.get(index).get(0));
-
-        return alumnos;
+         return selectionBar;
     }
 
+    public void updateSelectionBar(){
+        selectionBar.removeAll();
+        for (int i = 0;i<groupsNames.size();i++)
+            selectionBar.addElement(createColorPanel(i));
 
+        if (!groupsNames.isEmpty())
+            selectGroup(0,(JPanel) selectionBar.getComponent(0));
+
+    }
+
+    private JPanel selectedColorPanel;
+
+    private JPanel createColorPanel(int groupIndex){
+        LinearHorizontalLayout container = new LinearHorizontalLayout();
+            container.setBackground(Color.white);
+            container.setBorder(new EmptyBorder(10,20,10,20));
+             container.setCursor(new Cursor(Cursor.HAND_CURSOR));
+
+        JPanel colorPanel = new JPanel();
+            colorPanel.setBackground(colors.get(groupIndex));
+            colorPanel.setSize(new Dimension(10,10));
+
+
+        JLabel groupLabel = new JLabel(groupsNames.get(groupIndex));
+            groupLabel.setFont(new Font("sans-serif", Font.PLAIN, 20));
+            groupLabel.setBorder(new EmptyBorder(0,5,0,0));
+
+        container.addElement(colorPanel);
+        container.addElement(groupLabel);
+
+        container.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent e) {
+                super.mousePressed(e);
+                selectGroup(groupIndex,container);
+
+            }
+        });
+
+        return container;
+    }
+
+    private void selectGroup(int groupIndex,JPanel container){
+        setCurrentGroup(groupIndex);
+        if (selectedColorPanel != null)
+            selectedColorPanel.setBackground(Color.white);
+            selectedColorPanel = container;
+            container.setBackground(new Color(116, 185, 255));
+    }
+
+    public Map<String,ArrayList<String>> getSelectedAlumnos(){
+        Map<String,ArrayList<String>> groups = new HashMap<>();
+
+        for (int i = 0;i < groupsReveerseLink.length;i++){
+            ArrayList<String> cur = groupsReveerseLink[i];
+            if (cur != null)
+                cur.add(possibleSelections.get(i).get(0));
+        }
+
+        for (int i = 0;i<this.groups.size();i++){
+
+            if (!this.groups.get(i).isEmpty())
+                groups.put(groupsNames.get(i),this.groups.get(i));
+        }
+
+        return groups;
+    }
+
+    public boolean hasSelectedAlumnos() {
+        for (ArrayList alu:groupsReveerseLink)
+            if(alu!=null)
+                return true;
+
+        return false;
+    }
 }

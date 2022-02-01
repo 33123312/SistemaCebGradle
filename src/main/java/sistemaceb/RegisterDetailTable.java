@@ -7,6 +7,7 @@ package sistemaceb;
 
 import Generals.BtnFE;
 import JDBCController.ViewSpecs;
+import JDBCController.infoPackage;
 import SpecificViews.LinearVerticalLayout;
 import Tables.*;
 
@@ -18,7 +19,7 @@ import java.awt.*;
  * @author escal
  */
 public abstract class RegisterDetailTable extends JPanel{
-    private AdapTableFE outputTable;
+    protected AdapTableFE outputTable;
     private reactiveSearchBar searchInput;
     protected  ViewSpecs viewSpecs;
     public ConsultTableBuild consultTable;

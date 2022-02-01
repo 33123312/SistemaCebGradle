@@ -18,7 +18,7 @@ public class BoletaBuilder extends MultipleFormsOperation{
 
 
     public BoletaBuilder(OperationInfoPanel infoPanlel){
-        super( infoPanlel);
+        super(infoPanlel);
         operation = "Modificar Boleta";
     }
 
@@ -26,6 +26,7 @@ public class BoletaBuilder extends MultipleFormsOperation{
     public void buildOperation() {
         super.buildOperation();
         thisWindow.setTitle("Modificar Boleta");
+        thisWindow.addToHeader(getButtonsArea());
         operator = new ALumnoOperator(keyValue);
         values = getValues();
         califasBoleanas = getCaliBoleanas();
@@ -99,6 +100,7 @@ public class BoletaBuilder extends MultipleFormsOperation{
         MultipleFormsPanel.FormElementBuilder builder = new MultipleFormsPanel.FormElementBuilder() {
             @Override
             public FormElement buildElement(Formulario form, String title,String row) {
+                form.setUsesfocus(false);
                return form.addInput(title,dataType.FLOAT).
                         setRequired(false).addErrorChecker(new ErrorChecker() {
                    @Override

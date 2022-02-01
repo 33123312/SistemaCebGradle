@@ -48,10 +48,12 @@ public class PlanosMateriasPills extends RegisterDetailTable {
                 valuesToInsert.add("");
                 valuesToInsert.add("");
 
+                int matCount = getMatCount();
+
                 for (int i = 0; i < data.size();i++){
                     String key = data.get(i);
                     valuesToInsert.set(1,key);
-                    valuesToInsert.set(2,Integer.toString(i +1));
+                    valuesToInsert.set(2,Integer.toString(matCount + i +1));
 
                     try {
                         viewSpecs.getUpdater().insert(columnsToInsert,valuesToInsert);
@@ -79,6 +81,9 @@ public class PlanosMateriasPills extends RegisterDetailTable {
                 restartUpdaters();
             }
         };
+    }
+    private int getMatCount(){
+        return outputTable.getRows().size();
     }
 
     private MultipleAdderConsultBuild getBuild(){

@@ -7,21 +7,20 @@ import SpecificViews.GrupoOperator;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Map;
 
 public class GrupoSemestrePasador {
     private String nextSemestre;
-    private boolean isLastSemestre;
-    private TableRegister grupoInfo;
+    private String currentSemestre;
 
-    public GrupoSemestrePasador(GrupoOperator grupo){
-        grupoInfo = grupo.getTableInfo();
+    public GrupoSemestrePasador(String currentSemestre){
+        this.currentSemestre = currentSemestre;
         nextSemestre = getNextSemestre();
-        isLastSemestre = nextSemestre.equals("7");
 
     }
 
     public boolean isLastSemestre(){
-        return isLastSemestre;
+        return nextSemestre.equals("7");
     }
 
     public ArrayList<String> getNextSemestreGrupos(){
@@ -29,9 +28,9 @@ public class GrupoSemestrePasador {
 
         String[] bring = new String[]{"grupo"};
 
-         String[] cols = new String[]{"semestre","turno"};
+         String[] cols = new String[]{"semestre"};
 
-        String[] val = new String[]{nextSemestre,grupoInfo.get("turno")};
+        String[] val = new String[]{nextSemestre};
 
         return consulter.bringTable(bring,cols,val).getColumn(0);
     }
@@ -42,40 +41,46 @@ public class GrupoSemestrePasador {
 
     }
 
-    public void passAlumnos(String nextGroup, ArrayList<String> alumnos){
-        for (String alumnoKey:alumnos)
-            passAlumno(alumnoKey,nextGroup);
-    }
 
     private String getNextSemestre(){
 
-        String currentSemestre = grupoInfo.get("semestre");
         int currentSemestreInt = Integer.parseInt(currentSemestre);
         int nextSemestre = currentSemestreInt + 1;
 
         return Integer.toString(nextSemestre);
     }
 
-    private void passAlumno(String alumno, String newGroup){
+    public void passAlumnos(Map<String,ArrayList<String>> grupos){
+        System.out.println(grupos);
+        for (Map.Entry<String,ArrayList<String>> group:grupos.entrySet()){
+            passAlumnos(group.getKey(),group.getValue());
+        }
+    }
+
+    private void passAlumnos(String nextGroup, ArrayList<String> alumnos){
         ArrayList<String> colsToSet = new ArrayList<>();
             colsToSet.add("grupo");
             colsToSet.add("semestre");
 
         ArrayList<String> values = new ArrayList<>();
-            values.add(newGroup);
+            values.add(nextGroup);
             values.add(nextSemestre);
 
         ArrayList<String> cond = new ArrayList<>();
-            cond.add("numero_control");
-
         ArrayList<String> condVal = new ArrayList<>();
-            condVal.add(alumno);
+
+
+        for (String alumnoKey:alumnos){
+            cond.add("numero_control");
+            condVal.add(alumnoKey);
+        }
 
         try {
-            new ViewSpecs("alumnos").getUpdater().update(colsToSet,values,cond,condVal);
+            new ViewSpecs("alumnos").getUpdater().updateOr(colsToSet,values,cond,condVal);
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
+
     }
 
 }

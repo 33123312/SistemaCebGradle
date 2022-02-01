@@ -5,10 +5,13 @@ import JDBCController.Table;
 import JDBCController.TableRegister;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+
 public class HorariosPlanosBuilder extends Operation{
 
     ArrayList<String> diasClase;
     ArrayList<String> grupos;
+    private Table fullHorario;
 
     public HorariosPlanosBuilder(OperationInfoPanel infoPanlel) {
         super(infoPanlel);
@@ -20,6 +23,7 @@ public class HorariosPlanosBuilder extends Operation{
         diasClase = getDias();
         grupos = getGrupos();
         pdf = new HorariosPlanosPdf(diasClase,grupos.size());
+        fullHorario = getFullHorario();
         deployRows();
     }
 
@@ -29,7 +33,7 @@ public class HorariosPlanosBuilder extends Operation{
     }
 
     private ArrayList<String> getDias(){
-        DataBaseConsulter consulter = new DataBaseConsulter("dias_clase");
+        DataBaseConsulter consulter = new DataBaseConsulter("dias_clase_view");
 
         return consulter.bringTable().getColumn(0);
     }
@@ -78,72 +82,45 @@ public class HorariosPlanosBuilder extends Operation{
 
     private ArrayList<TableRegister>  getGrupoHoraDia(String hora,String grupo){
         ArrayList<TableRegister> register = new ArrayList();
+        System.out.println(fullHorario.getRegisters());
+
         for (String dia:diasClase)
             register.add(getGrupoDiaHora(grupo,dia,hora));
 
         return register;
     }
 
-    private TableRegister getGrupoDiaHora(String grupo, String dia, String hora){
-        DataBaseConsulter consulter = new DataBaseConsulter("horarios_view");
 
-        String[] colsToBring = new String[]{"nombre_abr","materia"};
+
+    private Table getFullHorario(){
+        DataBaseConsulter consulter = new DataBaseConsulter("grupo_asignaturas");
+
+        Table register = consulter.bringTable();
+
+        return register;
+    }
+
+    private TableRegister getGrupoDiaHora(String grupo, String dia, String hora){
 
         String[] cond = new String[]{"grupo","dia","hora"};
 
         String[] values = new String[]{grupo,dia,hora};
 
-        Table register = consulter.bringTable(colsToBring,cond,values);
+        System.out.println(Arrays.toString(values));
 
-        ArrayList<String> newTitles = new ArrayList<>();
-            newTitles.add("nombre_abr");
-            newTitles.add("nombre_completo");
-
-        register.setColumnTitles(newTitles);
+        Table register = fullHorario.getSubTable(cond,values);
 
         if(register.isEmpty()){
-            ArrayList<ArrayList<String>> newRegiters = new ArrayList<>();
-                ArrayList<String> registerA = new ArrayList<>();
-                    registerA.add("");
-                    registerA.add("");
+            ArrayList<ArrayList<String>> newRegisters = new ArrayList<>();
+                ArrayList<String> emptyRegister = new ArrayList<>();
+                for (String titles: register.getColumnTitles())
+                    emptyRegister.add("");
 
-            newRegiters.add(registerA);
-            register.setRegisters(newRegiters);
-        } else {
-
-
-            ArrayList<ArrayList<String>> neweFullRegisters = new ArrayList<>();
-
-            ArrayList<String> neweFirstRegisters = new ArrayList<>();
-            neweFirstRegisters.add(register.getUniqueValue());
-            String profesor = getProfesor(register.getColumn(1).get(0),grupo);
-
-            if(profesor == null)
-                profesor = "No asignado";
-
-            neweFirstRegisters.add(profesor);
-
-            neweFullRegisters.add(neweFirstRegisters);
-
-            register = new Table(newTitles,neweFullRegisters);
+            newRegisters.add(emptyRegister);
+            register.setRegisters(newRegisters);
         }
-
-
 
             return register.getRegister(0);
     }
 
-    private String getProfesor(String materia, String grupo){
-        DataBaseConsulter consulter = new DataBaseConsulter("asignaturas_visible_view");
-
-        String[] colsToBring = new String[]{"nombre_completo"} ;
-
-        String[]  cond = new String[]{"materia","grupo"} ;
-
-        String[]  val = new String[]{materia,grupo} ;
-
-
-        return consulter.bringTable(colsToBring,cond,val).getUniqueValue();
-
-    }
 }

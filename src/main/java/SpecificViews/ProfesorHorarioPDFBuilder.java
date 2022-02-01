@@ -1,5 +1,6 @@
 package SpecificViews;
 
+import JDBCController.DataBaseConsulter;
 import com.itextpdf.layout.border.Border;
 import com.itextpdf.layout.border.SolidBorder;
 import com.itextpdf.layout.element.Cell;
@@ -9,7 +10,7 @@ import java.util.ArrayList;
 public class ProfesorHorarioPDFBuilder extends PDFPlantillaTable{
 
     public ProfesorHorarioPDFBuilder() {
-        super("Horario de Profesor");
+        super("Horario del Profesor");
         addMembreteLargo();
         initTable();
     }
@@ -21,12 +22,10 @@ public class ProfesorHorarioPDFBuilder extends PDFPlantillaTable{
 
     private void addTitles(){
         ArrayList<String> dias = getDias();
+        table.addCell(addTitleStyle(getDefCell("Hora")));
         for (String dia:dias)
             table.addCell(addTitleStyle(getDefCell(dia)));
 
-    }
-
-    public void addTitleRow(ArrayList<String> titles){
 
     }
 
@@ -63,15 +62,9 @@ public class ProfesorHorarioPDFBuilder extends PDFPlantillaTable{
     }
 
     private ArrayList<String> getDias(){
-        ArrayList<String> dias = new ArrayList<>();
-            dias.add("");
-            dias.add("Lunes");
-            dias.add("Martes");
-            dias.add("Miercoles");
-            dias.add("Jueves");
-            dias.add("Viernes");
+        DataBaseConsulter consulter = new DataBaseConsulter("dias_clase_view");
 
-        return dias;
+        return consulter.bringTable().getColumn(0);
     }
 
     private float[] getSize(){

@@ -56,13 +56,13 @@ public class LinearVerticalLayout extends JPanel {
         addFiller();
     }
 
-    protected void removeElement(JComponent element) {
+    public void removeElement(JComponent element) {
+        remove(element);
         List<Component> components =  Arrays.asList(getComponents());
-        components.remove(element);
         removeAll();
         for(Component com: components)
             addElement(com);
-        addFiller();
+        //addFiller();
     }
 
 }

@@ -43,12 +43,12 @@ public class CuadroDeHonorOperation extends OperationWindow{
             btn.addMouseListener(new MouseAdapter() {
                 @Override
                 public void mousePressed(MouseEvent e) {
-                    super.mousePressed(e);
-                    if (!formPanel.hasErrors()){
-                        int selectedIndex =desplegableMenu.getSelectedIndex();
-                        pdf = new PdfCuadroHonorBuilder(keyValue,evaluaciones.get(selectedIndex));
-                        addRows(selectedIndex);
-                    }
+                super.mousePressed(e);
+                if (!formPanel.hasErrors()){
+                    int selectedIndex =desplegableMenu.getSelectedIndex();
+                    pdf = new PdfCuadroHonorBuilder(keyValue,evaluaciones.get(selectedIndex));
+                    addRows(selectedIndex);
+                }
                 }
             });
 
@@ -64,8 +64,6 @@ public class CuadroDeHonorOperation extends OperationWindow{
 
         thisWindow.addToHeader(layout);
     }
-
-
 
     private ArrayList<String> getEvaluaciones(){
         ArrayList<String> evas = new ArrayList<>();
@@ -83,71 +81,25 @@ public class CuadroDeHonorOperation extends OperationWindow{
         for (String grupo: grupos)
              getBigerAlumnos(grupo,eva);
 
-
-
         pdf.addTable();
         pdf.close();
     }
 
     private void getBigerAlumnos(String grupo,int eva){
         GrupoOperator operator = new GrupoOperator(grupo);
-        ArrayList<ArrayList<String>> alumnos = operator.getAlumnos().getRegisters();
 
-        String bigerAlumno = "";
-        double bigerAlumnoCalifa = 0;
+        String[] alumno;
 
-        CalifaGeter geter = getCalifaGeter(eva);
-
-            for (ArrayList<String> list: alumnos){
-                String alumno = list.get(0);
-                String alumnoName = list.get(1);
-                ALumnoOperator op = new ALumnoOperator(alumno);
-                ALumnoOperator.TodasMateriasOps materiaState = op.getMateriaOperators();
-                String califa = geter.getCalifa(materiaState);
-
-                if(califa != null && !califa.isEmpty()){
-                    double doubleCalifa = Double.parseDouble(califa);
-                    if (doubleCalifa > bigerAlumnoCalifa){
-                        bigerAlumnoCalifa = doubleCalifa;
-                        bigerAlumno = alumnoName;
-                    }
-                }
-
-            }
-
-        pdf.addRow(grupo,bigerAlumno,bigerAlumnoCalifa + "");
-    }
-
-    private CalifaGeter getCalifaGeter(int eva) {
-        if (eva >= 0 && eva < 4)
-            return new CalifaGeter() {
-                @Override
-                public String getCalifa(ALumnoOperator.TodasMateriasOps materiaState) {
-
-                    return materiaState.getPromUnidad().get(eva);
-                }
-            };
+        if (eva == 3)
+            alumno = operator.getGrupoBoletaOperator().getTopAlumnoSemestral();
         else if (eva == 4)
-            return new CalifaGeter() {
-                @Override
-                public String getCalifa(ALumnoOperator.TodasMateriasOps materiaState) {
-                    return materiaState.getPromSemestrales();
-                }
-            };
-        else if (eva == 5)
-            return  new CalifaGeter() {
-                @Override
-                public String getCalifa(ALumnoOperator.TodasMateriasOps materiaState) {
-                    return materiaState.getPromFinal();
-                }
-            };
+            alumno = operator.getGrupoBoletaOperator().getTopAlumnoFinal();
+        else
+            alumno = operator.getGrupoBoletaOperator().getTopAlumno(eva);
 
-        return null;
+        pdf.addRow(grupo,alumno[0],alumno[1]);
     }
 
 
-    private interface CalifaGeter{
-        public String getCalifa(ALumnoOperator.TodasMateriasOps  materiaState);
-    }
 
 }

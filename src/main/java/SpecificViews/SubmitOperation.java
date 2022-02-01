@@ -36,10 +36,10 @@ public abstract class SubmitOperation extends OperationWindow{
         return cont;
     }
 
-    private JPanel getButtonsArea(){
+    public JPanel getButtonsArea(){
         JPanel buttonsArea = new JPanel(new BorderLayout());
         buttonsArea.setBorder(BorderFactory.createEmptyBorder(0,0,0,15));
-        BtnFE btnAceptar  =new BtnFE("Aceptar");
+        BtnFE btnAceptar  = new BtnFE("Guardar");
         btnAceptar.setTextColor(Color.white);
         btnAceptar.setBackground(new Color(107, 117, 255));
         btnAceptar.setPadding(10,20,10,20);

@@ -33,10 +33,13 @@ public abstract class Formulario extends JPanel {
     protected final List<FormResponseManager> dataManagers;
     protected final Map<String, ArrayList<String>> relations;
 
+    private boolean usesfocus;
+
     protected int focusedElementIndex;
 
     public Formulario() {
         super();
+        usesfocus = true;
         relations = new HashMap<>();
         dataManagers = new ArrayList();
         elementTitles = new ArrayList();
@@ -53,11 +56,6 @@ public abstract class Formulario extends JPanel {
 
     public FormElement getElement(int i){
         return elements.get(i);
-    }
-
-    public void resetToDefaultValues(){
-        for (FormElement element: elements)
-            element.useDefval();
     }
 
     public void setDefaultValues(ArrayList<String> titles, ArrayList values){
@@ -185,22 +183,20 @@ public abstract class Formulario extends JPanel {
 
         formElementWithOptions childElement= getElementWithOptionsFromTitle(childElementName);
 
-        TrigerElemetGetter triggerEvent = new TrigerElemetGetter() {
-            @Override
-            public void onTrigger(FormElement element) {
-                if(!(parentsAreSetted(childElementName) && isVirtual(childElementName)))
-                    event.getNewOptions(element.getResponse(),childElement);
-            }
-        };
+            TrigerElemetGetter triggerEvent = new TrigerElemetGetter() {
+                @Override
+                public void onTrigger(FormElement element) {
+                    if(!(parentsAreSetted(childElementName) && isVirtual(childElementName)))
+                        event.getNewOptions(element.getAbsoluteResponse(),childElement);
+                }
+            };
 
             if(virtualParents.containsKey(parentElementName)){
                 Input auxCtrl = new Input("",dataType.VARCHAR);
-                    auxCtrl.setDefaultValue(virtualParents.get(parentElementName));
+                    auxCtrl.setResponse(virtualParents.get(parentElementName));
 
                 triggerEvent.onTrigger(auxCtrl);
-            }
-
-            else {
+            } else {
                 addRelation(parentElementName,childElementName);
                 formElementWithOptions parentElement= getElementWithOptionsFromTitle(parentElementName);
                 parentElement.addTrigerGetterEvent(triggerEvent);
@@ -235,6 +231,10 @@ public abstract class Formulario extends JPanel {
 
     };
 
+    public void setUsesfocus(boolean usesfocus) {
+        this.usesfocus = usesfocus;
+    }
+
     protected void addElement(FormElement element){
 
         element.getCurrentElement().
@@ -255,9 +255,11 @@ public abstract class Formulario extends JPanel {
     };
 
     public void changeFocusTo(int i){
+        if(usesfocus)
         changeFocusTo(elements.get(i).currentElement);
     }
     public void changeFocusTo(JComponent comp){
+
         comp.requestFocus();
     }
 
@@ -269,13 +271,17 @@ public abstract class Formulario extends JPanel {
 
     private void changeFocusToNext(){
         int nextIndex = focusedElementIndex+1;
+
+        if(!elements.get(focusedElementIndex).currentElement.hasFocus())
+           return;
+
         if (nextIndex < elements.size()) {
             if (elements.get(nextIndex).getCurrentElement().isEnabled())
                 changeFocusTo(nextIndex);
         }
-        else if(lastElementToFocus != null){
+        else if(lastElementToFocus != null)
             changeFocusTo(lastElementToFocus);
-        }
+
     }
 
     public boolean hasErrors(){
@@ -305,23 +311,8 @@ public abstract class Formulario extends JPanel {
         return data;
     }
 
-
-
-    private boolean validateElementErrors(FormElement element){
-        if(element.hasErrors())
-            return false;
-
-        return true;
-    }
-
     private boolean validateElement(FormElement element){
-        if(validateElementErrors(element)) {
-            if (!element.hasBeenModified())
-                return false;
-        } else return false;
-
-        return true;
-
+       return !element.hasErrors() && element.hasBeenModified();
     }
 
     public void manageData(){

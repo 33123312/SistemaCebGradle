@@ -30,7 +30,7 @@ public class CrudTable extends keyedBuildBehavior {
     }
 
     private void deploy(){
-        table.getFactory().addGralClickEvnt(new AdapTableFE.rowSelectionEvnt() {
+        table.getFactory().addRightClickEvnt(new AdapTableFE.rowSelectionEvnt() {
             @Override
             public void whenSelect(TableRow row) {
                 selectedRow = row.getKey();
@@ -114,25 +114,19 @@ public class CrudTable extends keyedBuildBehavior {
 
                         ArrayList<String> responseTitles = viewSpecs.getCol(responseTagTitles);
 
-                        rowUpdateConfirmationFrame confirmationForm = new rowUpdateConfirmationFrame();
-                        updateForm.getFrame().addChildForm(confirmationForm);
                         ArrayList<String> updateConditions2 = viewSpecs.getCol(updateConditions);
-                        confirmationForm.addOnAcceptEvent(new genericEvents() {
-                                  @Override
-                                  public void genericEvent() {
-                                      ((FormWindow) form).getFrame().closeForm();
-                                      try {
-                                          viewSpecs.getUpdater().update(responseTitles, responseValues, updateConditions2, selectedRegister);
-                                      } catch (SQLException throwables) {
-                                          throwables.printStackTrace();
-                                          new FormDialogMessage("Conflicto al insertar registro",
-                                                  "El registro que se ha intentdo añadir ya existe");
-                                      }
-                                      build.updateSearch();
 
-                                  }
-                              }
-                        );
+                        ((FormWindow) form).getFrame().closeForm();
+                        try {
+                            viewSpecs.getUpdater().update(responseTitles, responseValues, updateConditions2, selectedRegister);
+                        } catch (SQLException throwables) {
+                            throwables.printStackTrace();
+                            new FormDialogMessage("Conflicto al insertar registro",
+                                    "El registro que se ha intentdo añadir ya existe");
+                        }
+                        build.updateSearch();
+
+
                     }
                 });
                 }
@@ -142,6 +136,6 @@ public class CrudTable extends keyedBuildBehavior {
 
     @Override
     public String getInstructions() {
-        return "Da click en un registro para modificarlo o eliminarlo";
+        return "Da click derecho en un registro para modificarlo o eliminarlo";
     }
 }

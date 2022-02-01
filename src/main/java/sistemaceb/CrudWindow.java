@@ -31,7 +31,6 @@ public class CrudWindow extends Window {
         viewSpecs = new ViewSpecs(view);
         setTitle(viewSpecs.getInfo().getHumanName());
         consulterTable = new SimpleInsertTableBuild(view);
-        //consulterTable.updateSearch();
         deployAll();
         
     }
@@ -43,8 +42,10 @@ public class CrudWindow extends Window {
 
     private void deployAll(){
         LinearHorizontalLayout layout = new LinearHorizontalLayout();
-            layout.addElement(getResetButon());
+            if(viewSpecs.hasLootOfReg())
+                layout.addElement(getResetButon());
             layout.addElement(getSearchBar());
+
         addToHeader(layout);
         setBody(deployBodyContainer());
     }
@@ -79,6 +80,7 @@ public class CrudWindow extends Window {
   
     private JPanel deployBodyContainer(){
         JPanel container = new  JPanel( new BorderLayout());
+            if(viewSpecs.hasLootOfReg())
             container.add(deployTagsSearcher(),BorderLayout.NORTH);
             container.add(deployTableAndControls(),BorderLayout.CENTER);
             container.setBackground(new Color(20,240,240));
@@ -182,15 +184,16 @@ public class CrudWindow extends Window {
     }
 
     public JPanel deployTableOptionsContainer(){
-        
-         JPanel generalContainer = new JPanel(new BorderLayout());
+
+        LinearHorizontalLayout generalContainer = new LinearHorizontalLayout();
+
 
         BtnFE addBtn = consulterTable.getInsertButton();
             addBtn.setPadding(5,10,5,10);
-            addBtn.setMargins(15,5,0,0,generalContainer.getBackground());
+            addBtn.setMargins(15,0,0,5,generalContainer.getBackground());
             addBtn.setBackground(new Color(2, 152, 219));
-            generalContainer.add(addBtn,BorderLayout.EAST);
-            generalContainer.add(consulterTable.getInstructionsPanel(),BorderLayout.WEST);
+            generalContainer.addElement(addBtn);
+            generalContainer.addElement(consulterTable.getInstructionsPanel());
 
         return generalContainer;
         

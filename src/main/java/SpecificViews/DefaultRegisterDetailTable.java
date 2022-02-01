@@ -20,6 +20,7 @@ public class DefaultRegisterDetailTable extends RegisterDetailTable {
         super.firstImplementation();
         addDefInsertButton();
         addSearchOptions();
+
     }
 
     private ConsultTableBuild getBuild(){

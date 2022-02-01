@@ -64,7 +64,7 @@ public class QueryParser {
 
     }
 
-    protected String stringifyConditions(ArrayList<String> columnCondition,ArrayList<String> values){
+    protected String stringifyConditions(ArrayList<String> columnCondition,ArrayList<String> values,String condition){
         removeNulls(columnCondition,values);
         StringBuilder stringifiedConditions = new StringBuilder();
 
@@ -74,7 +74,7 @@ public class QueryParser {
             stringifiedConditions.append(columnCondition.get(i));
             stringifiedConditions.append(" = ");
             stringifiedConditions.append(mergeBranches(values.get(i)));
-            stringifiedConditions.append( " and ");
+            stringifiedConditions.append( " " + condition + " ");
         }
 
         stringifiedConditions.append(columnCondition.get(i));

@@ -7,6 +7,7 @@ import com.itextpdf.layout.element.Cell;
 import com.itextpdf.layout.element.Paragraph;
 import com.itextpdf.layout.element.Table;
 import com.itextpdf.layout.property.HorizontalAlignment;
+import com.itextpdf.layout.property.VerticalAlignment;
 
 import java.util.ArrayList;
 
@@ -23,7 +24,7 @@ public class BitacoraMateriaGrupoPDF extends PDFPlantillaTable{
         fillerCols = 25;
         this.alumnos = alumnos;
         rowCont = 1;
-        addMembreteLargo();
+        adddMembreteCorto();
 
     }
 
@@ -106,7 +107,7 @@ public class BitacoraMateriaGrupoPDF extends PDFPlantillaTable{
         float[] sizes = new float[]{1};
 
         Table firma = new Table(sizes).
-                setWidthPercent(33);
+                setWidthPercent(50);
 
         Cell lineCell = new Cell().setBorder(Border.NO_BORDER).
                 setBorderBottom(new SolidBorder(1)).
@@ -116,17 +117,16 @@ public class BitacoraMateriaGrupoPDF extends PDFPlantillaTable{
 
         Cell nombreCell = new Cell().
                 setHorizontalAlignment(HorizontalAlignment.CENTER).
+                setVerticalAlignment(VerticalAlignment.MIDDLE).
                 setBorder(Border.NO_BORDER).
-                setFontSize(10).add(profesor);
+                setFontSize(8).add(profesor);
 
         firma.addCell(nombreCell);
 
         add(new Paragraph(""));
         add(new Paragraph(""));
         add(new Paragraph(""));
-        add(new Paragraph(""));
-        add(new Paragraph(""));
-        add(new Paragraph(""));
+
         add(firma);
 
 

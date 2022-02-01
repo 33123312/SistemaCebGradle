@@ -21,7 +21,7 @@ public class PlanoGrupoViewerPill extends RegisterDetailTable {
 
     private ConsultTableBuild getBuild(){
         MultipleAdderConsultBuild build = new MultipleAdderConsultBuild(viewSpecs.getTable(),critValue,parentSpecs);
-            build.setBehavior(new LinkedTable(viewSpecs.getTable(),"Clave_plan",build.getOutputTable()));
+            build.setBehavior(new LinkedTable(build.getViewSpecs().getTable(), build.getRelatedKey(), build.getOutputTable()));
         return build;
     }
 

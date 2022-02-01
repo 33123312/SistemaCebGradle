@@ -12,11 +12,18 @@ public class DBSTate {
     public static String currentDatabase;
     public static String user;
     public static String password;
+    public static String backAuthKey;
+    public static String serverURL;
+    public static String serverDir;
 
 
     public DBSTate() {
         user = "remote";
         password = "Kinareth41ñ$";
+        backAuthKey = "pocheto";
+        serverDir = "147.182.129.199";
+        serverURL = "http://147.182.129.199";
+
 
         useMainDatabase();
 

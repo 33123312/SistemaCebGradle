@@ -9,7 +9,7 @@ public class DeleteAluOperation extends Operation{
 
     public DeleteAluOperation(OperationInfoPanel registerDetail) {
         super(registerDetail);
-        operation = "Borrar Alumno";
+        operation = "Desaparecer Alumno";
     }
 
     @Override

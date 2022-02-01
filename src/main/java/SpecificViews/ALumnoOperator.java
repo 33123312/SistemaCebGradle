@@ -3,6 +3,7 @@ package SpecificViews;
 import JDBCController.DataBaseConsulter;
 import JDBCController.Table;
 import JDBCController.TableRegister;
+import sistemaceb.AluPassGenerator;
 import sistemaceb.form.Global;
 
 import java.awt.desktop.PreferencesEvent;
@@ -10,53 +11,103 @@ import java.util.ArrayList;
 
 public class  ALumnoOperator extends TableOperator{
     public GrupoOperator grupoOperator;
+    private int evasSize;
+    public Table boleta;
+    public Table semestralesBoleta;
+    private String periodo;
+    protected ALumnoOperator thisOp;
 
     public ALumnoOperator(String aluMatr){
         super(aluMatr,"alumnos");
+        thisOp = this;
+        periodo = Global.conectionData.loadedPeriodo;
         grupoOperator =
                 new GrupoOperator(getTableInfo().get("grupo"));
+        evasSize  = 0;
     }
 
-    public ALumnoOperator(TableRegister aluInfo,Table boleta,GrupoOperator op){
+    public ALumnoOperator(TableRegister aluInfo,Table grupoBoleta,GrupoOperator op){
         super(aluInfo.get("numero_control"),"alumnos",aluInfo);
-        this.boleta = boleta;
+        thisOp = this;
+        periodo = Global.conectionData.loadedPeriodo;
+        this.boleta = extractBoleta(grupoBoleta);
         grupoOperator = op;
-
+        evasSize = 0;
     }
+
+    public ALumnoOperator(TableRegister aluInfo,Table grupoBoleta,Table grupoSemestralesBoleta,GrupoOperator op){
+        super(aluInfo.get("numero_control"),"alumnos",aluInfo);
+        thisOp = this;
+        periodo = Global.conectionData.loadedPeriodo;
+        this.boleta = extractBoleta(grupoBoleta);
+        this.semestralesBoleta = extractBoleta(grupoSemestralesBoleta);
+        grupoOperator = op;
+        evasSize = 0;
+    }
+
+    private Table extractBoleta(Table grupoBoleta){
+        return grupoBoleta.getSubTable(
+                new String[]{"numero_control"},
+                new String[]{getRegisterValue("numero_control")});
+    }
+
+
+    private int getEvasSize(){
+        if (evasSize == 0)
+            evasSize = CalifasOperator.getEvaluaciones().size();
+
+        return evasSize;
+    }
+
+    private ArrayList<ArrayList<String>> getEmptySizerArr() {
+        ArrayList<ArrayList<String>> e = new ArrayList<>();
+
+        int size = getEvasSize();
+
+        for (int i = 0;i < size;i++)
+            e.add(new ArrayList<>());
+
+
+        return e;
+    }
+
     public ArrayList<AluMateriaBolOperator> getBolBoleta(){
+
+
+        return getBolBoleta(grupoOperator.getMaterias("A/NA").getColumn("materia"));
+    }
+
+    public ArrayList<AluMateriaBolOperator> getBolBoleta(ArrayList<String> materiasBol){
         ArrayList<AluMateriaBolOperator> op = new ArrayList<>();
-        ArrayList<String> materiasBol = grupoOperator.getMaterias("A/NA").getColumn("materia");
 
-
-        for (String key: materiasBol)
-            if(boleta == null){
-                Table fullResB = getboleta("alumno_bol_califa_charge_view");
-                op.add(new AluMateriaBolOperator(key,Global.conectionData.loadedPeriodo,getTableInfo(),fullResB));
-            } else
-                op.add(new AluMateriaBolOperator(key, Global.conectionData.loadedPeriodo,getTableInfo(),boleta));
+        for (String key: materiasBol){
+            Table boleta = getBoleta("alumno_num_califa_charge_view");
+            op.add(new AluMateriaBolOperator(key, periodo,getTableInfo(),boleta));
+        }
 
         return op;
     }
 
     public ArrayList<AluMateriaNumOperator> getNumBoleta(){
-        ArrayList<AluMateriaNumOperator> op = new ArrayList<>();
-        ArrayList<String> materiasNum = grupoOperator.getMaterias("Numérica").getColumn("materia");
 
+
+        return getNumBoleta(grupoOperator.getMaterias("Numérica").getColumn("materia"));
+    }
+
+    public ArrayList<AluMateriaNumOperator> getNumBoleta(ArrayList<String> materiasNum){
+        ArrayList<AluMateriaNumOperator> op = new ArrayList<>();
+        getBoleta("alumno_num_califa_charge_view");
+        getSemBoleta();
 
         for (String key: materiasNum)
-            if(boleta == null){
-                Table fullResN = getboleta("alumno_num_califa_charge_view");
-                op.add(new AluMateriaNumOperator(key,Global.conectionData.loadedPeriodo,getTableInfo(),fullResN));
-            } else
-                op.add(new AluMateriaNumOperator(key, Global.conectionData.loadedPeriodo,getTableInfo(),boleta));
+            op.add(getNumMatState(key));
+
 
         return op;
     }
 
-    public Table boleta;
 
-    private Table getboleta(String view){
-
+    private Table getBoleta(String view){
         if (boleta == null){
             DataBaseConsulter consulter = new DataBaseConsulter(view);
 
@@ -64,10 +115,29 @@ public class  ALumnoOperator extends TableOperator{
 
             String[] cond = new String[]{"numero_control","periodo"};
 
-            String[] val = new String[]{getTableRegister(),Global.conectionData.loadedPeriodo};
+            String[] val = new String[]{getTableRegister(),periodo};
 
-            return consulter.bringTable(colsToBring,cond,val);
-        } else return boleta;
+            boleta = consulter.bringTable(colsToBring,cond,val);
+
+        }
+
+        return boleta;
+
+    }
+
+    private Table getSemBoleta(){
+        if (semestralesBoleta == null){
+            DataBaseConsulter consulter = new DataBaseConsulter("calificaciones_semestrales_view");
+
+            String[] cond = new String[]{"clave_alumno","periodo"};
+
+            String[] val = new String[]{getTableRegister(),periodo};
+
+            semestralesBoleta = consulter.bringTable(cond,val);
+
+        }
+
+        return semestralesBoleta;
 
     }
 
@@ -84,7 +154,7 @@ public class  ALumnoOperator extends TableOperator{
     }
 
     public AluMateriaBolOperator getBolMatState(String materia){
-        String periodo = Global.conectionData.loadedPeriodo;
+
         if (boleta == null)
             return new AluMateriaBolOperator(materia, periodo,getTableInfo());
         else
@@ -92,11 +162,14 @@ public class  ALumnoOperator extends TableOperator{
     }
 
     public AluMateriaNumOperator getNumMatState(String materia){
-        String periodo = Global.conectionData.loadedPeriodo;
         if (boleta == null)
             return new AluMateriaNumOperator(materia, periodo,getTableInfo());
         else
-            return new AluMateriaNumOperator(materia,periodo,getTableInfo(),boleta);
+            if (semestralesBoleta == null)
+                return new AluMateriaNumOperator(materia,periodo,getTableInfo(),boleta);
+            else
+                return new AluMateriaNumOperator(materia,periodo,getTableInfo(),boleta,semestralesBoleta);
+
     }
 
     public AluMateriaOperator getMateriaState(String materia){
@@ -113,26 +186,20 @@ public class  ALumnoOperator extends TableOperator{
     }
 
     public class TodasMateriasOps {
-        ArrayList<AluMateriaNumOperator> operators;
-        ArrayList<String> materias;
+        public ALumnoOperator operator = thisOp;
+        private ArrayList<AluMateriaNumOperator> operators;
 
         public TodasMateriasOps(){
-            operators = new ArrayList<>();
-            materias = grupoOperator.getMaterias("Numérica").getColumn(0);
-            for (String materia : materias)
-                operators.add((AluMateriaNumOperator) getMateriaState(materia));
+            operators = getNumBoleta();
+
         }
 
         public ArrayList<String> getSumatoriaFaltas() {
-            ArrayList<ArrayList<String>> faltasTotales = new ArrayList<>();
-            faltasTotales.add(new ArrayList<>());
-            faltasTotales.add(new ArrayList<>());
-            faltasTotales.add(new ArrayList<>());
-            faltasTotales.add(new ArrayList<>());
+            ArrayList<ArrayList<String>> faltasTotales = getEmptySizerArr();
 
             for (AluMateriaNumOperator materiaOp : operators) {
                 ArrayList<String> faltas = materiaOp.getFaltas();
-                for (int i = 0; i < 4; i++)
+                for (int i = 0; i < faltasTotales.size(); i++)
                     faltasTotales.get(i).add(faltas.get(i));
 
             }
@@ -146,15 +213,11 @@ public class  ALumnoOperator extends TableOperator{
         }
 
         public ArrayList<String> getPromUnidad() {
-            ArrayList<ArrayList<String>> faltasTotales = new ArrayList<>();
-            faltasTotales.add(new ArrayList<>());
-            faltasTotales.add(new ArrayList<>());
-            faltasTotales.add(new ArrayList<>());
-            faltasTotales.add(new ArrayList<>());
+            ArrayList<ArrayList<String>> faltasTotales = getEmptySizerArr();
 
             for (AluMateriaNumOperator materiaOp : operators) {
                 ArrayList<String> faltas = materiaOp.getParCalif();
-                for (int i = 0; i < 4; i++)
+                for (int i = 0; i < faltasTotales.size(); i++)
                     faltasTotales.get(i).add(faltas.get(i));
 
             }
@@ -193,7 +256,7 @@ public class  ALumnoOperator extends TableOperator{
             for (AluMateriaNumOperator materiaOp : operators)
                 semestrales.add(materiaOp.getSumaFaltas());
 
-            return PromsOperations.getProm(semestrales);
+            return PromsOperations.getSumaFaltas(semestrales);
 
         }
 

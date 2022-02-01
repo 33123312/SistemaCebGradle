@@ -27,11 +27,6 @@ public class LinkedTable extends KeyedTableBehavior {
 
     }
 
-    @Override
-    public String getInstructions() {
-        return "Da click en un registro para conocer los detalles del mismo";
-    }
-
     public LinkedTable(String originalTable, String mainKey,primaryKeyedTable table ){
         super(getObjectiveTable(new ViewSpecs(originalTable),mainKey),table);
         primarykey = mainKey;
@@ -39,7 +34,14 @@ public class LinkedTable extends KeyedTableBehavior {
 
     }
 
-    private static String getObjectiveTable(ViewSpecs viewSpecs,String primaryKey){
+
+    @Override
+    public String getInstructions() {
+        return "Da click en un registro para conocer los detalles del mismo o da click derecho para modificarlo o removerlo";
+    }
+
+
+    protected static String getObjectiveTable(ViewSpecs viewSpecs,String primaryKey){
         ArrayList<String> foreignCols =  viewSpecs.getForeignTags();
         ArrayList<String> tables = viewSpecs.getInfo().getForeignTables();
 
@@ -55,6 +57,10 @@ public class LinkedTable extends KeyedTableBehavior {
     }
 
     protected String getPrimaryKey(int key){
+        System.out.println(viewSpecs.getTable());
+        System.out.println(primarykey);
+        System.out.println(table.currentRegisters.getColumnTitles());
+
         String keyValue = table.currentRegisters.getRegister(key).get(primarykey);
         return keyValue;
     }
@@ -63,6 +69,7 @@ public class LinkedTable extends KeyedTableBehavior {
         table.getFactory().addLeftClickEvnt(new AdapTableFE.rowSelectionEvnt() {
             @Override
             public void whenSelect(TableRow row) {
+
                 Global.view.currentWindow.newView(
                     new RegisterDetailView(
                         viewSpecs.getTable(),

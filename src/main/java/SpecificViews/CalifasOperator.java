@@ -20,9 +20,15 @@ public class CalifasOperator {
                 .bringTable().getColumn(0);
     }
 
+    public static ArrayList<String> getHorasClaseView(){
+
+        return new DataBaseConsulter("horas_clase_vissible_view")
+                .bringTable().getColumn(4);
+    }
+
     public static Table getHorasClase(String turno){
 
-        return new DataBaseConsulter("horas_clase_view")
+        return new DataBaseConsulter("horas_clase_visible_view")
                 .bringTable(
                         new String[]{"orden","hora"},
                         new String[]{"turno"},
@@ -31,7 +37,7 @@ public class CalifasOperator {
 
     public static ArrayList<String> getDiasClase(){
         if (diasClase == null)
-            diasClase = new DataBaseConsulter("dias_clase").bringTable().getColumn(0);
+            diasClase = new DataBaseConsulter("dias_clase_view").bringTable().getColumn(0);
 
         return diasClase;
 

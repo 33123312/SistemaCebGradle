@@ -73,7 +73,7 @@ public class DataBaseSearcher {
         currentTagsToAproximatedSearch = new ArrayList<>();
         currentTagsToExactSearch = new ArrayList<>();
 
-        String view = specs.getInfo().getTable();
+        String view = specs.getInfo().getView();
         String visibleView = specs.getInfo().getVisibleView();
 
         consulterView = new DataBaseConsulter(view);
@@ -258,7 +258,9 @@ public class DataBaseSearcher {
     }
 
     private boolean hasVisibleView(){
-       return !visibleTagsConsulter.getTable().equals(specs.getTable());
+        String table = specs.getTable();
+
+       return !table.equals(specs.getInfo().getView()) && !table.equals(specs.getInfo().getVisibleView());
     }
 
     private void removeCols(Table sortedTable,ArrayList<String> columnsToBring){

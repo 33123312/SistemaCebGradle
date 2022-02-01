@@ -1,21 +1,24 @@
 package sistemaceb;
 
+import JDBCController.DBSTate;
 import com.google.gson.Gson;
 import sistemaceb.form.FormDialogMessage;
 import sistemaceb.form.Global;
 
-import java.io.IOException;
+import java.io.*;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
 public class RespaldosManager {
 
-    private  String serverURL = "http://147.182.129.199:3000/";
+    private String serverURL = DBSTate.serverURL + ":3000/";
 
     private Map getDefJson(){
         Map jsonToSend = new HashMap();
@@ -52,16 +55,33 @@ public class RespaldosManager {
         HttpClient client = HttpClient.newBuilder().build();
         HttpRequest request = HttpRequest.newBuilder()
                 .header("Content-Type", "application/json")
+                .header("Authorization", "Basic " + DBSTate.backAuthKey)
                 .uri(URI.create(serverURL + "orderBackup"))
                 .POST(HttpRequest.BodyPublishers.ofString(parsedJSON))
                 .build();
 
         try {
-            client.send(request, HttpResponse.BodyHandlers.discarding());
+            HttpResponse<InputStream> res =  client.send(request, HttpResponse.BodyHandlers.ofInputStream());
+            createLocalRes(res);
+
             showDiaog("Se ha respaldado exitosamente");
         } catch (Exception e) {
             e.printStackTrace();
             showDiaog("Error desconocido en el servidor al hacer el respaldo, no se ha podido realizar");
+        }
+    }
+
+    private void createLocalRes(HttpResponse<InputStream> res) {
+        InputStream resB= res.body();
+        try {
+            checkIfResDirExists();
+            FileOutputStream fos = new FileOutputStream(new File(System.getProperty("user.dir") + "/res/" + getLocalResName() + ".sql"));
+            resB.transferTo(fos);
+            fos.close();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 
@@ -170,12 +190,14 @@ public class RespaldosManager {
         HttpClient client = HttpClient.newBuilder().build();
         HttpRequest request = HttpRequest.newBuilder()
                 .header("Content-Type", "application/json")
+
                 .uri(URI.create(serverURL + endPoint))
                 .POST(HttpRequest.BodyPublishers.ofString(parsedJSON))
                 .build();
 
         try {
-            HttpResponse r = client.send(request, HttpResponse.BodyHandlers.discarding());
+            client.send(request, HttpResponse.BodyHandlers.discarding());
+
         } catch (IOException e) {
             e.printStackTrace();
             showDiaog("Error desconocido al traer la lista, no se ha podido realizar");
@@ -207,11 +229,26 @@ public class RespaldosManager {
     public void createResDir(String periodo){
         Map json = new HashMap();
             json.put("periodo",periodo);
-        charge(json,"createPeriodoBackupsDir");
 
+        charge(json,"createPeriodoBackupsDir");
     }
 
 
+
+    private String getLocalResName(){
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH-mm-ss");
+        LocalDateTime now = LocalDateTime.now();
+
+        return dtf.format(now);
+    }
+
+    private void checkIfResDirExists(){
+        File file = new File(System.getProperty("user.dir") + "/res" );
+        if(file.exists()){
+
+        } else
+            file.mkdirs();
+    }
 
 
 }

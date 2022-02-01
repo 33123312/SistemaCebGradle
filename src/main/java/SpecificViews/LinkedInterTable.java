@@ -8,13 +8,11 @@ import JDBCController.ViewSpecs;
 import Tables.AdapTableFE;
 import Tables.RowsFactory;
 import Tables.TableRow;
-import sistemaceb.FormResponseManager;
-import sistemaceb.LinkedTable;
-import sistemaceb.TagFormBuilder;
+import sistemaceb.*;
+import sistemaceb.form.FormDialogMessage;
 import sistemaceb.form.FormWindow;
 import sistemaceb.form.Formulario;
 import sistemaceb.form.MultipleAdderConsultBuild;
-import sistemaceb.primaryKeyedTable;
 
 import java.awt.*;
 import java.awt.event.MouseAdapter;
@@ -30,6 +28,7 @@ public class LinkedInterTable extends LinkedTable {
     public LinkedInterTable(MultipleAdderConsultBuild build) {
         super(build.getViewSpecs().getTable(), build.getRelatedKey(), build.getOutputTable());
         this.build = build;
+
     }
 
     @Override
@@ -46,6 +45,7 @@ public class LinkedInterTable extends LinkedTable {
                         return super.buttonsEditor(button);
                     }
                 };
+
                 if (!getModificableCols().isEmpty())
                     menu.addButton("Modificar", new MouseAdapter() {
                         @Override
@@ -54,6 +54,7 @@ public class LinkedInterTable extends LinkedTable {
                             modifyElement(getPrimaryKey(key));
                         }
                     });
+
 
                 menu.addButton("Remover", new MouseAdapter() {
                     @Override
@@ -137,11 +138,15 @@ public class LinkedInterTable extends LinkedTable {
             values.add(build.critValue);
             values.add(selectdKey);
 
+        ViewSpecs interSpecs = new ViewSpecs(interTable);
         cols = build.getViewSpecs().getCol(cols);
         try {
-            new ViewSpecs(interTable).getUpdater().delete(cols,values);
+            interSpecs.getUpdater().delete(cols,values);
         } catch (SQLException throwables) {
             throwables.printStackTrace();
+            FormDialogMessage message = new FormDialogMessage("No se puede eliminar","El registro no pudo ser eliminado, " +
+                    "ya que está siendo usado por otras tablas de la base de datos " + interSpecs.getRelatedTables() + " " +
+                    "elimine el registro de dichas tablas antes de eliminar el registro");
         }
         build.updateSearch();
     }

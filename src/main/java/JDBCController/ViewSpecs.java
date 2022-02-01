@@ -265,6 +265,12 @@ public class ViewSpecs {
         return size < 100;
     }
 
+    public boolean hasLootOfReg(){
+        int size = info.getCount();
+
+        return size > 20;
+    }
+
     public ArrayList<String> getAutoIncrTag(){
         return getTag(info.getAutoIncrCols());
     }
@@ -291,8 +297,8 @@ public class ViewSpecs {
     public class Updater extends QueryParser{
 
         public void delete(ArrayList<String> columnCondition, ArrayList<String> values) throws SQLException {
-            String query = "delete from " + table + " where "  + stringifyConditions(columnCondition,values);
-            //System.out.println(query);
+            String query = "delete from " + table + " where "  + stringifyConditions(columnCondition,values,"and");
+            System.out.println(query);
             info.flushCount();
             Global.SQLConector.getMyStatment().executeUpdate(query);
 
@@ -311,7 +317,7 @@ public class ViewSpecs {
         public void insert(ArrayList<String> columns,ArrayList<String> values) throws SQLException {
 
             String query = "insert into " + table + "(" + stringifyColumns(columns) + ") values (" + getPrametrized(values.toArray(new String[values.size()])) + ")";
-            //System.out.println(query);
+            System.out.println(query);
             info.flushCount();
             Global.SQLConector.getMyStatment().executeUpdate(query);
 
@@ -345,6 +351,37 @@ public class ViewSpecs {
             }
             if(!colToMod.isEmpty())
                 updateRegister(colToMod,newValues,colCondition,conditionValue);
+        }
+
+        public void updateOr (
+
+                ArrayList<String>colToMod,
+                ArrayList<String> newValues,
+                ArrayList<String>colCondition,
+                ArrayList<String> conditionValue
+
+        ) throws SQLException {
+
+            String primaryCol = getCol(getPrimarykey());
+
+            if(colToMod.contains(primaryCol) && getPrimaryskey().size() == 1){
+                int keyIndex = colToMod.indexOf(primaryCol);
+                String newPrimaryValue = newValues.get(keyIndex);
+                String oldValue = conditionValue.get(0);
+                if(!oldValue.equals(newPrimaryValue)) {
+                    copyOldRegister(primaryCol, newPrimaryValue, oldValue);
+                    updteRelatedTables(newPrimaryValue, oldValue);
+                    deleteOldValue(primaryCol, oldValue);
+                    conditionValue.remove(0);
+                    conditionValue.add(newPrimaryValue);
+                }
+
+                colToMod.remove(primaryCol);
+                newValues.remove(newPrimaryValue);
+
+            }
+            if(!colToMod.isEmpty())
+                updateRegisterOr(colToMod,newValues,colCondition,conditionValue);
         }
 
         private void deleteOldValue(String primaryCol, String oldValue){
@@ -420,12 +457,26 @@ public class ViewSpecs {
 
             stringifiedNewValues +=  " " + colToMod.get(i)  + " = " + mergeBranches(newValues.get(i));
 
-            String query = "update " + table + " set "  + stringifiedNewValues + " where " + stringifyConditions(colCondition,conditionValue);
-            //System.out.println(query);
+            String query = "update " + table + " set "  + stringifiedNewValues + " where " + stringifyConditions(colCondition,conditionValue,"and");
+            System.out.println(query);
             Global.SQLConector.getMyStatment().executeUpdate(query);
 
         }
 
+        public void updateRegisterOr (ArrayList<String>colToMod, ArrayList<String> newValues,ArrayList<String>colCondition,ArrayList<String>conditionValue) throws SQLException {
+            String stringifiedNewValues = "";
+            int i;
+            int size = colToMod.size()-1;
+            for(i = 0; i < size;i++)
+                stringifiedNewValues +=  colToMod.get(i) + " = " + mergeBranches(newValues.get(i)) + ",";
+
+            stringifiedNewValues +=  " " + colToMod.get(i)  + " = " + mergeBranches(newValues.get(i));
+
+            String query = "update " + table + " set "  + stringifiedNewValues + " where " + stringifyConditions(colCondition,conditionValue,"or");
+            System.out.println(query);
+            Global.SQLConector.getMyStatment().executeUpdate(query);
+
+        }
 
 
 

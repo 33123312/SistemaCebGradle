@@ -73,7 +73,8 @@ public class RespaldoChargerWindow extends Window {
                 super.mousePressed(e);
                 String file = periodoSelector.getSelectedFile();
                 if (file != null){
-                    FormDialogMessage form = new FormDialogMessage("Borrar Respaldo","Está cpmpletamente seguro de querer borrar el repaldo " + file);
+                    FormDialogMessage form = new FormDialogMessage("Borrar Respaldo","¿Está completamente seguro de querer borrar el respaldo " + file + "?");
+                        form.addAcceptButton();
                         form.addOnAcceptEvent(new genericEvents() {
                             @Override
                             public void genericEvent() {
@@ -92,8 +93,9 @@ public class RespaldoChargerWindow extends Window {
                 super.mousePressed(e);
                 String file = periodoSelector.getSelectedFile();
                 if (file != null) {
-                    FormDialogMessage dialog = new FormDialogMessage("Cargar respaldo","Se usara ete respaldo como periodo actual, aún así, se creará un respaldo para el periodo " + Global.conectionData.loadedPeriodo);
-                        dialog.addOnAcceptEvent(new genericEvents() {
+                    FormDialogMessage dialog = new FormDialogMessage("Cargar respaldo","Se usara este respaldo como periodo actual, aún así, se creará un respaldo para el periodo " + Global.conectionData.loadedPeriodo);
+                    dialog.addAcceptButton();
+                    dialog.addOnAcceptEvent(new genericEvents() {
                             @Override
                             public void genericEvent() {
                                 dialog.closeForm();
@@ -137,9 +139,11 @@ public class RespaldoChargerWindow extends Window {
                     String file = backupSelector.getSelectedFile();
                     if (file != null) {
                         FormDialogMessage dialog = new FormDialogMessage("Cargar respaldo", "Se usará este respaldo como periodo actual, aún así, se creará un respaldo para el periodo que se está utilizando");
+                        dialog.addAcceptButton();
                         dialog.addOnAcceptEvent(new genericEvents() {
                             @Override
                             public void genericEvent() {
+                                dialog.closeForm();
                                 resManager.chargeBackupAsMainDatabase(backupSelector.getSelectedFile());
                             }
                         });
@@ -226,9 +230,14 @@ public class RespaldoChargerWindow extends Window {
         public void setOptions(ArrayList<String> options){
             setVisible(false);
             removeAll();
-            for(String option: options)
-                addElement(getRowButton(option));
+            addResList(options);
+
             setVisible(true);
+        }
+
+        private void addResList(ArrayList<String> options){
+            for (int i = options.size() -1; i > -1;i--)
+                addElement(getRowButton(options.get(i)));
         }
 
         private JPanel getRowButton(String file){

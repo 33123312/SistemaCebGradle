@@ -25,7 +25,7 @@ FormElement extends JPanel{
     private ArrayList<ErrorChecker> errorChecker;
     private int index;
     protected ArrayList<TrigerElemetGetter> trigerElementEvents;
-    private String defaultValue;
+    protected String defaultValue;
 
     public FormElement(String title){
         defaultValue = "";
@@ -34,7 +34,6 @@ FormElement extends JPanel{
         setBackground(Color.white);
         this.title = title;
         trueTitle = title;
-        addEmptyError();
         setLayout(new BorderLayout());
         errorLabel = deployErrorLabel();
         setBorder(BorderFactory.createEmptyBorder(0,20,0,20)); 
@@ -49,7 +48,6 @@ FormElement extends JPanel{
         return this;
     }
 
-    public abstract void useDefval();
 
 
 
@@ -144,15 +142,22 @@ FormElement extends JPanel{
     }
     
     public String getResponse(){
+        String response = getAbsoluteResponse();
+
+        if (response != null)
+            if (!response.equals(defaultValue))
+                return response;
+
+        return null;
+    }
+
+    public String getAbsoluteResponse(){
         desactivateErrorMesage();
         String response = getResponseConfig();
-
+        if(response != null)
         response.trim();
 
-        if (response.equals(defaultValue))
-            return null;
-        else
-            return response;
+        return response;
     }
 
     protected String getResponseConfig(){
@@ -160,27 +165,28 @@ FormElement extends JPanel{
         return "";
     }
     
-public boolean hasErrors(){
-    String error = checkErrors();
-    boolean hasError = !error.isEmpty();
-    if(hasError)
-        activateErrorMesage(error);
-    
-    return hasError;
-}
+    public boolean hasErrors(){
+        String error = checkErrors();
+        boolean hasError = !error.isEmpty();
+        if(hasError)
+            activateErrorMesage(error);
+        return hasError;
+    }
 
+    private String checkErrors(){
+            if (hasBeenModified()){
+                String response = getResponse();
+                for (ErrorChecker checker : errorChecker) {
+                    String error = checker.checkForError(response);
+                    if (!error.isEmpty())
+                        return error;
+                }
+            } else if(isRequired())
+                return "Campo Obligatorio";
 
-    private void addEmptyError(){
-    addErrorChecker(new ErrorChecker(){
-        @Override
-        public String checkForError(String response) {
-            if(!hasBeenModified() && isRequired())
-                 return "Campo Obligatorio";
+        return "";
+    }
 
-            return "";
-        }
-    });
-}
     public void setResponse(String response){
 
     };
@@ -194,18 +200,7 @@ public boolean hasErrors(){
         return getResponse() != null;
     }
 
-    private String checkErrors(){
-        if (hasBeenModified())
-        for(ErrorChecker checker:errorChecker){
-            String error = checker.checkForError(getResponse());
-            if(!error.isEmpty()){
-                System.out.println("Error: " + error);
-                return error;
-            }
-        }
 
-        return "";
-    }
 
 public FormElement addErrorChecker(ErrorChecker checker){
     errorChecker.add(checker);

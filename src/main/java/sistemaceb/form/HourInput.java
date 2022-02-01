@@ -26,7 +26,7 @@ public class HourInput extends FormElement{
             @Override
             public String checkForError(String response) {
                 if (response.equals("forErr"))
-                    return "Error: mas de 23 horas o 60 min";
+                    return "Error: mas de 23 horas o 59 min";
 
                 return "";
             }
@@ -44,7 +44,7 @@ public class HourInput extends FormElement{
         if (hour.isEmpty() || minutes.isEmpty())
             return super.getResponseConfig();
 
-        if(Integer.parseInt(hour) > 23 || Integer.parseInt(hour) > 60)
+        if(Integer.parseInt(hour) > 23 || Integer.parseInt(minutes) > 59)
             return "forErr";
 
         String completeHOur = hour + ":" + minutes + ":00";
@@ -80,8 +80,5 @@ public class HourInput extends FormElement{
 
     }
 
-    @Override
-    public void useDefval() {
 
-    }
 }
