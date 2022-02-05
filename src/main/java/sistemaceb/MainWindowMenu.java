@@ -6,6 +6,7 @@
 package sistemaceb;
 
 import JDBCController.DBSTate;
+import JDBCController.PastPeriodoAlumnoSearcherWindow;
 import JDBCController.Table;
 import JDBCController.TableRegister;
 import sistemaceb.form.Global;
@@ -82,6 +83,13 @@ public class MainWindowMenu extends MenuListsContainer {
                         new AluPassGenerator();
                     }
                 } ));
+
+                list.addButton(new ListButton.Button("Recuperar Bajas", new ListButton.WindowBuiler() {
+                    @Override
+                    public Window buildWindow() {
+                        return new PastPeriodoAlumnoSearcherWindow();
+                    }
+                }).reBuildWindow());
             } else
                 list.addButton(new ListButton.Button("Salir del Respaldo",new MouseAdapter() {
                     @Override

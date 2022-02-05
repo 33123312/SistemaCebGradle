@@ -71,5 +71,12 @@ public class complexSearcher{
         
     }
 
-    
+
+    /**
+     *
+     * @author escal
+     */
+    public static class ConsulterInterface {
+
+    }
 }

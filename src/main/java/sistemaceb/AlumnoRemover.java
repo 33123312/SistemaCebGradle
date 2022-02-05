@@ -1,6 +1,7 @@
 package sistemaceb;
 
 import JDBCController.DataBaseConsulter;
+import JDBCController.Table;
 import JDBCController.ViewSpecs;
 
 import java.sql.SQLException;
@@ -8,113 +9,117 @@ import java.util.ArrayList;
 
 public class AlumnoRemover {
 
-    public AlumnoRemover(String alumno){
-        removeBoletas(alumno);
-        graduarAlumno(alumno);
+    ArrayList<String> alumnoCalifasKeys;
+    ArrayList<String> alumnos;
+
+    public AlumnoRemover(ArrayList<String> alumnos){
+        this.alumnos = alumnos;
+        removeBoletas(alumnos);
+        graduarAlumno(alumnos);
     }
 
-    private void removeAlumno(String alumno){
-        removeAluVal(alumno,"numero_control","alumnos");
+    public AlumnoRemover(ArrayList<String> alumnos, Table califakeys){
+        this.alumnos = alumnos;
 
+        alumnoCalifasKeys = califakeys.getColumn(0);
+
+        removeBoletas(alumnos);
+        graduarAlumno(alumnos);
     }
 
-    private void removeCalificaciones(String alumno){
-        ArrayList<String> califasKeys = getCalificacionesKeys(alumno);
-        removeCalificacionesEtapas(califasKeys);
-
-        ArrayList<String> colToDelete = new ArrayList<>();
-        colToDelete.add("clave_alumno");
-
-        ArrayList<String> values = new ArrayList<>();
-        values.add(alumno);
-
-        try {
-            new ViewSpecs("calificaciones").getUpdater().delete(colToDelete,values);
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
+    private  ArrayList<String> getCalifasKeys(){
+        if (alumnoCalifasKeys==null){
+            alumnoCalifasKeys = getCalificacionesKeys(alumnos);
         }
 
+        return alumnoCalifasKeys;
     }
 
-    private void removeEtapasFromTable(String table,ArrayList<String> califasKeys){
-        ViewSpecs updater = new ViewSpecs(table);
+    private ArrayList<String> getCalificacionesKeys(ArrayList<String> alumnos){
+        String[] colToBring = new String[]{"calificacion_clave"};
 
-        ArrayList<String> cols = new ArrayList<>();
-        cols.add("calificacion_clave");
+        String[] cond = new String[alumnos.size()];
 
-        for (String key:califasKeys){
-            ArrayList<String> valueBol = new ArrayList<>();
-            valueBol.add(key);
+        for (int i = 0; i < cond.length;i++)
+            cond[i] = "clave_alumno";
 
-            try {
-                updater.getUpdater().delete(cols,valueBol);
-            } catch (SQLException throwables) {
-                throwables.printStackTrace();
-            }
 
-        }
-    }
-
-    private void removeCalificacionesEtapas(ArrayList<String> califasKeys){
-        removeEtapasFromTable("calificaciones_booleanas",califasKeys);
-        removeEtapasFromTable("calificaciones_numericas",califasKeys);
-        removeEtapasFromTable("calificaciones_semestrales",califasKeys);
-
-    }
-
-    private ArrayList<String> getCalificacionesKeys(String alumno){
-        String[] colsToSet = new String[]{"clave_alumno"};
-
-        String[] values = new String[]{alumno};
+        String[] values = alumnos.toArray(new String[alumnos.size()]);
 
         DataBaseConsulter consulter = new DataBaseConsulter("calificaciones");
-        ArrayList<String> calificaciones = consulter.bringTable(colsToSet,values).getColumn("calificacion_clave");
+
+        ArrayList<String> calificaciones =
+                consulter.bringTableOr(colToBring,cond,values).getColumn(0);
+
         return calificaciones;
     }
 
-    private void  removeBoletas(String alumno){
-        removeCalificaciones(alumno);
-        removeContact(alumno);
-        removeTutores(alumno);
-        removeAlumno(alumno);
+    private void  removeBoletas(ArrayList<String> alumnos){
+
+        removeWebUsers();
+        removeCalificacionesEtapas();
+        removeCalificaciones(alumnos);
+        removeContact(alumnos);
+        removeTutores(alumnos);
+        removeAlumno(alumnos);
 
     }
 
-    private void removeAluVal(String alumno,String condition,String table){
-        ArrayList<String> cond = new ArrayList<>();
-        cond.add(condition);
+    private void removeWebUsers(){
+        delete(alumnos,"numero_control","webUsers");
+    }
 
-        ArrayList<String> val = new ArrayList<>();
-        val.add(alumno);
+    private void delete(ArrayList<String> keys,String keyCol,String table){
+        ArrayList<String> cols = new ArrayList<>();
+
+        for (String key:keys){
+            cols.add(keyCol);
+        }
 
         try {
-            new ViewSpecs(table).getUpdater().delete(cond,val);
+            new ViewSpecs(table).getUpdater().deleteOr(cols,keys);
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
 
     }
 
-    private void graduarAlumno(String alumno){
-        ArrayList<String> colsToSet = new ArrayList<>();
-        colsToSet.add("numero_control");
+    private void removeAlumno(ArrayList<String> alumnos){
+        delete(alumnos,"numero_control","alumnos");
 
-        ArrayList<String> values = new ArrayList<>();
-        values.add(alumno);
+    }
 
-        try {
-            new ViewSpecs("alumnos").getUpdater().delete(colsToSet,values);
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
-        }
+    private void removeCalificaciones(ArrayList<String> alumnos) {
+
+        delete(alumnos,"clave_alumno","calificaciones");
+    }
+
+    private void removeEtapasFromTable(String table){
+        delete(getCalifasKeys(),"calificacion_clave",table);
+
+    }
+
+    private void removeCalificacionesEtapas(){
+        removeEtapasFromTable("calificaciones_booleanas");
+        removeEtapasFromTable("calificaciones_numericas");
+        removeEtapasFromTable("calificaciones_semestrales");
+
     }
 
 
-    private void removeContact(String alumno){
-        removeAluVal(alumno,"numero_control","alumnos_contacto");
+
+
+
+    private void graduarAlumno(ArrayList<String> alumnos){
+        delete(alumnos,"numero_control","alumnos");
     }
 
-    private void removeTutores(String alumno){
-        removeAluVal(alumno,"numero_control","tutores");
+
+    private void removeContact(ArrayList<String> alumnos){
+        delete(alumnos,"numero_control","alumnos_contacto");
+    }
+
+    private void removeTutores(ArrayList<String> alumnos){
+        delete(alumnos,"numero_control","tutores");
     }
 }

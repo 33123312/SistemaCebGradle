@@ -297,10 +297,26 @@ public class ViewSpecs {
     public class Updater extends QueryParser{
 
         public void delete(ArrayList<String> columnCondition, ArrayList<String> values) throws SQLException {
-            String query = "delete from " + table + " where "  + stringifyConditions(columnCondition,values,"and");
-            System.out.println(query);
-            info.flushCount();
-            Global.SQLConector.getMyStatment().executeUpdate(query);
+
+            if (!values.isEmpty()){
+                String query = "delete from " + table + " where "  + stringifyConditions(columnCondition,values,"and");
+                System.out.println(query);
+                info.flushCount();
+                Global.SQLConector.getMyStatment().executeUpdate(query);
+            }
+
+
+        }
+
+        public void deleteOr(ArrayList<String> columnCondition, ArrayList<String> values) throws SQLException {
+
+            if (!values.isEmpty()){
+                String query = "delete from " + table + " where "  + stringifyConditions(columnCondition,values,"or");
+                System.out.println(query);
+                info.flushCount();
+                Global.SQLConector.getMyStatment().executeUpdate(query);
+            }
+
 
         }
 
@@ -320,6 +336,27 @@ public class ViewSpecs {
             System.out.println(query);
             info.flushCount();
             Global.SQLConector.getMyStatment().executeUpdate(query);
+
+        }
+
+        public void insertMany(ArrayList<String> columns,ArrayList<ArrayList<String>> values) throws SQLException {
+            if (!values.isEmpty()){
+                String query =
+                        "insert into " + table + "(" + stringifyColumns(columns) + ") values ";
+                int arraySize = values.size() -1;
+                for (int i = 0; i < arraySize;i++)
+                    query+="(" + getPrametrized(values.get(i).toArray(new String[values.get(i).size()])) + "),";
+
+
+                if (!values.isEmpty())
+                    query+="(" + getPrametrized(values.get(arraySize).toArray(new String[values.get(arraySize).size()])) + ")";
+
+
+                System.out.println(query);
+                info.flushCount();
+                Global.SQLConector.getMyStatment().executeUpdate(query);
+            }
+
 
         }
         public void update (

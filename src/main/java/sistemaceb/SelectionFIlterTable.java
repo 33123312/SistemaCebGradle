@@ -27,6 +27,9 @@ public class SelectionFIlterTable extends AdapTableFE {
     public SelectionFIlterTable(String grupo,Table alumnos) {
         super();
         this.grupo = grupo;
+        groupsNames = new ArrayList<>();
+        colors = new ArrayList<>();
+        groups = new ArrayList<>();
         deployTable(alumnos);
 
 
@@ -49,7 +52,17 @@ public class SelectionFIlterTable extends AdapTableFE {
             }
         }
 
-        System.out.println(groups);
+    }
+
+    public ArrayList<String> getUnselected(){
+        ArrayList<String> alumnos = new ArrayList<>();
+        ArrayList<TableRow> unselectedIndex = getDeselectedRow();
+
+        for (TableRow row:unselectedIndex){
+            alumnos.add(possibleSelections.get(row.getKey()).get(0));
+        }
+
+        return alumnos;
     }
 
     private int getAluIndex(String key){
@@ -70,8 +83,6 @@ public class SelectionFIlterTable extends AdapTableFE {
     }
 
     private void addAlumnos(Table alumnos){
-        System.out.println(alumnos.getColumnTitles());
-        System.out.println(grupo);
 
         possibleSelections = alumnos.getSubTable(new String[]{"grupo"},new String[]{grupo}).getRegisters();
         groupsReveerseLink = new ArrayList[possibleSelections.size()];
@@ -147,10 +158,21 @@ public class SelectionFIlterTable extends AdapTableFE {
     }
 
     public void setCurrentGroup(int currentGroup) {
-        this.currentGroup = currentGroup;
+        setCurrentGroup(currentGroup,selectedColorPanels.get(currentGroup));
 
+        this.currentGroup = currentGroup;
         setSelectionColor(getColor());
 
+    }
+
+
+    private void setCurrentGroup(int groupIndex,JPanel container){
+        this.currentGroup = groupIndex;
+        setSelectionColor(getColor());
+        if (selectedColorPanel != null)
+            selectedColorPanel.setBackground(Color.white);
+        selectedColorPanel = container;
+        container.setBackground(new Color(116, 185, 255));
     }
 
     private Color getColor(){
@@ -184,15 +206,21 @@ public class SelectionFIlterTable extends AdapTableFE {
 
     public void updateSelectionBar(){
         selectionBar.removeAll();
-        for (int i = 0;i<groupsNames.size();i++)
-            selectionBar.addElement(createColorPanel(i));
+        selectedColorPanels = new ArrayList<>();
+        for (int i = 0;i<groupsNames.size();i++){
+            JPanel p = createColorPanel(i);
+            selectionBar.addElement(p);
+            selectedColorPanels.add(p);
+        }
+
 
         if (!groupsNames.isEmpty())
-            selectGroup(0,(JPanel) selectionBar.getComponent(0));
+            setCurrentGroup(0);
 
     }
 
     private JPanel selectedColorPanel;
+    private ArrayList<JPanel>  selectedColorPanels;
 
     private JPanel createColorPanel(int groupIndex){
         LinearHorizontalLayout container = new LinearHorizontalLayout();
@@ -216,7 +244,7 @@ public class SelectionFIlterTable extends AdapTableFE {
             @Override
             public void mousePressed(MouseEvent e) {
                 super.mousePressed(e);
-                selectGroup(groupIndex,container);
+                setCurrentGroup(groupIndex);
 
             }
         });
@@ -224,13 +252,7 @@ public class SelectionFIlterTable extends AdapTableFE {
         return container;
     }
 
-    private void selectGroup(int groupIndex,JPanel container){
-        setCurrentGroup(groupIndex);
-        if (selectedColorPanel != null)
-            selectedColorPanel.setBackground(Color.white);
-            selectedColorPanel = container;
-            container.setBackground(new Color(116, 185, 255));
-    }
+
 
     public Map<String,ArrayList<String>> getSelectedAlumnos(){
         Map<String,ArrayList<String>> groups = new HashMap<>();

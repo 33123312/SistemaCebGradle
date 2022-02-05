@@ -6,6 +6,7 @@ import SpecificViews.GrupoOperator;
 import SpecificViews.GrupoPasserInfoStorage;
 import SpecificViews.LinearHorizontalLayout;
 import SpecificViews.LinearVerticalLayout;
+import Tables.TableRow;
 import sistemaceb.form.Global;
 import sistemaceb.form.HorizontalFormPanel;
 import sistemaceb.form.formElementWithOptions;
@@ -24,17 +25,22 @@ public class GrupoPasserWindow extends Window{
     private GrupoSemestrePasador pasador;
     private SelectionFIlterTable table;
     private Table alumnos;
+    private ArrayList<String> nextGrupos;
+    private int nextGrupo;
 
 
-    public GrupoPasserWindow(String grupo, String currentSemestre, Table alumnos){
+    public GrupoPasserWindow(String grupo, String currentSemestre, Table alumnos,ArrayList<String> nextGrupos,int nextGrupo){
         this.grupo = grupo;
         this.alumnos = alumnos;
+        this.nextGrupos = nextGrupos;
+        this.nextGrupo = nextGrupo;
+
         pasador = new GrupoSemestrePasador(currentSemestre);
         setTitle("Pasar Alumnos al Siguiente Semestre - " + grupo);
         addBody();
     }
 
-    public boolean hasDefInfo(){
+    public boolean hasInfo(){
         return  table.hasSelectedAlumnos();
     }
 
@@ -74,10 +80,7 @@ public class GrupoPasserWindow extends Window{
         table.setDefaultSelections(defSelections);
     }
 
-    private void updateGrupos(){
-        table.updateEvr(pasador.getNextSemestreGrupos());
 
-    }
 
     private void addBody(){
         LinearVerticalLayout panel = new LinearVerticalLayout();
@@ -92,10 +95,10 @@ public class GrupoPasserWindow extends Window{
     }
 
     private JLabel getDescLabel(){
-        String descripción = " Esta seccón es para determinar los alumnos que pasarán al siguiente semestre, para indicar el<br>" +
-                " grupo al que pasarán los alumnos, seleccione el dicho en la lista desplegable y para seleccionar los alumnos que <br>" +
-                "pasarán al grupo, presione sus nombres" +
-                " en la tabla de abajo.";
+        String descripción =
+                "Ésta sección es para determinar los alumnos que pasarán al siguiente semestre, para indicar el<br>" +
+                "grupo al que pasarán los alumnos, seleccione el dicho en la lista de grupos, después seleccione los alumnos que irán a ese grupo en la tabla, <br>"+
+                "estos se iluminarán con el color correspondiente al grupo que irán, para indicar que un alumno es una baja, simplemente déjelo deselecionado" ;
 
         JLabel descLabel = new JLabel("<html><body>" + descripción + "</html></body>");
             descLabel.setHorizontalAlignment(SwingConstants.CENTER);
@@ -113,11 +116,13 @@ public class GrupoPasserWindow extends Window{
 
         if(pasador.isLastSemestre()){
           container.add(getUltimoSemestrePanel());
-          table.createGroup("004");
+          table.createGroup("gr0");
+          table.setCurrentGroup("gr0");
         }
         else{
             container.add(table.getColorsSelectionBar());
-            updateGrupos();
+            table.updateEvr(nextGrupos);
+            table.setCurrentGroup(nextGrupo);
         }
 
         return container;
@@ -127,7 +132,8 @@ public class GrupoPasserWindow extends Window{
 
     private JPanel getUltimoSemestrePanel(){
         JPanel cont = new JPanel(new GridBagLayout());
-        JLabel label = new JLabel("Los alumnos seleccionado no pasarán a ningún grupo, puesto que pertenecen al último semestre, además, " +
+        JLabel label = new JLabel(
+                "Los alumnos seleccionado no pasarán a ningún grupo, puesto que pertenecen al último semestre, además, " +
                 "su historial académico se borrará de la base de datos, aunque aún estará disponible en el respaldo de este periodo");
             label.setForeground(Color.red);
 
@@ -164,16 +170,19 @@ public class GrupoPasserWindow extends Window{
 
     }
 
-    public boolean canSubmit(){
-        return !pasador.isLastSemestre() || table.hasSelectedAlumnos();
+    public ArrayList<String> getBajas(){
+        System.out.println(table.getUnselected());
+        return table.getUnselected();
+
     }
 
     public void submit(){
-        Map<String,ArrayList<String>> groups = table.getSelectedAlumnos();
-        if (pasador.isLastSemestre())
-            pasador.graduarAlumnos(groups.get("004"));
-        else
-            pasador.passAlumnos(groups);
+
+        if (table.hasSelectedAlumnos()){
+            Map<String,ArrayList<String>> groups = table.getSelectedAlumnos();
+                pasador.passAlumnos(groups);
+        }
+
 
     }
 }

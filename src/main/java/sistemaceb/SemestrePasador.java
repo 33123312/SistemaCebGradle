@@ -5,7 +5,6 @@ import JDBCController.DataBaseConsulter;
 import JDBCController.Table;
 import JDBCController.ViewSpecs;
 import JDBCController.dataType;
-import SpecificViews.LinearHorizontalLayout;
 import SpecificViews.LinearVerticalLayout;
 import sistemaceb.form.ErrorChecker;
 import sistemaceb.form.Global;
@@ -27,16 +26,21 @@ public class SemestrePasador extends Window{
     LinearVerticalLayout controlsPanel;
     ArrayList<String> semestres;
     Map<String,Map<String,ArrayList<String>>> currentPasadoresInfoPackage;
-    private ArrayList<GrupoPasserWindow> grupoPassers;
+    ArrayList<String> currentGrupos;
+    private ArrayList<SemestrePasser> semestrePassersPassers;
+    Table alumnos;
+
 
     public SemestrePasador(){
         setTitle("Avanzar de Periodoo");
+        currentGrupos = new ArrayList<>();
+        alumnos = getAlumnos();
         initClass();
     }
 
     private void initClass(){
         semestres = Global.conectionData.getSemestres();
-        grupoPassers = new ArrayList<>();
+        semestrePassersPassers = new ArrayList<>();
         deployLayout();
     }
 
@@ -136,11 +140,9 @@ public class SemestrePasador extends Window{
 
     private Map<String,Map<String,ArrayList<String>>> collectInfoFromPassers(){
         Map<String,Map<String,ArrayList<String>>> infos = new HashMap<>();
-        for (GrupoPasserWindow window:grupoPassers)
-            if (window.hasDefInfo()){
-                infos.put(window.grupo,window.getSelectionsInfo());
-            }
 
+        for (SemestrePasser passer:semestrePassersPassers)
+            infos.putAll(passer.getInfo());
 
         return infos;
     }
@@ -153,13 +155,10 @@ public class SemestrePasador extends Window{
 
     private void addGrupos(){
         currentPasadoresInfoPackage = collectInfoFromPassers();
-        //la informacion de los passers nunca se pierde, pero reiniciamos loa passers por si se cambio un alumno o lago
-        grupoPassers = new ArrayList<>();
         gruposPanel.removeAll();
 
         for (String semestre:semestres)
             gruposPanel.addElement(getGruposToPassPanel(semestre));
-
 
     }
 
@@ -176,10 +175,6 @@ public class SemestrePasador extends Window{
 
     }
 
-    private Map<String,ArrayList<String>> gotDefInfo(String grupo){
-
-        return  currentPasadoresInfoPackage.get(grupo);
-    }
 
     private JPanel getErrorGrupoMessage(){
         JPanel container = new JPanel(new GridLayout());
@@ -197,10 +192,17 @@ public class SemestrePasador extends Window{
         JPanel gruposPanel = new JPanel(new BorderLayout());
             gruposPanel.setOpaque(false);
             gruposPanel.add(getSemestreTitleLabel(semestre),BorderLayout.NORTH);
-            gruposPanel.add(getSemestreGruposLine(semestre),BorderLayout.CENTER);
+            gruposPanel.add(createSemestrePasser(semestre),BorderLayout.CENTER);
             gruposPanel.setBorder(new EmptyBorder(10,0,10,0));
 
         return gruposPanel;
+    }
+
+    private JPanel createSemestrePasser(String semestre){
+        SemestrePasser passer = new SemestrePasser(Integer.parseInt(semestre),alumnos,currentPasadoresInfoPackage);
+        semestrePassersPassers.add(passer);
+
+        return passer.getSemestreGruposLine();
     }
 
     private JPanel getControlsSection(String title,JPanel panelBody){
@@ -219,28 +221,7 @@ public class SemestrePasador extends Window{
         return section;
     }
 
-    private LinearHorizontalLayout getSemestreGruposLine(String semestre) {
-        LinearHorizontalLayout gruposPanel = new LinearHorizontalLayout();
-            gruposPanel.setOpaque(false);
-
-        ArrayList<String> grupos = getSemestreGrupos(semestre);
-        Table alumnos = getAlumnos(semestre);
-
-        for (String grupo : grupos) {
-            BtnFE grupoBtn = getBtnGrupoPasser(grupo,semestre,alumnos);
-            gruposPanel.addElement(grupoBtn);
-        }
-
-        return gruposPanel;
-    }
-
-    private ArrayList<String> getSemestreGrupos(String semestre){
-        SemestreOperator operator = new SemestreOperator(semestre);
-        return operator.getGrupos();
-
-    }
-
-    private Table getAlumnos(String semestre){
+    private Table getAlumnos(){
         DataBaseConsulter consulter = new DataBaseConsulter("alumnos_visible_view");
 
         return consulter.bringTable();
@@ -255,52 +236,152 @@ public class SemestrePasador extends Window{
         return semetreTitle;
     }
 
+    private void submit(){
 
+        truncateBajas();
 
-    private BtnFE getBtnGrupoPasser(String grupo,String semestre,Table alumnos){
-        BtnFE btn = new BtnFE(grupo);
-            btn.setPadding(3,10,3,10);
-            btn.setBackground(new Color(41, 128, 185));
-            btn.setTextColor(Color.white);
-            btn.setMargins(5,0,5,10,Color.white);
-            btn.setFuente(new Font("arial", Font.PLAIN, 15));
+        registerBajas();
 
-            GrupoPasserWindow passer = new GrupoPasserWindow(grupo,semestre, alumnos);
-            Map<String,ArrayList<String>> storage = gotDefInfo(passer.grupo);
-            if (storage != null)
-                passer.setDefValues(storage);
+        new RespaldosManager().orderPeriodoRes();
 
-            grupoPassers.add(passer);
-            btn.addMouseListener(new MouseAdapter() {
-                @Override
-                public void mousePressed(MouseEvent e) {
-                    super.mousePressed(e);
-                    Global.view.currentWindow.newView(passer);
-                }
-            });
+        truncateBajas();
 
-        return btn;
+        makeGrupos();
+
+        submitPassrs();
+
+        deleteBajas();
+
+        deleteGrupos();
+
+        setNewPeriodo();
+
+        Global.resetPriodo();
+
     }
 
+    private void truncateBajas(){
+        try {
+            Global.SQLConector.getMyStatment().executeUpdate("truncate cebdatabase.bajas");
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+    }
 
-    private void submit(){
-        boolean hasErrors = false;
+    private void submitPassrs(){
+        for (SemestrePasser passer:semestrePassersPassers){
+            passer.submit();
+        }
+    }
 
-        for(GrupoPasserWindow pasador:grupoPassers)
-            if(!pasador.canSubmit()){
-                errorGrupoMessage.setVisible(true);
-                hasErrors = true;
-            }
+    private void registerBajas(){
+        ArrayList<String> allBajas = new ArrayList<>();
 
-        if(!hasErrors){
-            new RespaldosManager().orderPeriodoRes();
-            for(GrupoPasserWindow pasador:grupoPassers)
-                pasador.submit();
-
-            setNewPeriodo();
-            Global.resetPriodo();
+        for(SemestrePasser pasador:semestrePassersPassers){
+            ArrayList<String> semestreBaja = pasador.getBajas();
+            allBajas.addAll(semestreBaja);
 
         }
+
+        registerBajas(allBajas);
+
+    }
+
+    private void deleteBajas (){
+
+        ArrayList<String> alumnosToRemove = new ArrayList<>();
+
+        for(SemestrePasser pasador:semestrePassersPassers){
+            ArrayList<String> semestreBaja = pasador.getBajas();
+            if(pasador.semestre + 1 != 7)
+                alumnosToRemove.addAll(semestreBaja);
+
+        }
+
+        deleteAlumnos(alumnosToRemove);
+    }
+
+    private void registerBajas(ArrayList<String> bajas){
+        ArrayList<String> cols = new ArrayList<>();
+            cols.add("numero_control");
+
+        ArrayList<ArrayList<String>> registers = new ArrayList<>();
+
+        for (String baja:bajas) {
+            ArrayList<String> reg = new ArrayList<>();
+                reg.add(baja);
+
+            registers.add(reg);
+        }
+
+        try {
+            new ViewSpecs("bajas").getUpdater().insertMany(cols,registers);
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+    }
+
+    private void deleteAlumnos (ArrayList<String> bajas){
+        new AlumnoRemover(bajas);
+    }
+
+    private void makeGrupos(){
+        ArrayList<ArrayList<String >> newGroups = new ArrayList<>();
+
+        for (SemestrePasser passer:semestrePassersPassers){
+            newGroups.addAll(passer.getNewGrupos());
+        }
+
+
+        ArrayList<String> cols = new ArrayList<>();
+            cols.add("grupo");
+            cols.add("semestre");
+            cols.add("turno");
+
+        try {
+            new ViewSpecs("grupos").getUpdater().insertMany(cols,newGroups);
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+    }
+
+    private void deleteGrupos(){
+
+        ArrayList<String> conditions = new ArrayList<>();
+            conditions.add("semestre");
+            conditions.add("semestre");
+            conditions.add("semestre");
+
+        ArrayList<String> values = new ArrayList<>();
+            values.addAll(semestres);
+
+        ArrayList<String> grupos =
+                new DataBaseConsulter("grupos").bringTableOr(
+                        new String[]{"grupo"},
+                        conditions.toArray(new String[conditions.size()]),
+                        values.toArray(new String[conditions.size()])
+                ).getColumn(0);
+
+        delete(grupos,"grupo","horarios");
+        delete(grupos,"grupo","asignaturas");
+        delete(grupos,"grupo","plan_grupo");
+        delete(grupos,"grupo","grupos");
+
+    }
+
+    private void delete(ArrayList<String> keys,String keyCol,String table){
+        ArrayList<String> cols = new ArrayList<>();
+
+        for (String key:keys){
+            cols.add(keyCol);
+        }
+
+        try {
+            new ViewSpecs(table).getUpdater().deleteOr(cols,keys);
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+
     }
 
     private void submitPasers(){

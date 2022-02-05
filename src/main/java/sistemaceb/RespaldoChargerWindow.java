@@ -2,6 +2,8 @@ package sistemaceb;
 
 import Generals.BtnFE;
 import JDBCController.DBSTate;
+import JDBCController.DataBaseUpdater;
+import JDBCController.ViewSpecs;
 import SpecificViews.LinearHorizontalLayout;
 import SpecificViews.LinearVerticalLayout;
 import sistemaceb.form.FormDialogMessage;
@@ -13,6 +15,7 @@ import javax.swing.border.MatteBorder;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.sql.SQLException;
 import java.util.ArrayList;
 
 
@@ -81,6 +84,18 @@ public class RespaldoChargerWindow extends Window {
                                 form.closeForm();
                                 resManager.deleteResDir(periodoSelector.getSelectedFile());
                                 periodoSelector.setOptions(resManager.getPriodosBackUps());
+
+                                ArrayList<String> cond = new ArrayList<>();
+                                    cond.add("periodo");
+
+                                ArrayList<String> val = new ArrayList<>();
+                                    cond.add(file);
+
+                                try {
+                                    new ViewSpecs("periodos").getUpdater().delete(cond,val);
+                                } catch (SQLException throwables) {
+                                    throwables.printStackTrace();
+                                }
                             }
                         });
                 }
@@ -123,7 +138,7 @@ public class RespaldoChargerWindow extends Window {
                 super.mousePressed(e);
                 String file = backupSelector.getSelectedFile();
                 if (file != null)
-                    Global.chargeBackup(backupSelector.getSelectedFile());
+                    Global.chargeBackup(file);
 
             }
         });

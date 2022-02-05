@@ -45,7 +45,8 @@ public class DBSTate {
         setDataBase( "cebdatabase");
     }
 
-    public void useResDatabase(){ setDataBase( "backDatabase");
+    public void useResDatabase(){
+        setDataBase( "backDatabase");
     }
 
     public void setCurrentPeriodo(){

@@ -87,6 +87,7 @@ public class RespaldosManager {
 
     private void showDiaog(String message){
         FormDialogMessage mes = new FormDialogMessage("",message);
+            mes.addAcceptButton();
             mes.addOnAcceptEvent(new genericEvents() {
                 @Override
                 public void genericEvent() {
@@ -151,6 +152,8 @@ public class RespaldosManager {
         Map jsonToSend = getDefJson();
             jsonToSend.put("periodo", periodo);
             jsonToSend.put("type", "periodoBackup");
+
+        System.out.println(periodo);
 
         charge(jsonToSend, "chargeBackup");
     }

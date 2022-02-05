@@ -37,7 +37,7 @@ public class LinkedTable extends KeyedTableBehavior {
 
     @Override
     public String getInstructions() {
-        return "Da click en un registro para conocer los detalles del mismo o da click derecho para modificarlo o removerlo";
+        return "Da click en un registro para conocer los detalles del mismo";
     }
 
 

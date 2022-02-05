@@ -5,6 +5,8 @@ import sistemaceb.form.FormDialogMessage;
 import sistemaceb.form.Global;
 import sistemaceb.genericEvents;
 
+import java.util.ArrayList;
+
 public class DeleteAluOperation extends Operation{
 
     public DeleteAluOperation(OperationInfoPanel registerDetail) {
@@ -24,7 +26,9 @@ public class DeleteAluOperation extends Operation{
         form.addOnAcceptEvent(new genericEvents() {
             @Override
             public void genericEvent() {
-                new AlumnoRemover(keyValue);
+                ArrayList<String> alumnos = new ArrayList<>();
+                    alumnos.add(keyValue);
+                new AlumnoRemover(alumnos);
                 form.closeForm();
                 Global.view.currentWindow.cut();
             }

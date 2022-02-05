@@ -25,6 +25,14 @@ public class DataBaseConector {
     private Connection myCon;
     private boolean isChecked;
     private Timer timer;
+    private String database;
+
+    public DataBaseConector(){
+    }
+
+    public DataBaseConector(String database){
+        this.database = "backDatabase";
+    }
 
     public boolean checkConection(){
         boolean wasConn = isChecked;
@@ -34,6 +42,13 @@ public class DataBaseConector {
         }
 
         return wasConn;
+    }
+
+    private String getDatabase(){
+        if (database == null)
+            return DBSTate.currentDatabase;
+
+        return database;
     }
 
     private void activateTimer(){
@@ -84,7 +99,7 @@ public class DataBaseConector {
         try {
              myCon =
                      DriverManager.getConnection(
-                        URL + DBSTate.currentDatabase + connSpecs,
+                        URL + getDatabase() + connSpecs,
                              Global.conectionData.user,
                              Global.conectionData.password);
             myStatment = myCon.createStatement();

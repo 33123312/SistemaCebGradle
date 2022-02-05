@@ -222,8 +222,10 @@ public class SubmitFrame extends JFrame {
             return btnCancelar;
         }
 
-    public void addAcceptButton(){
+    public SubmitFrame addAcceptButton(){
         buttonsContainer.addElement(getAcceptBtn());
+
+        return this;
     }
 
     public void addCloseButton(){

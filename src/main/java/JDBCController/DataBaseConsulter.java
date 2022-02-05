@@ -10,6 +10,7 @@ import sistemaceb.form.Global;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.logging.Level;
@@ -22,9 +23,21 @@ import java.util.logging.Logger;
 public class DataBaseConsulter extends QueryParser{
 
     protected final String table;
+    private Statement stat;
+
+    public DataBaseConsulter(String table,Statement stat){
+        this.stat = stat;
+        this.table = table;
+    }
 
     public DataBaseConsulter(String table) {
         this.table = table;
+    }
+
+    private Statement getStat ( ){
+        if (stat == null)
+            return Global.SQLConector.getMyStatment();
+        return stat;
     }
 
     public String getTable() {
@@ -46,6 +59,10 @@ public class DataBaseConsulter extends QueryParser{
 
     public Table bringTable(String[] columnsToSearch, String[] keyWords) {
         return buildRegisters(buildSelect("*", buildConditionalQuery(columnsToSearch, keyWords)));
+    }
+
+    public Table bringTableOr(String[] columnsToBring, String[] columnsToSearch, String[] keyWords) {
+        return buildRegisters(buildSelect(buildCColumnQuery(columnsToBring), buildConditionalQueryOr(columnsToSearch, keyWords)));
     }
 
     public Table bringTable(String[] columnsToBring, String[] columnsToSearch, String[] keyWords) {
@@ -75,7 +92,7 @@ public class DataBaseConsulter extends QueryParser{
         ArrayList<String> columns = null;
 
         try{
-            response = Global.SQLConector.getMyStatment().executeQuery(query);
+            response = getStat().executeQuery(query);
             int columnsNumber =  response.getMetaData().getColumnCount();
 
             while (response.next()) {

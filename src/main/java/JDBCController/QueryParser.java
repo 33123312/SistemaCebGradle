@@ -104,4 +104,24 @@ public class QueryParser {
         return "";
     }
 
+    protected String buildConditionalQueryOr(String[] columnsToSearch, String[] keyWords) {
+
+        int colsNum = columnsToSearch.length;
+
+        if (colsNum > 0) {
+            StringBuilder query = new StringBuilder("where BINARY ");
+            int iteratons = colsNum - 1;
+            for (int i = 0; i < iteratons; i++) {
+                query.append(getEqualString(columnsToSearch[i], keyWords[i]));
+                query.append(" or ");
+            }
+
+            query.append(getEqualString(columnsToSearch[iteratons], keyWords[iteratons]));
+
+            return query.toString();
+        }
+
+        return "";
+    }
+
 }
