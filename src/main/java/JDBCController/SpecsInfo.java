@@ -32,10 +32,19 @@ public class SpecsInfo {
 
     private int colCount;
 
+    private ArrayList<String> colTypes;
+
+
 
     public SpecsInfo(String table){
         thisTable = table;
         colCount =-1;
+    }
+
+    public ArrayList<String> getColTypes(){
+        if (colTypes == null)
+            colTypes = getMetadata().getColumnsMetadata("DATA_TYPE");
+        return colTypes;
     }
 
     public ArrayList<Integer> getColumnsSize(){

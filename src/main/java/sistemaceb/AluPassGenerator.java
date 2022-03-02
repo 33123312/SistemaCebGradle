@@ -9,16 +9,13 @@ import java.net.http.HttpResponse;
 
 public class AluPassGenerator {
 
-    //private  String serverURL = "http://147.182.129.199:3000/";
-    public static String serverURL = "http://localhost:3002/";
+    public static String serverURL = "http://147.182.129.199:3000/";
+    //public static String serverURL = "http://localhost:3000/";
 
     public AluPassGenerator(){
         FormDialogMessage mes = new FormDialogMessage(
                 "",
-                "Se generarán claves para todos los alumnos que no tengan ya una," +
-                " dado que nuestro servicio de email sólo permite enviar 90 mails diarios, éste proceso tardará varios días " +
-                "en concretarse. También tenga en cuenta que es un proceso experimental y puede fallar, en ese caso reinicie el proceso" +
-                " o contacte al administrador");
+                "Se generarán claves para todos los alumnos que no tengan ya una,");
         mes.addCloseButton();
         mes.addAcceptButton();
         mes.addOnAcceptEvent(new genericEvents() {
@@ -36,7 +33,7 @@ public class AluPassGenerator {
         HttpClient client = HttpClient.newBuilder().build();
         HttpRequest request = HttpRequest.newBuilder()
                 .header("Content-Type", "application/json")
-                .uri(URI.create(serverURL + "genAluPass"))
+                .uri(URI.create(serverURL + "genPass/alumno"))
                 .build();
 
         try {

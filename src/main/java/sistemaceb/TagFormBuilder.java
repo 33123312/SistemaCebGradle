@@ -29,7 +29,8 @@ public class TagFormBuilder {
 
     public TagFormBuilder(ViewSpecs specs,ArrayList<String> tags,Formulario form,boolean required){
         this.specs = specs;
-        this.tags = proccesTagsToShow(tags);
+        this.tags = tags;
+        //this.tags = proccesTagsToShow(tags);
         this.required = required;
         this.form = form;
         optionsGetter = new OptionsGetter(specs);

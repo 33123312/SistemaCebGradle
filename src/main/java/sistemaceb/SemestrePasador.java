@@ -156,7 +156,6 @@ public class SemestrePasador extends Window{
     private void addGrupos(){
         currentPasadoresInfoPackage = collectInfoFromPassers();
         gruposPanel.removeAll();
-
         for (String semestre:semestres)
             gruposPanel.addElement(getGruposToPassPanel(semestre));
 
@@ -237,20 +236,15 @@ public class SemestrePasador extends Window{
     }
 
     private void submit(){
-
-        truncateBajas();
-
         registerBajas();
 
         new RespaldosManager().orderPeriodoRes();
 
-        truncateBajas();
+        deleteBajas();
 
         makeGrupos();
 
         submitPassrs();
-
-        deleteBajas();
 
         deleteGrupos();
 
@@ -260,9 +254,9 @@ public class SemestrePasador extends Window{
 
     }
 
-    private void truncateBajas(){
+    private void truncateBajas(String bajas){
         try {
-            Global.SQLConector.getMyStatment().executeUpdate("truncate cebdatabase.bajas");
+            Global.SQLConector.getMyStatment().executeUpdate("truncate cebdatabase." + bajas);
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
@@ -280,25 +274,32 @@ public class SemestrePasador extends Window{
         for(SemestrePasser pasador:semestrePassersPassers){
             ArrayList<String> semestreBaja = pasador.getBajas();
             allBajas.addAll(semestreBaja);
-
         }
 
-        registerBajas(allBajas);
+        allBajas.addAll(getBajasDelPeriodo());
 
+        registerBajas(allBajas);
+    }
+
+    private ArrayList<String> getBajasDelPeriodo(){
+        ArrayList<String> bajas = new DataBaseConsulter("bajas_periodo").
+                bringTable(new String[]{"numero_control"}).getColumn(0);
+
+
+        return  bajas;
+    }
+
+    private ArrayList<String> getAllPeriodoBaja(){
+        return new DataBaseConsulter("bajas").
+            bringTable(new String[]{"numero_control"}).getColumn(0);
     }
 
     private void deleteBajas (){
+        ArrayList<String> bajas = getAllPeriodoBaja();
+        truncateBajas("bajas");
+        truncateBajas("bajas_periodo");
+        deleteAlumnos(bajas);
 
-        ArrayList<String> alumnosToRemove = new ArrayList<>();
-
-        for(SemestrePasser pasador:semestrePassersPassers){
-            ArrayList<String> semestreBaja = pasador.getBajas();
-            if(pasador.semestre + 1 != 7)
-                alumnosToRemove.addAll(semestreBaja);
-
-        }
-
-        deleteAlumnos(alumnosToRemove);
     }
 
     private void registerBajas(ArrayList<String> bajas){
@@ -392,26 +393,32 @@ public class SemestrePasador extends Window{
 
     private void setNewPeriodo(){
         String nextPeriodo = getNextPeriodo();
-
+        checkThatPerioDoesntExists(nextPeriodo);
         new RespaldosManager().createResDir(nextPeriodo);
 
         String currentPeriodo = Global.conectionData.loadedPeriodo;
 
-        ArrayList<String> periodoString = new ArrayList<>();
+        updateCurrentPeriodo(nextPeriodo,currentPeriodo);
+
+    }
+
+    private void checkThatPerioDoesntExists(String newPeriodo){
+
+            ArrayList<String> periodoString = new ArrayList<>();
             periodoString.add("periodo");
             periodoString.add("paridad");
 
-        ArrayList<String> periodoNewValue = new ArrayList();
-            periodoNewValue.add(nextPeriodo);
+            ArrayList<String> periodoNewValue = new ArrayList();
+            periodoNewValue.add(newPeriodo);
             periodoNewValue.add(getNewParidad());
 
-        try {
-            new ViewSpecs("periodos").getUpdater().insert(periodoString,periodoNewValue);
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
-        }
+            try {
+                new ViewSpecs("periodos").getUpdater().insert(periodoString,periodoNewValue);
+            } catch (SQLException throwables) {
+                throwables.printStackTrace();
+            }
 
-        updateCurrentPeriodo(nextPeriodo,currentPeriodo);
+            new RespaldosManager().deleteResDir(newPeriodo);
 
     }
 

@@ -8,6 +8,7 @@ import sistemaceb.form.FormElement;
 import sistemaceb.form.Formulario;
 import sistemaceb.form.Global;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 
 public class BoletaBuilder extends MultipleFormsOperation{
@@ -25,6 +26,7 @@ public class BoletaBuilder extends MultipleFormsOperation{
     @Override
     public void buildOperation() {
         super.buildOperation();
+        deleteTrashFromCalifas();
         thisWindow.setTitle("Modificar Boleta");
         thisWindow.addToHeader(getButtonsArea());
         operator = new ALumnoOperator(keyValue);
@@ -32,6 +34,13 @@ public class BoletaBuilder extends MultipleFormsOperation{
         califasBoleanas = getCaliBoleanas();
         addForms();
 
+    }
+    private void deleteTrashFromCalifas(){
+        try {
+            new DataBaseConsulter("").executeQuery("call cebdatabase.delete_trash_from_califas()");
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
     }
 
     private void addForms(){

@@ -27,10 +27,26 @@ public class AlumnoDeleteOp extends Operation{
         message.addOnAcceptEvent(new genericEvents() {
             @Override
             public void genericEvent() {
+                pasarABajas();
                 darDeBaja();
                 message.closeForm();
             }
         });
+
+    }
+
+    private void pasarABajas(){
+        ArrayList<String> colst = new ArrayList<>();
+            colst.add("numero_control");
+
+        ArrayList<String> vals = new ArrayList<>();
+            vals.add(keyValue);
+
+        try {
+            new ViewSpecs("bajas_periodo").getUpdater().insert(colst,vals);
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
 
     }
 

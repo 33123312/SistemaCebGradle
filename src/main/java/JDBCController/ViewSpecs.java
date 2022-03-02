@@ -218,14 +218,7 @@ public class ViewSpecs {
 
     private static ArrayList<SpecsInfo> viewsStates;
 
-    private SpecsInfo getInfoFromLIst(){
 
-        for (SpecsInfo info:viewsStates)
-            if (info.getTable().equals(table))
-                return info;
-
-        return null;
-    }
 
     private SpecsInfo getSpecsInfo() {
         if (viewsStates == null)
@@ -241,6 +234,15 @@ public class ViewSpecs {
 
         return res;
 
+    }
+
+    private SpecsInfo getInfoFromLIst(){
+
+        for (SpecsInfo info:viewsStates)
+            if (info.getTable().equals(table))
+                return info;
+
+        return null;
     }
 
     public int getTagSize(String tag){
@@ -275,15 +277,14 @@ public class ViewSpecs {
         return getTag(info.getAutoIncrCols());
     }
 
-    private DBTableMetadata getMetadata(){
-        return new DBTableMetadata(table);
-    }
-
     public dataType getColumnType(String tag) {
         tag = getCol(tag);
 
-        ArrayList<String> columns = getMetadata().getColumnsMetadata("COLUMN_NAME");
-        ArrayList<String> types = getMetadata().getColumnsMetadata("DATA_TYPE");
+        ArrayList<String> columns = info.getTableCols();
+        ArrayList<String> types = info.getColTypes();
+
+        System.out.println(columns);
+        System.out.println(types);
 
         int columnIndex = columns.indexOf(tag);
 

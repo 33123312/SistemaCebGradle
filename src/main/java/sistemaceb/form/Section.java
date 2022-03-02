@@ -14,27 +14,27 @@ import java.awt.*;
  */
 public class Section extends JPanel{
     
-            int currentElements = 0;
-            int maxCols;
+        int currentElements = 0;
+        int maxCols;
 
-            public Section (int cols){
-                maxCols = cols;
-                setOpaque(false);
-            }
-            
+        public Section (int cols){
+            maxCols = cols;
+            setOpaque(false);
+        }
 
-            public void addElement (Component a){
 
-                setLayout(new GridLayout(1,currentElements));
+        public void addElement (Component a){
 
-                add(a);
-                currentElements++;
-               
-            }
-            
-            public boolean isntFull(){
-                return maxCols > currentElements;
-            }
+            setLayout(new GridLayout(1,currentElements));
+
+            add(a);
+            currentElements++;
+
+        }
+
+        public boolean isntFull(){
+            return maxCols > currentElements;
+        }
             
     
 }

@@ -9,23 +9,20 @@ import java.util.ArrayList;
 
 
 public class FormWindow extends Formulario{
-    SubmitFrame frame;
-    private final ArrayList<Section> sections;
+    private SubmitFrame frame;
+    private Section currentSection;
 
     public FormWindow(String title){
         super();
         deployBodyContainer();
-        sections = new ArrayList();
+        createNewSection();
+
         frame = new SubmitFrame(title);
             frame.addBody(this);
+            frame.addCloseButton();
+            frame.addAcceptButton();
 
-
-        addSection();
         addEvents();
-
-        frame.addCloseButton();
-        frame.addAcceptButton();
-        frame.setVisible(true);
     }
 
     private void deployBodyContainer(){
@@ -36,10 +33,9 @@ public class FormWindow extends Formulario{
 
     }
 
-    private void addSection(){
-        Section newSection = new Section(2);
-        sections.add(newSection);
-        add(newSection);
+    private void createNewSection(){
+        currentSection = new Section(2);
+        add(currentSection);
     }
 
     public SubmitFrame getFrame(){
@@ -48,7 +44,6 @@ public class FormWindow extends Formulario{
 
     private void addEvents(){
         frame.addOnAcceptEvent(
-
                 new genericEvents(){
                     public void genericEvent(){
                         if(!hasErrors())
@@ -57,30 +52,19 @@ public class FormWindow extends Formulario{
                 }
         );
 
-        frame.addOnDimissEvent(
-                new genericEvents(){
-                    public void genericEvent(){
-                        frame.closeForm();
-                    }
-                }
-        );
-
     }
 
-    int sectionsCounter = 0;
 
     @Override
     protected void addElement(FormElement element) {
         super.addElement(element);
-        Section currentSection = sections.get(sectionsCounter);
 
             if (currentSection.isntFull())
                 currentSection.addElement(element);
             else{
-                addSection();
-                sectionsCounter++;
+                createNewSection();
                 addElement(element);
-        }
+            }
     }
 
 }

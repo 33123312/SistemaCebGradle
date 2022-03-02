@@ -9,6 +9,7 @@ import JDBCController.DBSTate;
 import JDBCController.PastPeriodoAlumnoSearcherWindow;
 import JDBCController.Table;
 import JDBCController.TableRegister;
+import SpecificViews.ProfPassGen;
 import sistemaceb.form.Global;
 import sistemaceb.form.MenuListsContainer;
 
@@ -76,7 +77,15 @@ public class MainWindowMenu extends MenuListsContainer {
                     }
                 } ));
 
-                list.addButton(new ListButton.Button("Generar Claves Web",new MouseAdapter() {
+                list.addButton(new ListButton.Button("Generar Claves Profesores",new MouseAdapter() {
+                    @Override
+                    public void mousePressed(MouseEvent e) {
+                        super.mousePressed(e);
+                        new ProfPassGen();
+                    }
+                } ));
+
+                list.addButton(new ListButton.Button("Generar Claves Alumnos",new MouseAdapter() {
                     @Override
                     public void mousePressed(MouseEvent e) {
                         super.mousePressed(e);

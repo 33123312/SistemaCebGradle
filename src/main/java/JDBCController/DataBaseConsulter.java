@@ -83,16 +83,21 @@ public class DataBaseConsulter extends QueryParser{
 
         return "*";
     }
+
+    public ResultSet executeQuery(String query) throws SQLException {
+        System.out.println(query);
+        return  getStat().executeQuery(query);
+    }
+
    
     private Table  buildRegisters( String query){
-        System.out.println(query);
         ResultSet response;
 
         ArrayList<ArrayList<String>> newTable = new ArrayList<>();
         ArrayList<String> columns = null;
 
         try{
-            response = getStat().executeQuery(query);
+            response = executeQuery(query);
             int columnsNumber =  response.getMetaData().getColumnCount();
 
             while (response.next()) {

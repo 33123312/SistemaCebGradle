@@ -104,6 +104,48 @@ public class PastPeriodoAlumnoSearcherWindow extends Window {
     }
 
     private void traerAlumno(ArrayList<String> alumno){
+        if(Global.conectionData.loadedPeriodo.equals(alumno.get(alumno.size()-1))){
+            traerDelAtcual(alumno);
+        } else {
+            traerDePasado(alumno);
+        }
+
+
+    }
+
+    private void traerDelAtcual(ArrayList<String> alumno){
+        FormWindow formWindowm = new FormWindow("Elegir nuevo grupo");
+
+        formWindowm.addDesplegableMenu("Grupo").
+            setOptions(new DataBaseConsulter("grupos").bringTable(
+                        new String[]{"grupo"},
+                        new String[]{"semestre"},
+                        new String[]{alumno.get(3)}
+                ));
+
+        formWindowm.getFrame().addOnAcceptEvent(
+                new genericEvents() {
+                    @Override
+                    public void genericEvent() {
+                        if (!formWindowm.hasErrors()){
+                            formWindowm.getFrame().closeForm();
+                            Map<String,String> data = formWindowm.getData();
+                            restaurarAlumno(alumno.get(0),data.get("Grupo"));
+                            FormDialogMessage dialogMessage = new FormDialogMessage(
+                                    "Éxito","Se ha restauraado el alumno de manera exitosa");
+                            dialogMessage.addAcceptButton();
+                            dialogMessage.addOnAcceptEvent(new genericEvents() {
+                                @Override
+                                public void genericEvent() {
+                                    dialogMessage.closeForm();
+                                }
+                            });
+                        }
+                    }
+                });
+    }
+
+    private void traerDePasado(ArrayList<String> alumno){
         String periodo = alumno.get(alumno.size()-1);
         FormWindow formWindowm = new FormWindow("Elegir nuevo grupo");
 
@@ -155,7 +197,40 @@ public class PastPeriodoAlumnoSearcherWindow extends Window {
 
     }
 
+    private void restaurarAlumno(String numC, String nuevG){
+        ArrayList<String> colSet = new ArrayList<>();
+            colSet.add("grupo");
 
+        ArrayList<String> valSet = new ArrayList<>();
+            valSet.add(nuevG);
+
+        ArrayList<String> colcon = new ArrayList<>();
+            colcon.add("numero_control");
+
+        ArrayList<String> valCon = new ArrayList<>();
+            valCon.add(numC);
+
+        try {
+            new ViewSpecs("alumnos").getUpdater().update(colSet,valSet,colcon,valCon);
+
+            ArrayList<String> colConDel = new ArrayList<>();
+                colConDel.add("numero_control");
+
+            ArrayList<String> valConDel = new ArrayList<>();
+                valConDel.add(numC);
+
+            new ViewSpecs("bajas_periodo")
+                .getUpdater()
+                .delete(colConDel,valConDel);
+
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+
+
+
+
+    }
 
     private void crearAlumno(ArrayList<String> alumnoInfo,String grupo,String semestre,String periodo){
 

@@ -140,7 +140,6 @@ public class RegisterDetailView extends Window {
 
     private void addDefaultPills(){
         ArrayList<String> relatedTables = viewSpecs.getRelatedTables();
-        System.out.println(relatedTables);
         ArrayList<String> currentPills = getCurrentPillsRelatedTables();
 
         for (String pill:currentPills)
@@ -149,7 +148,6 @@ public class RegisterDetailView extends Window {
 
         for (String table:relatedTables)
             if(!removedPills.contains(table)){
-                System.out.println(table);
                 DefaultRegisterDetailTable tableR = new DefaultRegisterDetailTable(table);
                     addPill(tableR);
             }

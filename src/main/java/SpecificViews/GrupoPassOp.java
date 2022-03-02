@@ -18,30 +18,19 @@ public class GrupoPassOp extends Operation{
 
     public GrupoPassOp(OperationInfoPanel registerDetail) {
         super(registerDetail);
-        operation = "Reestablecer Contraseñas";
+        operation = "Reestablecer Contraseña";
     }
 
     @Override
     public void buildOperation() {
-        ArrayList<String> cond = new ArrayList<>();
-            cond.add("numero_control");
-        ArrayList<String> val = new ArrayList<>();
-            val.add(keyValue);
-
-        try {
-            new ViewSpecs("webUsers").getUpdater().delete(cond,val);
-            generate();
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
-            showDiaog("Error desconocido en la base de datos");
-        }
+        generate();
     }
 
     private void generate(){
         HttpClient client = HttpClient.newBuilder().build();
         HttpRequest request = HttpRequest.newBuilder()
                 .header("Content-Type", "application/json")
-                .uri(URI.create(AluPassGenerator.serverURL + "genAluPass/" + keyValue))
+                .uri(URI.create(AluPassGenerator.serverURL + "genPass/alumno/" + keyValue))
                 .build();
 
         try {

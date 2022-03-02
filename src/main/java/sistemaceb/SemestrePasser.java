@@ -25,7 +25,8 @@ public class SemestrePasser {
 
 
 
-    public SemestrePasser(int semestre,Table alumnos,Map<String,Map<String,ArrayList<String>>> currentPasadoresInfoPackage)
+    public SemestrePasser(
+            int semestre,Table alumnos,Map<String,Map<String,ArrayList<String>>> currentPasadoresInfoPackage)
     {
         this.currentPasadoresInfoPackage = currentPasadoresInfoPackage;
         this.grupoPassers = new ArrayList<>();
@@ -135,7 +136,7 @@ public class SemestrePasser {
 
     public void submit(){
 
-        if(semestre+1==7){
+        if(semestre==6){
             removeAllSemestreAlumnos();
             return;
         }

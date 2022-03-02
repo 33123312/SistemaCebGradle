@@ -40,6 +40,7 @@ public class GrupoCalifChargOpCont {
             String view,
             String procedure){
         this.procedure = procedure;
+        deleteTrashFromCalifas();
         managers = new ArrayList<>();
         specs = new ViewSpecs(view);
         extraSearchCond = new HashMap<>();
@@ -51,6 +52,14 @@ public class GrupoCalifChargOpCont {
             colsToSet.add("calificacion");
         colsToSetHuman = new ArrayList<>();
             colsToSetHuman.add("Calificación");
+    }
+
+    private void deleteTrashFromCalifas(){
+        try {
+            new DataBaseConsulter("").executeQuery("call cebdatabase.delete_trash_from_califas()");
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
     }
 
     public void init(){

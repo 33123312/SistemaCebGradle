@@ -1,6 +1,7 @@
 package sistemaceb;
 
 import JDBCController.DBSTate;
+import JDBCController.ViewSpecs;
 import com.google.gson.Gson;
 import sistemaceb.form.FormDialogMessage;
 import sistemaceb.form.Global;
@@ -10,6 +11,7 @@ import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -174,7 +176,17 @@ public class RespaldosManager {
             json.put("type","periodoBackup");
 
         chargeAsMainDatabase(periodo,json);
+        truncateBajas("bajas");
 
+    }
+
+
+    private void truncateBajas(String bajas){
+        try {
+            Global.SQLConector.getMyStatment().executeUpdate("truncate cebdatabase." + bajas);
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
     }
 
     private void chargeAsMainDatabase(String periodo,Map json){

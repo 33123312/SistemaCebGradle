@@ -22,12 +22,13 @@ public class PastPeriodoAlumnoSearcher {
         ArrayList<String> titels = new ArrayList<>();
         ArrayList<ArrayList<String>> unratedAlumnos = new ArrayList<>();
 
+        Table localBajas = getCurrentPeriodoBaas();
+
+        titels = localBajas.getColumnTitles();
+        unratedAlumnos.addAll(localBajas.getRegisters());
 
         for (String periodo:periodos){
             Table currT = searchInPeriodo(periodo);
-
-            if (titels.isEmpty())
-                titels = currT.getColumnTitles();
 
             unratedAlumnos.addAll(currT.getRegisters());
 
@@ -56,6 +57,18 @@ public class PastPeriodoAlumnoSearcher {
 
         conector.endConection();
 
+        return sortAlumnos(alumnos,periodo);
+    }
+
+    private Table getCurrentPeriodoBaas(){
+
+        Table alumnos = new DataBaseConsulter("bajas_periodo_visible_view").
+                bringTable();
+
+        return sortAlumnos(alumnos,Global.conectionData.loadedPeriodo);
+    }
+
+    private Table sortAlumnos(Table alumnos,String periodo){
         complexSearcher searcher = new complexSearcher(alumnos);
 
         searcher.rate("nombre_completo",nombre);
@@ -80,7 +93,7 @@ public class PastPeriodoAlumnoSearcher {
 
     private ArrayList<ArrayList<String>> getBetterRated(Table ratedAlumnos){
         ArrayList<ArrayList<String>> betterRated = new ArrayList<>();
-        for (int i = 0;i < 30;i++)
+        for (int i = 0;i < ratedAlumnos.rowCount() && i < 30;i++)
             betterRated.add(ratedAlumnos.getRegister(i).getValues());
 
         return betterRated;

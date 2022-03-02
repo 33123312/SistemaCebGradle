@@ -4,9 +4,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 public class QueryParser {
-
+;
     protected String getPrametrized(String[] params){
-
+        if (params.length == 0)
+            return "";
         int arraySize = params.length -1;
             StringBuilder builder = new StringBuilder();
             for (int i = 0; i < arraySize;i++){

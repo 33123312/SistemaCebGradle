@@ -22,10 +22,10 @@ import java.util.ArrayList;
 public class SubmitFrame extends JFrame {
     
     public JPanel body;
-    ArrayList<genericEvents> acceptEvents;
-    ArrayList<genericEvents> dimissEvents;
-    ArrayList<genericEvents> closeEvents;
-    ArrayList<SubmitFrame>  childForms;
+    private ArrayList<genericEvents> acceptEvents;
+    private ArrayList<genericEvents> dimissEvents;
+    private ArrayList<genericEvents> closeEvents;
+    private ArrayList<SubmitFrame>  childForms;
     
     
     public SubmitFrame(String title){
@@ -70,8 +70,9 @@ public class SubmitFrame extends JFrame {
                 }
             }
         );
+
     }
-    
+
     private JPanel deployPanelPrincipal(String title){
         
         final JPanel panelPrincipal=new JPanel(new BorderLayout());
@@ -109,7 +110,7 @@ public class SubmitFrame extends JFrame {
             closeButton.setOpaque(false);
             closeButton.setMargins(0, 5, 0, 5, container.getBackground());
             closeButton.addMouseListener(new MouseAdapter(){
-                
+
                 @Override
                 public void mousePressed(MouseEvent arg0){
                     closeForm();
@@ -213,7 +214,7 @@ public class SubmitFrame extends JFrame {
                      @Override
                      public void mousePressed(MouseEvent arg0){
                          triggerDimissEvents();
-                         closeForm();
+
 
                      }
                  }
@@ -230,6 +231,7 @@ public class SubmitFrame extends JFrame {
 
     public void addCloseButton(){
         buttonsContainer.addElement(getCancelBtn());
+
     }
 
     private LinearHorizontalLayout buttonsContainer;

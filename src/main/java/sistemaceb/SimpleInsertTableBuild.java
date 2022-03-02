@@ -31,7 +31,6 @@ public class SimpleInsertTableBuild extends ConsultTableBuild {
         else
             return getWindow();
 
-
     }
 
     protected MouseAdapter getMultipleAdder(ArrayList<String> tags){
@@ -52,7 +51,6 @@ public class SimpleInsertTableBuild extends ConsultTableBuild {
                 });
             }
         };
-
     }
 
     protected MouseAdapter getWindow(){
@@ -91,8 +89,6 @@ public class SimpleInsertTableBuild extends ConsultTableBuild {
     protected ArrayList<String> getTagsToInsert() {
         return viewSpecs.getTableTags();
     }
-
-
 
     protected ArrayList<String> getTagsToShow() {
 

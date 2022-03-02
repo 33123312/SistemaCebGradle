@@ -157,23 +157,22 @@ public class SelectionFIlterTable extends AdapTableFE {
 
     }
 
-    public void setCurrentGroup(int currentGroup) {
-        setCurrentGroup(currentGroup,selectedColorPanels.get(currentGroup));
+    public void setCurrentGroup(int groupIndex) {
 
-        this.currentGroup = currentGroup;
-        setSelectionColor(getColor());
-
-    }
-
-
-    private void setCurrentGroup(int groupIndex,JPanel container){
         this.currentGroup = groupIndex;
-        setSelectionColor(getColor());
-        if (selectedColorPanel != null)
+
+        if (selectedColorPanels != null){
+            setSelectionColor(getColor());
+            if(selectedColorPanel != null)
             selectedColorPanel.setBackground(Color.white);
-        selectedColorPanel = container;
-        container.setBackground(new Color(116, 185, 255));
+            JPanel container = selectedColorPanels.get(currentGroup);
+            selectedColorPanel = container;
+            container.setBackground(new Color(116, 185, 255));
+        }
     }
+
+
+
 
     private Color getColor(){
         return colors.get(currentGroup);

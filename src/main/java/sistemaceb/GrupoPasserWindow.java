@@ -171,7 +171,6 @@ public class GrupoPasserWindow extends Window{
     }
 
     public ArrayList<String> getBajas(){
-        System.out.println(table.getUnselected());
         return table.getUnselected();
 
     }

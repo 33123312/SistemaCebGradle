@@ -85,17 +85,7 @@ public class RespaldoChargerWindow extends Window {
                                 resManager.deleteResDir(periodoSelector.getSelectedFile());
                                 periodoSelector.setOptions(resManager.getPriodosBackUps());
 
-                                ArrayList<String> cond = new ArrayList<>();
-                                    cond.add("periodo");
 
-                                ArrayList<String> val = new ArrayList<>();
-                                    cond.add(file);
-
-                                try {
-                                    new ViewSpecs("periodos").getUpdater().delete(cond,val);
-                                } catch (SQLException throwables) {
-                                    throwables.printStackTrace();
-                                }
                             }
                         });
                 }
