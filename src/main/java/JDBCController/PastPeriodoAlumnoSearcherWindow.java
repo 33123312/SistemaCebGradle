@@ -16,6 +16,7 @@ import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.IOException;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
@@ -234,7 +235,13 @@ public class PastPeriodoAlumnoSearcherWindow extends Window {
 
     private void crearAlumno(ArrayList<String> alumnoInfo,String grupo,String semestre,String periodo){
 
-        new RespaldosManager().chargePeriodoBackup(periodo);
+        try {
+            new RespaldosManager().chargePeriodoBackup(periodo);
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
 
         DataBaseConector conector = new DataBaseConector("");
 

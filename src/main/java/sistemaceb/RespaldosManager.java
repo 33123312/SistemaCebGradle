@@ -1,5 +1,6 @@
 package sistemaceb;
 
+import JDBCController.BackendController;
 import JDBCController.DBSTate;
 import JDBCController.ViewSpecs;
 import com.google.gson.Gson;
@@ -20,57 +21,35 @@ import java.util.Map;
 
 public class RespaldosManager {
 
-    private String serverURL = DBSTate.serverURL + ":3000/";
-
-    private Map getDefJson(){
+    private String getJsonOrderBackup(String type){
         Map jsonToSend = new HashMap();
-        jsonToSend.put("password",Global.conectionData.password);
-
-            jsonToSend.put("user",Global.conectionData.user);
-
-        return jsonToSend;
-    }
-
-    private  String getJsonOrderBackup(String type){
-        Map jsonToSend = getDefJson();
             jsonToSend.put("periodo", Global.conectionData.loadedPeriodo);
             jsonToSend.put("type",type);
 
-        return stringify(jsonToSend);
+        return BackendController.stringify(jsonToSend);
     }
 
-    private String stringify(Map map){
-        Gson gson = new Gson();
-        return gson.toJson(map,Map.class);
-    }
 
-    public void orderPeriodoRes()  {
+    public void orderPeriodoRes() throws IOException, InterruptedException {
         orderBackup("periodoBackup");
     }
 
-    public void orderRes(){
+    public void orderRes() throws IOException, InterruptedException {
         orderBackup("backup");
     }
 
-    private  void orderBackup(String type){
+    private  void orderBackup(String type) throws IOException, InterruptedException {
         String parsedJSON = getJsonOrderBackup(type);
-        HttpClient client = HttpClient.newBuilder().build();
-        HttpRequest request = HttpRequest.newBuilder()
+
+        HttpRequest request = BackendController.getRequest("orderBackup")
                 .header("Content-Type", "application/json")
-                .header("Authorization", "Basic " + DBSTate.backAuthKey)
-                .uri(URI.create(serverURL + "orderBackup"))
                 .POST(HttpRequest.BodyPublishers.ofString(parsedJSON))
                 .build();
 
-        try {
-            HttpResponse<InputStream> res =  client.send(request, HttpResponse.BodyHandlers.ofInputStream());
-            createLocalRes(res);
+        HttpClient client = HttpClient.newBuilder().build();
+        HttpResponse<InputStream> res =  client.send(request, HttpResponse.BodyHandlers.ofInputStream());
+        createLocalRes(res);
 
-            showDiaog("Se ha respaldado exitosamente");
-        } catch (Exception e) {
-            e.printStackTrace();
-            showDiaog("Error desconocido en el servidor al hacer el respaldo, no se ha podido realizar");
-        }
     }
 
     private void createLocalRes(HttpResponse<InputStream> res) {
@@ -100,38 +79,29 @@ public class RespaldosManager {
     }
 
 
-    public ArrayList<String> getBackUps(String periodo){
+    public ArrayList<String> getBackUps(String periodo) throws IOException, InterruptedException {
         return consultListaFromServer("getBack/" + periodo);
     }
 
-    public ArrayList<String> getPriodosBackUps(){
+    public ArrayList<String> getPriodosBackUps() throws IOException, InterruptedException {
         ArrayList<String> periodos = consultListaFromServer("getPeriodosBack");
             periodos.remove(Global.conectionData.loadedPeriodo);
         return
                 periodos;
     }
 
-    private ArrayList<String> consultListaFromServer(String endpoint){
-        String url = serverURL + endpoint;
+    private ArrayList<String> consultListaFromServer(String endpoint) throws IOException, InterruptedException {
 
         HttpClient client = HttpClient.newHttpClient();
-        HttpRequest request = HttpRequest.newBuilder()
-            .uri(URI.create(url))
+        HttpRequest request = BackendController.getRequest(endpoint)
             .build();
 
-        HttpResponse<String> response =
-                null;
-        try {
-            response = client.send(
-                    request,
-                    HttpResponse.BodyHandlers.ofString());
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        HttpResponse<String> response = client.send(
+                request,
+                HttpResponse.BodyHandlers.ofString());
 
         String object =  response.body();
+            System.out.println(object);
             Gson gson = new Gson();
             Map map = gson.fromJson(object,Map.class);
 
@@ -139,8 +109,8 @@ public class RespaldosManager {
 
     }
 
-    public void chargeBackup(String file) {
-        Map jsonToSend = getDefJson();
+    public void chargeBackup(String file) throws IOException, InterruptedException {
+        Map jsonToSend = new HashMap();
             jsonToSend.put("file", file);
             jsonToSend.put("periodo", Global.conectionData.loadedPeriodo);
             jsonToSend.put("type", "backup");
@@ -150,17 +120,16 @@ public class RespaldosManager {
 
 
 
-    public void chargePeriodoBackup(String periodo) {
-        Map jsonToSend = getDefJson();
+    public void chargePeriodoBackup(String periodo) throws IOException, InterruptedException {
+        Map jsonToSend = new HashMap();
             jsonToSend.put("periodo", periodo);
             jsonToSend.put("type", "periodoBackup");
 
-        System.out.println(periodo);
 
         charge(jsonToSend, "chargeBackup");
     }
 
-    public void chargeBackupAsMainDatabase(String file){
+    public void chargeBackupAsMainDatabase(String file) throws IOException, InterruptedException {
         orderRes();
         Map json = new HashMap();
             json.put("type","backup");
@@ -170,7 +139,7 @@ public class RespaldosManager {
 
     }
 
-    public void chargePeriodoAsMainDatabase(String periodo){
+    public void chargePeriodoAsMainDatabase(String periodo) throws IOException, InterruptedException {
         orderPeriodoRes();
         Map json = new HashMap();
             json.put("type","periodoBackup");
@@ -189,8 +158,8 @@ public class RespaldosManager {
         }
     }
 
-    private void chargeAsMainDatabase(String periodo,Map json){
-        Map specs = getDefJson();
+    private void chargeAsMainDatabase(String periodo,Map json) throws IOException, InterruptedException {
+        Map specs = new HashMap();
             specs.putAll(json);
             specs.put("periodo",periodo);
 
@@ -200,48 +169,29 @@ public class RespaldosManager {
 
     }
 
-    private void charge(Map specs,String endPoint){
-        String parsedJSON = stringify(specs);
+    private void charge(Map specs,String endPoint) throws IOException, InterruptedException {
+        String parsedJSON = BackendController.stringify(specs);
         HttpClient client = HttpClient.newBuilder().build();
-        HttpRequest request = HttpRequest.newBuilder()
-                .header("Content-Type", "application/json")
+        HttpRequest request = BackendController.getRequest(endPoint)
+            .header("Content-Type", "application/json")
+            .POST(HttpRequest.BodyPublishers.ofString(parsedJSON))
+            .build();
 
-                .uri(URI.create(serverURL + endPoint))
-                .POST(HttpRequest.BodyPublishers.ofString(parsedJSON))
-                .build();
+        client.send(request, HttpResponse.BodyHandlers.discarding());
 
-        try {
-            client.send(request, HttpResponse.BodyHandlers.discarding());
-
-        } catch (IOException e) {
-            e.printStackTrace();
-            showDiaog("Error desconocido al traer la lista, no se ha podido realizar");
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-            showDiaog("Error desconocido al traer la lista, no se ha podido realizar");
-        }
     }
 
-    public void deleteResDir(String periodo){
+    public void deleteResDir(String periodo) throws IOException, InterruptedException {
         HttpClient client = HttpClient.newBuilder().build();
-        HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create(serverURL + "deletePeriodoBackDir/" + periodo))
+        HttpRequest request = BackendController.getRequest("deletePeriodoBackDir/" + periodo)
                 .POST(HttpRequest.BodyPublishers.ofString(""))
                 .build();
 
-        try {
-            client.send(request, HttpResponse.BodyHandlers.discarding());
+        client.send(request, HttpResponse.BodyHandlers.discarding());
 
-        } catch (IOException e) {
-            e.printStackTrace();
-            showDiaog("Error desconocido al borrar el respaldo, no se ha podido realizar");
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-            showDiaog("Error desconocido al borrar el respaldo, no se ha podido realizar");
-        }
     }
 
-    public void createResDir(String periodo){
+    public void createResDir(String periodo) throws IOException, InterruptedException {
         Map json = new HashMap();
             json.put("periodo",periodo);
 

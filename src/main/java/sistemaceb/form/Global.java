@@ -35,15 +35,29 @@ public class Global {
      }
 
     public static void chargeBackup(String file){
-        new RespaldosManager().chargeBackup(file);
-        conectionData.useResDatabase();
-        reStartView();
+        try {
+            new RespaldosManager().chargeBackup(file);
+            conectionData.useResDatabase();
+            reStartView();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
     }
 
     public static void chargePeriodoRes(String periodo){
-        new RespaldosManager().chargePeriodoBackup(periodo);
-        conectionData.useResDatabase();
-        reStartView();
+        try {
+            new RespaldosManager().chargePeriodoBackup(periodo);
+            conectionData.useResDatabase();
+            reStartView();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
     }
 
     public static void chargeMainDatabase(){

@@ -2,6 +2,7 @@ package JDBCController;
 import sistemaceb.RespaldosManager;
 import sistemaceb.form.Global;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 public class PastPeriodoAlumnoSearcher {
@@ -46,7 +47,13 @@ public class PastPeriodoAlumnoSearcher {
 
     private Table searchInPeriodo(String periodo){
 
-        new RespaldosManager().chargePeriodoBackup(periodo);
+        try {
+            new RespaldosManager().chargePeriodoBackup(periodo);
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
 
         DataBaseConector conector = new DataBaseConector("");
 

@@ -15,6 +15,7 @@ import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -238,19 +239,24 @@ public class SemestrePasador extends Window{
     private void submit(){
         registerBajas();
 
-        new RespaldosManager().orderPeriodoRes();
+        try {
+            new RespaldosManager().orderPeriodoRes();
 
-        deleteBajas();
+            deleteBajas();
 
-        makeGrupos();
+            makeGrupos();
 
-        submitPassrs();
+            submitPassrs();
 
-        deleteGrupos();
+            deleteGrupos();
 
-        setNewPeriodo();
+            setNewPeriodo();
 
-        Global.resetPriodo();
+            Global.resetPriodo();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
     }
 
@@ -394,11 +400,17 @@ public class SemestrePasador extends Window{
     private void setNewPeriodo(){
         String nextPeriodo = getNextPeriodo();
         checkThatPerioDoesntExists(nextPeriodo);
-        new RespaldosManager().createResDir(nextPeriodo);
+        try {
+            new RespaldosManager().createResDir(nextPeriodo);
+            String currentPeriodo = Global.conectionData.loadedPeriodo;
+            updateCurrentPeriodo(nextPeriodo,currentPeriodo);
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
 
-        String currentPeriodo = Global.conectionData.loadedPeriodo;
 
-        updateCurrentPeriodo(nextPeriodo,currentPeriodo);
 
     }
 
@@ -414,11 +426,15 @@ public class SemestrePasador extends Window{
 
             try {
                 new ViewSpecs("periodos").getUpdater().insert(periodoString,periodoNewValue);
+                new RespaldosManager().deleteResDir(newPeriodo);
             } catch (SQLException throwables) {
                 throwables.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
             }
 
-            new RespaldosManager().deleteResDir(newPeriodo);
 
     }
 

@@ -1,5 +1,6 @@
 package SpecificViews;
 
+import JDBCController.BackendController;
 import JDBCController.DataBaseConsulter;
 import JDBCController.ViewSpecs;
 import sistemaceb.AluPassGenerator;
@@ -28,10 +29,9 @@ public class GrupoPassOp extends Operation{
 
     private void generate(){
         HttpClient client = HttpClient.newBuilder().build();
-        HttpRequest request = HttpRequest.newBuilder()
-                .header("Content-Type", "application/json")
-                .uri(URI.create(AluPassGenerator.serverURL + "genPass/alumno/" + keyValue))
-                .build();
+        HttpRequest request = BackendController.getRequest("genPass/alumno/" + keyValue)
+            .header("Content-Type", "application/json")
+            .build();
 
         try {
             client.send(request, HttpResponse.BodyHandlers.discarding());

@@ -1,5 +1,6 @@
 package sistemaceb;
 
+import JDBCController.BackendController;
 import sistemaceb.form.FormDialogMessage;
 
 import java.net.URI;
@@ -31,9 +32,8 @@ public class AluPassGenerator {
 
     private void generate(){
         HttpClient client = HttpClient.newBuilder().build();
-        HttpRequest request = HttpRequest.newBuilder()
+        HttpRequest request = BackendController.getRequest("genPass/alumno")
                 .header("Content-Type", "application/json")
-                .uri(URI.create(serverURL + "genPass/alumno"))
                 .build();
 
         try {

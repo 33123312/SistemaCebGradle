@@ -15,6 +15,7 @@ import javax.swing.border.MatteBorder;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
@@ -55,9 +56,21 @@ public class RespaldoChargerWindow extends Window {
         return pillsPanel;
     }
 
+    private PanelPeriodoSelector getPeriodoSelector(){
+        try {
+            return new PanelPeriodoSelector(resManager.getPriodosBackUps());
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
 
     private JPanel getPeriodoSelectorPanel(){
-        PanelPeriodoSelector periodoSelector = new PanelPeriodoSelector(resManager.getPriodosBackUps());
+        PanelPeriodoSelector periodoSelector = getPeriodoSelector();
 
         BtnFE seePreiodoBtn = getButton("Ver Periodo",(new MouseAdapter() {
             @Override
@@ -82,8 +95,15 @@ public class RespaldoChargerWindow extends Window {
                             @Override
                             public void genericEvent() {
                                 form.closeForm();
-                                resManager.deleteResDir(periodoSelector.getSelectedFile());
-                                periodoSelector.setOptions(resManager.getPriodosBackUps());
+                                try {
+                                    resManager.deleteResDir(periodoSelector.getSelectedFile());
+                                    periodoSelector.setOptions(resManager.getPriodosBackUps());
+
+                                } catch (IOException ioException) {
+                                    ioException.printStackTrace();
+                                } catch (InterruptedException interruptedException) {
+                                    interruptedException.printStackTrace();
+                                }
 
 
                             }
@@ -104,12 +124,20 @@ public class RespaldoChargerWindow extends Window {
                             @Override
                             public void genericEvent() {
                                 dialog.closeForm();
-                                resManager.chargePeriodoAsMainDatabase(periodoSelector.getSelectedFile());
+                                try {
+                                    resManager.chargePeriodoAsMainDatabase(periodoSelector.getSelectedFile());
+                                } catch (IOException ioException) {
+                                    ioException.printStackTrace();
+                                } catch (InterruptedException interruptedException) {
+                                    interruptedException.printStackTrace();
+                                }
                             }
                         });
                 }
             }
         }));
+
+
 
         ArrayList<BtnFE> buttons = new ArrayList<>();
             buttons.add(seePreiodoBtn);
@@ -119,8 +147,28 @@ public class RespaldoChargerWindow extends Window {
         return getSelectorPanel(periodoSelector,buttons);
     }
 
+    private PanelPeriodoSelector getBackupSelector(){
+        backupSelector = new PanelPeriodoSelector();
+        reloadResspaldos();
+
+        return backupSelector;
+    }
+
+    public PanelPeriodoSelector backupSelector;
+
+    private void reloadResspaldos(){
+        try {
+            backupSelector.setOptions(resManager.getBackUps(periodo));
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+    }
+
     private JPanel getBackupSelectorPanel(){
-        PanelPeriodoSelector backupSelector = new PanelPeriodoSelector(resManager.getBackUps(periodo));
+        PanelPeriodoSelector backupSelector = getBackupSelector();
 
         BtnFE seePreiodoBtn = getButton("Ver respaldo",new MouseAdapter() {
             @Override
@@ -149,14 +197,37 @@ public class RespaldoChargerWindow extends Window {
                             @Override
                             public void genericEvent() {
                                 dialog.closeForm();
-                                resManager.chargeBackupAsMainDatabase(backupSelector.getSelectedFile());
+                                try {
+                                    resManager.chargeBackupAsMainDatabase(backupSelector.getSelectedFile());
+                                } catch (IOException ioException) {
+                                    ioException.printStackTrace();
+                                } catch (InterruptedException interruptedException) {
+                                    interruptedException.printStackTrace();
+                                }
                             }
                         });
 
                     }
                 }
             }));
+
+            BtnFE btnCrearRespaldo = getButton("Crear nuevo", new MouseAdapter() {
+                @Override
+                public void mousePressed(MouseEvent e) {
+                    try {
+                        new RespaldosManager().orderRes();
+                        reloadResspaldos();
+                    } catch (IOException ioException) {
+                        ioException.printStackTrace();
+                    } catch (InterruptedException interruptedException) {
+                        interruptedException.printStackTrace();
+                    }
+
+                }
+            });
+            buttons.add(btnCrearRespaldo);
             buttons.add(usePeriodoBtn);
+
         }
 
 
@@ -230,6 +301,9 @@ public class RespaldoChargerWindow extends Window {
 
         public PanelPeriodoSelector(ArrayList<String> options){
             setOptions(options);
+        }
+        public  PanelPeriodoSelector(){
+
         }
 
         public void setOptions(ArrayList<String> options){

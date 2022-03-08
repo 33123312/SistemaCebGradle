@@ -15,6 +15,7 @@ import sistemaceb.form.MenuListsContainer;
 
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.IOException;
 
 /**
  *
@@ -52,7 +53,7 @@ public class MainWindowMenu extends MenuListsContainer {
     private void addToolsSubMenu() {
         ListButton list = addNewSubmenu("Herramientas", "images/tablasIcon.png");
 
-            list.addButton(new ListButton.Button("Ver Respaldos", new ListButton.WindowBuiler() {
+            list.addButton(new ListButton.Button("Respaldos", new ListButton.WindowBuiler() {
                 @Override
                 public Window buildWindow() {
                     return new RespaldoChargerWindow();
@@ -68,14 +69,6 @@ public class MainWindowMenu extends MenuListsContainer {
                         return new SemestrePasador();
                     }
                 }).storeWindow());
-
-                list.addButton(new ListButton.Button("Respaldar",new MouseAdapter() {
-                    @Override
-                    public void mousePressed(MouseEvent e) {
-                        super.mousePressed(e);
-                        new RespaldosManager().orderRes();
-                    }
-                } ));
 
                 list.addButton(new ListButton.Button("Generar Claves Profesores",new MouseAdapter() {
                     @Override

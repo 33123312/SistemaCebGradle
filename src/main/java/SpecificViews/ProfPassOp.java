@@ -1,5 +1,6 @@
 package SpecificViews;
 
+import JDBCController.BackendController;
 import sistemaceb.AluPassGenerator;
 import sistemaceb.form.FormDialogMessage;
 import sistemaceb.genericEvents;
@@ -23,9 +24,8 @@ public class ProfPassOp extends Operation{
 
     private void generate(){
         HttpClient client = HttpClient.newBuilder().build();
-        HttpRequest request = HttpRequest.newBuilder()
+        HttpRequest request = BackendController.getRequest("genPass/profesor/" + keyValue)
                 .header("Content-Type", "application/json")
-                .uri(URI.create(AluPassGenerator.serverURL + "genPass/profesor/" + keyValue))
                 .build();
 
         try {

@@ -1,5 +1,6 @@
 package SpecificViews;
 
+import JDBCController.BackendController;
 import sistemaceb.form.FormDialogMessage;
 import sistemaceb.genericEvents;
 
@@ -32,9 +33,8 @@ public class ProfPassGen {
 
     private void generate(){
         HttpClient client = HttpClient.newBuilder().build();
-        HttpRequest request = HttpRequest.newBuilder()
+        HttpRequest request = BackendController.getRequest("genPass/profesor")
                 .header("Content-Type", "application/json")
-                .uri(URI.create(serverURL + "genPass/profesor"))
                 .build();
 
         try {
